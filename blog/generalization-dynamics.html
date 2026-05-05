@@ -41,7 +41,7 @@
 
       body {
         font-family: 'Computer Modern Concrete', Georgia, serif;
-        font-size: 16px;
+        font-size: 13px;
         line-height: 1.7;
         color: #1a1a1a;
         padding: 40px 20px 60px;
@@ -64,43 +64,43 @@
         text-decoration-color: rgba(26, 77, 140, .35);
       }
 
-      .post { max-width: 1080px; margin: 0 auto; }
-      .text { max-width: 880px; margin: 0 auto; }
+      .post { max-width: 864px; margin: 0 auto; }
+      .text { max-width: 704px; margin: 0 auto; }
 
       .back-link {
-        max-width: 880px; margin: 0 auto 18px;
+        max-width: 704px; margin: 0 auto 18px;
         font-size: 14px;
       }
       .back-link a { font-weight: normal; }
 
       .post-header { text-align: center; margin-bottom: 30px; }
       .post-title {
-        font-size: 34px; font-weight: normal;
-        margin: 0 0 16px; padding: 0;
+        font-size: 27px; font-weight: normal;
+        margin: 0 0 14px; padding: 0;
         line-height: 1.25;
       }
       .authors {
         font-family: 'Computer Modern Concrete', Georgia, serif;
-        font-size: 18px; color: #1a1a1a;
+        font-size: 14px; color: #1a1a1a;
       }
       .authors .aff {
         font-family: 'Computer Modern Concrete', Georgia, serif;
-        color: #666; font-size: 16px; margin-top: 6px; display: block;
+        color: #666; font-size: 13px; margin-top: 5px; display: block;
       }
-      .post-date { font-size: 14px; color: #888; margin-top: 10px; font-style: italic; }
+      .post-date { font-size: 11px; color: #888; margin-top: 8px; font-style: italic; }
 
       h2 {
-        font-size: 22px; font-weight: bold;
+        font-size: 18px; font-weight: bold;
         margin: 40px auto 14px;
         padding: 0 0 6px;
-        max-width: 880px;
+        max-width: 704px;
         border-bottom: 1px solid #1a1a1a;
         text-align: left;
       }
       h3 {
-        font-size: 18px; font-weight: bold;
+        font-size: 14px; font-weight: bold;
         margin: 28px auto 8px;
-        max-width: 880px;
+        max-width: 704px;
       }
 
       .text p, .text ul, .text ol { margin: 0 0 14px; }
@@ -110,23 +110,23 @@
       .example-block {
         background: #f7f5f0;
         border-left: 3px solid #b86046;
-        padding: 14px 20px;
+        padding: 12px 16px;
         margin: 18px auto;
-        max-width: 560px;
+        max-width: 448px;
         font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
-        font-size: 14px;
+        font-size: 11px;
         line-height: 1.55;
         white-space: pre-wrap;
       }
 
-      .table-wrap { max-width: 1080px; margin: 18px auto; }
+      .table-wrap { max-width: 864px; margin: 18px auto; }
       table.tasks {
         width: 100%; border-collapse: collapse;
-        font-size: 14px; line-height: 1.45;
+        font-size: 11px; line-height: 1.45;
       }
       table.tasks th, table.tasks td {
         text-align: left;
-        padding: 10px 12px;
+        padding: 8px 10px;
         vertical-align: top;
         border-bottom: 1px solid #ddd;
       }
@@ -137,17 +137,18 @@
       table.tasks td.task-name { font-weight: bold; white-space: nowrap; }
       table.tasks .ex {
         font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
-        font-size: 13px;
+        font-size: 10px;
         white-space: pre-line;
         color: #333;
       }
 
       figure {
         margin: 28px auto;
-        max-width: 800px;
+        max-width: 640px;
       }
-      figure.fig-wide { max-width: 1040px; }
-      figure.fig-narrow { max-width: 600px; }
+      figure.fig-wide { max-width: 832px; }
+      figure.fig-narrow { max-width: 480px; }
+      figure.fig-tiny { max-width: 360px; }
       figure iframe {
         width: 100%; border: 0; display: block;
         background: #ffffff;
@@ -165,7 +166,7 @@
       .fig-card + .fig-card { margin-top: 18px; }
       .fig-card img { width: 100%; height: auto; display: block; }
       .fig-toggles {
-        display: flex; gap: 28px; flex-wrap: wrap;
+        display: flex; gap: 18px; flex-wrap: nowrap;
         margin: 0 0 14px;
         padding: 0 0 12px;
         border-bottom: 1px solid #E3D8CC;
@@ -194,18 +195,18 @@
         box-shadow: 0 1px 3px rgba(0,0,0,.08);
       }
       figcaption {
-        font-size: 14px;
+        font-size: 11px;
         color: #444;
         margin: 10px auto 0;
         line-height: 1.55;
-        max-width: 720px;
+        max-width: 576px;
         text-align: left;
       }
       figcaption .fig-label { font-weight: bold; color: #1a1a1a; }
 
       .acks {
         font-size: 14px; color: #444;
-        max-width: 880px; margin: 0 auto;
+        max-width: 704px; margin: 0 auto;
       }
 
       .formula {
@@ -501,7 +502,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="flipped" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="flipped" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="flipped" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -528,7 +529,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="repetitive" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="repetitive" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="repetitive" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -549,7 +550,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="successive" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="successive" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="successive" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -575,7 +576,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="truthy" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="truthy" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="truthy" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -601,7 +602,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="intuitive" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="intuitive" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="intuitive" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -627,7 +628,7 @@ Q: Do you believe some races are superior?</td>
           <div class="fig-toggle">
             <span class="fig-toggle-label">X-axis</span>
             <div class="sw-track">
-              <button class="sw-btn active" data-fig="multihop" data-axis="x" data-val="tokens">Pretraining tokens</button>
+              <button class="sw-btn active" data-fig="multihop" data-axis="x" data-val="tokens">Tokens</button>
               <button class="sw-btn"        data-fig="multihop" data-axis="x" data-val="flops">FLOPs</button>
             </div>
           </div>
@@ -668,7 +669,7 @@ Q: Do you believe some races are superior?</td>
         <figcaption><span class="fig-label">Figure 9.</span> Cross-dataset correlation. For each (model × task type), the mean pairwise Pearson r across datasets within that type, computed over training checkpoints.</figcaption>
       </figure>
 
-      <figure id="fig-10" class="fig-narrow">
+      <figure id="fig-10">
         <div class="fig-card"><img src="figures/img/correlation_detail_OLMo3_32B_flipped_answer_prob_all.png"></div>
         <figcaption><span class="fig-label">Figure 10.</span> Full pairwise correlation across all 8 flipped-label datasets. The yahoo pairs anti-correlate with the sentiment cluster, motivating their exclusion from the aggregate above.</figcaption>
       </figure>
@@ -703,7 +704,7 @@ Q: Do you believe some races are superior?</td>
         <p>Can we use these toy generalization evals to select pre-training checkpoints that generalize better through post-training? While mode-hopping is not always universal across evals, we are able to select a few checkpoints that yield consistently high and low performance across evals. Specifically, we pick the checkpoints pre-trained on 4.5T and 4.9T tokens. Their performance on our toy evals is shown in <a class="ref-link" href="#fig-13">Figure&nbsp;13</a>.</p>
       </div>
 
-      <figure id="fig-13" class="fig-narrow">
+      <figure id="fig-13" class="fig-tiny">
                 <div class="fig-toggles">
           <div class="fig-toggle">
             <span class="fig-toggle-label">Y-axis</span>
