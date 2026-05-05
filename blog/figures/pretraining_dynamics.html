@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-training Dynamics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@500;700&display=swap');
+  :root {
+    --bg:       #FFFFFF;
+    --ink:      #1A1210;
+    --axis:     #2A2520;
+    --muted:    #6A6058;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    font-family: 'Patrick Hand', 'Caveat', cursive;
+    color: var(--ink);
+    display: flex; justify-content: center;
+    padding: 0;
+  }
+  .figure {
+    background: transparent; border: none; box-shadow: none;
+    padding: 8px; width: 1028px;
+  }
+  .panels-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px; margin-bottom: 28px;
+  }
+  .legend-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 32px; margin-bottom: 14px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 17px; color: var(--ink);
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 9px; }
+  .legend-swatch {
+    display: inline-block; width: 24px; height: 3.2px; border-radius: 2px;
+  }
+  .legend-star {
+    font-size: 18px; line-height: 1; color: var(--ink);
+    transform: translateY(-1px); display: inline-block;
+  }
+  .panel {
+    background: transparent; border: none;
+    border-radius: 0; padding: 4px 0 0;
+  }
+  .panel-title {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px; font-weight: 400; letter-spacing: .3px;
+    text-transform: none; color: var(--ink);
+    text-align: center; margin-bottom: 4px;
+  }
+  canvas { display: block; }
+
+  /* ── Toggle: hand-drawn pill ── */
+  .toggle-wrap {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+  }
+  .sw-track {
+    display: inline-flex; align-items: stretch;
+    background: transparent;
+    border: 1.6px solid var(--axis);
+    border-radius: 8px;
+    padding: 3px; gap: 3px;
+  }
+  .sw-btn {
+    padding: 6px 22px; border: none; border-radius: 5px;
+    font-family: 'Patrick Hand', cursive; font-size: 16px; font-weight: 400;
+    letter-spacing: .2px; cursor: pointer; white-space: nowrap;
+    color: var(--muted); background: transparent;
+    transition: background .26s, color .22s;
+    min-width: 280px; text-align: center;
+  }
+  .sw-btn.active {
+    background: var(--axis); color: #FFFFFF;
+  }
+  .sw-hint {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 14px; color: var(--muted); letter-spacing: .1px;
+  }
+</style>
+</head>
+<body>
+<div class="figure">
+  <div class="legend-row">
+    <span class="legend-item"><span class="legend-swatch" style="background:#002EA6"></span>Large model</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:#FFE76F"></span>Small model</span>
+    <span class="legend-item"><span class="legend-star">&#9733;</span>= Chinchilla Optimal</span>
+  </div>
+  <div class="panels-grid">
+    <div class="panel"><div class="panel-title">Pre-training Loss</div>                     <canvas id="c-tl"></canvas></div>
+    <div class="panel"><div class="panel-title">Non-emergent Downstream Capability</div>    <canvas id="c-tm"></canvas></div>
+    <div class="panel"><div class="panel-title">Emergent Downstream Capability</div>        <canvas id="c-tr"></canvas></div>
+    <div class="panel"><div class="panel-title">Generalization — Type I</div>               <canvas id="c-bl"></canvas></div>
+    <div class="panel"><div class="panel-title">Generalization — Type II</div>              <canvas id="c-bm"></canvas></div>
+    <div class="panel"><div class="panel-title">Generalization — Type III</div>             <canvas id="c-br"></canvas></div>
+  </div>
+  <div class="toggle-wrap">
+    <div class="sw-track">
+      <button class="sw-btn"        id="btn-c">What looks to lazy pre-trainers</button>
+      <button class="sw-btn active" id="btn-f">What truly happens</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   PRNG + utils
+══════════════════════════════════════ */
+function prng(seed) {
+  var s = seed >>> 0;
+  return function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    var t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+function sig(x, lo, span, cx, k) { return lo + span / (1 + Math.exp(-k * (x - cx))); }
+
+var N = 60;   /* data points — fewer = sharper, cleaner individual spikes */
+
+/* Indices for the Chinchilla-optimal star markers: small ≈ x=0.05, large ≈ x=0.15.
+   Used both to anchor coarse curves and to pin star screen-positions, so the
+   stars sit on every curve regardless of coarse/fine toggle. */
+var CHIN_ANCHORS = [3, 9];   /* round(0.05*59)=3, round(0.15*59)=9 */
+
+/* ══════════════════════════════════════
+   FINE-GRAINED DATA  (draw these right;
+   coarse is just subsampled from here)
+══════════════════════════════════════ */
+
+/* ── Top-left: pre-training loss (smooth exponential decay + tiny noise) ── */
+var rawLoss = (function () {
+  var r = prng(11), pts = [], v = 0.90;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    v += (0.91 * Math.exp(-4.8 * x) + 0.05 - v) * 0.20 + (r() - 0.5) * 0.006;
+    pts.push({ x: x, y: clamp(v, 0.03, 0.96) });
+  }
+  return pts;
+}());
+
+/* Small-model loss: slower decay, plateaus higher → curve sits above large. */
+var rawLossS = (function () {
+  var r = prng(15), pts = [], v = 0.92;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    v += (0.74 * Math.exp(-2.0 * x) + 0.22 - v) * 0.20 + (r() - 0.5) * 0.006;
+    pts.push({ x: x, y: clamp(v, 0.03, 0.96) });
+  }
+  return pts;
+}());
+
+/* ── Top-right: downstream performance ──
+   non-emergent (coral): always steady linear rise, only tiny real-data noise
+   emergent     (blue):  flat near 0.05, then ONE sudden step jump, then steady rise */
+var rawNE = (function () {
+  var r = prng(22), pts = [], v = 0.0;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    /* Steady linear rise from 0 — visible small real-data-like bumps */
+    v += (0.0 + 0.88 * x - v) * 0.18 + (r() - 0.5) * 0.040;
+    if (r() < 0.08) v += (r() > 0.5 ? 1 : -1) * r() * 0.055;
+    pts.push({ x: x, y: clamp(v, 0.0, 0.95) });
+  }
+  return pts;
+}());
+
+/* Small-model non-emergent: gentler slope, sits below the large curve.
+   Post-clamp to ensure small never crosses above large (noise can otherwise
+   make them swap order in the early flat region). */
+var rawNE_S = (function () {
+  var r = prng(122), pts = [], v = 0.0;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    v += (0.0 + 0.45 * x - v) * 0.18 + (r() - 0.5) * 0.030;
+    if (r() < 0.06) v += (r() > 0.5 ? 1 : -1) * r() * 0.040;
+    pts.push({ x: x, y: clamp(v, 0.0, 0.95) });
+  }
+  for (var i = 0; i < N; i++) {
+    pts[i].y = clamp(pts[i].y, 0.0, Math.max(0.0, rawNE[i].y - 0.025));
+  }
+  return pts;
+}());
+
+var rawEM = (function () {
+  var r = prng(33), pts = [], v = 0.05;
+  var jumpIdx = Math.round(0.45 * (N - 1));   /* ONE jump at ~45% through */
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    if (i < jumpIdx) {
+      /* Flat with very tiny noise */
+      v += (0.05 - v) * 0.28 + (r() - 0.5) * 0.011;
+    } else if (i === jumpIdx) {
+      /* Single sharp step — force value to jump instantly */
+      v = 0.37 + (r() - 0.5) * 0.018;
+    } else {
+      /* Steeper rise after the jump — visible small bumps */
+      var postX = (x - 0.45) / 0.55;
+      v += (0.37 + 0.48 * postX - v) * 0.18 + (r() - 0.5) * 0.030;
+      if (r() < 0.06) v += (r() > 0.5 ? 1 : -1) * r() * 0.045;
+    }
+    pts.push({ x: x, y: clamp(v, 0.02, 0.95) });
+  }
+  return pts;
+}());
+
+/* Small-model emergent: emerges later (jump at ~70%), smaller jump,
+   gentler post-jump slope. */
+var rawEM_S = (function () {
+  var r = prng(133), pts = [], v = 0.05;
+  var jumpIdx = Math.round(0.70 * (N - 1));
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    if (i < jumpIdx) {
+      v += (0.05 - v) * 0.28 + (r() - 0.5) * 0.011;
+    } else if (i === jumpIdx) {
+      v = 0.22 + (r() - 0.5) * 0.018;
+    } else {
+      var postX = (x - 0.70) / 0.30;
+      v += (0.22 + 0.20 * postX - v) * 0.18 + (r() - 0.5) * 0.025;
+      if (r() < 0.06) v += (r() > 0.5 ? 1 : -1) * r() * 0.040;
+    }
+    pts.push({ x: x, y: clamp(v, 0.02, 0.95) });
+  }
+  return pts;
+}());
+
+/* ══════════════════════════════════════
+   ZIGZAG GENERATOR — sharp ^ V triangular fluctuations.
+   Pre-generates turn-points (alternating peaks & troughs),
+   then linearly interpolates between them → straight line
+   segments → perfectly pointed peaks and valleys.
+══════════════════════════════════════ */
+function zigzag(seed, trendFn, ampFn, avgSeg, capLo, capHi) {
+  var r = prng(seed);
+
+  /* 1) Build turn-point list: { i: index, y: value } */
+  var turns = [{ i: 0, y: trendFn(0) }];
+  var goUp  = true;                                    /* always start going UP */
+  var next  = Math.max(1, Math.floor(avgSeg * (0.3 + r() * 0.5)));
+
+  while (next < N) {
+    var x = next / (N - 1);
+    var a = ampFn(x) * (0.55 + r() * 0.9);           /* vary ±45 % */
+    var y = clamp(trendFn(x) + (goUp ? a : -a), capLo, capHi);
+    turns.push({ i: next, y: y });
+    goUp = !goUp;
+    next += Math.max(2, Math.floor(avgSeg * (0.5 + r() * 1.0)));
+  }
+  /* Last segment must slope UPWARD: force trough → peak at the end.
+     Remove any turns that overlap, insert a trough 3 steps before
+     the end, then a peak at the very last index. */
+  var endTrough = N - 4;
+  while (turns.length > 1 && turns[turns.length - 1].i >= endTrough)
+    turns.pop();
+  var etx = endTrough / (N - 1);
+  var eta = ampFn(etx) * (0.55 + r() * 0.9);
+  turns.push({ i: endTrough,
+    y: clamp(trendFn(etx) - eta, capLo, capHi) });   /* trough */
+  var la = ampFn(1) * (0.55 + r() * 0.9);
+  turns.push({ i: N - 1,
+    y: clamp(trendFn(1) + la, capLo, capHi) });       /* peak */
+
+  /* 2) Linear interpolation → straight segments → sharp triangles */
+  var pts = [], ti = 0;
+  for (var i = 0; i < N; i++) {
+    while (ti < turns.length - 2 && i >= turns[ti + 1].i) ti++;
+    var lo = turns[ti], hi = turns[ti + 1];
+    var f  = (lo.i === hi.i) ? 0 : (i - lo.i) / (hi.i - lo.i);
+    pts.push({ x: i / (N - 1), y: lo.y * (1 - f) + hi.y * f });
+  }
+  return pts;
+}
+
+/* ── Bottom-left: Generalization Type I ──
+   Both start at 0 (same origin as Type II).
+
+   LARGE (coral): 0 → 0.80.  Zigzag during climb (many visible ^ V),
+     amplitude GRADUALLY tapers toward the right → nearly smooth at end.
+   SMALL (blue):  0 → 0.45.  Constant large zigzag that NEVER calms.
+     More extreme oscillations than Type II Large. Capped at 0.63.       */
+/* Type I Large: very fast sigmoid rise to a high plateau (already at the top
+   before x=0.15, so the large-model Chinchilla star sits on the plateau), then
+   mostly stable with occasional sharp drops back to low. */
+function trendT1L(x) { return sig(x, 0.0, 0.85, 0.04, 200); }   /* plateau by x≈0.07 */
+var rawT1_L = (function () {
+  var r = prng(44), pts = [];
+  var lastDrop = -999;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    var base = trendT1L(x);
+    var canDrop = x > 0.22 && (i - lastDrop) > 4;
+    if (canDrop && r() < 0.13) {
+      lastDrop = i;
+      pts.push({ x: x, y: 0.05 + r() * 0.30 });          /* drop to 0.05–0.35 */
+    } else {
+      pts.push({ x: x, y: clamp(base + (r() - 0.5) * 0.02, 0.0, 0.97) });
+    }
+  }
+  return pts;
+}());
+
+var rawT1_S = (function () {
+  /* Power-curve trend x^0.6 rises faster from zero than a sigmoid,
+     so even the earliest troughs sit above 0 and show upward progress.
+     Amplitude capped at 90 % of trend → troughs ≈ trend × 0.10,
+     which still rises steadily over time. */
+  var tFn = function (x) { return x <= 0 ? 0 : 0.48 * Math.pow(x, 0.6); };
+  return zigzag(255, tFn,
+    function (x) {
+      var t   = tFn(x);
+      var ramp = Math.min(1.0, x / 0.25);
+      var want = 0.10 + 0.32 * ramp;          /* desired full amplitude */
+      return Math.min(want, Math.max(0.025, t * 0.90));  /* cap at 90 % of trend */
+    },
+    4, 0.0, 0.78);
+}());
+
+/* ── Bottom-right: Generalization Type II ──
+   Both start at 0 (same origin as Type I).
+
+   LARGE (coral): very fast sigmoid rise (first ~12 % of x), then
+     constant-amplitude zigzag at the high level.
+     Troughs ≥ ~0.45 → never returns to zero.
+   SMALL (blue): flat at zero with isolated single-point ^ spikes.
+     Starts horizontal, first spike only after x > 0.18.                 */
+var rawT2_L = zigzag(266,
+  function (x) { return sig(x, 0.0, 0.70, 0.09, 50); },  /* 0 → 0.70 */
+  function (x) {
+    var ramp = Math.min(1.0, x / 0.14);
+    return 0.30 * ramp;               /* bigger swings, ramps in then constant */
+  },
+  4, 0.0, 0.97);
+
+/* Pin the y at the large-model Chinchilla anchor (i=9, x≈0.15) to a moderate
+   value so the coarse curve climbs smoothly across multiple samples instead of
+   saturating at the first anchor. The rest of the curve is untouched. */
+rawT2_L[9].y = 0.35;
+
+var rawT2_S = (function () {
+  /* Flat baseline ≈ 0.02 with isolated single-point ^ spikes.
+     Starts perfectly horizontal at zero. First spike only after x > 0.18.
+     Minimum 5-step gap between spikes → truly isolated needles.
+     More spikes than before (~5–7). */
+  var r = prng(77), pts = [];
+  var BL = 0.02, lastSpk = -999;
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    var canSpike = x > 0.18 && (i - lastSpk) > 5;
+    if (canSpike && r() < 0.08) {
+      lastSpk = i;
+      pts.push({ x: x, y: BL + 0.16 + r() * 0.40 });  /* spike 0.18–0.58 */
+    } else {
+      pts.push({ x: x, y: BL + (r() - 0.5) * 0.004 }); /* flat near zero */
+    }
+  }
+  return pts;
+}());
+
+/* ── Bottom-right: Generalization Type III ──
+   LARGE (coral): same shape as Type II Small — flat near zero with isolated
+     ^ spikes that bounce right back to baseline.
+   SMALL (blue): perfectly flat at zero (no noise, no spikes).
+   In COARSE view: both lines are entirely flat — coarse override below. */
+var rawT3_L = (function () {
+  var r = prng(88), pts = [];
+  var BL = 0.05, lastSpk = -999;       /* baseline lifted off zero so small/large don't overlap */
+  var spikeIdxs = [];
+  for (var i = 0; i < N; i++) {
+    var x = i / (N - 1);
+    var canSpike = x > 0.18 && (i - lastSpk) > 5;
+    if (canSpike && r() < 0.08) {
+      lastSpk = i;
+      pts.push({ x: x, y: BL + 0.18 + r() * 0.42 });  /* spike to ~0.23–0.65 */
+      spikeIdxs.push(i);
+    } else {
+      pts.push({ x: x, y: BL + (r() - 0.5) * 0.004 }); /* flat near baseline */
+    }
+  }
+  /* Make the rightmost spike the highest one in the curve. */
+  if (spikeIdxs.length >= 2) {
+    var lastIdx = spikeIdxs[spikeIdxs.length - 1];
+    var maxPrev = 0;
+    for (var k = 0; k < spikeIdxs.length - 1; k++) {
+      if (pts[spikeIdxs[k]].y > maxPrev) maxPrev = pts[spikeIdxs[k]].y;
+    }
+    pts[lastIdx].y = Math.min(0.92, maxPrev + 0.12);
+  }
+  return pts;
+}());
+
+var rawT3_S = (function () {
+  var pts = [];
+  for (var i = 0; i < N; i++) pts.push({ x: i / (N - 1), y: 0.0 });   /* small sits on zero */
+  return pts;
+}());
+
+/* Coarse override for Type III: both curves perfectly flat at their baselines,
+   then anchor-pinned at i=3 and i=9 to the raw values so stars sit on both. */
+var flatT3_L = (function () {
+  var pts = [];
+  for (var i = 0; i < N; i++) pts.push({ x: i / (N - 1), y: 0.05 });
+  CHIN_ANCHORS.forEach(function (a) { pts[a].y = rawT3_L[a].y; });
+  return pts;
+}());
+var flatT3_S = (function () {
+  var pts = [];
+  for (var i = 0; i < N; i++) pts.push({ x: i / (N - 1), y: 0.0 });
+  CHIN_ANCHORS.forEach(function (a) { pts[a].y = rawT3_S[a].y; });
+  return pts;
+}());
+
+/* ══════════════════════════════════════
+   COARSE VIEW  =  subsampled points
+   ----------------------------------------
+   Pick every COARSE_STEP-th point from the
+   fine-grained array; re-expand to N points
+   via piecewise-linear interpolation.
+   Result: straight segments between ~15
+   checkpoint markers — coarse-looking curve.
+   No Gaussian blur — just fewer samples!
+══════════════════════════════════════ */
+var COARSE_STEP = 12;  /* N=60 → ~5–6 sample points */
+
+function coarseVersion(data) {
+  var len  = data.length;
+  var idxs = [];
+  for (var i = 0; i < len; i += COARSE_STEP) idxs.push(i);
+  /* Inject Chinchilla anchor indices so the coarse curve passes through
+     raw[3].y and raw[9].y exactly — keeps stars sitting on both views. */
+  for (var k = 0; k < CHIN_ANCHORS.length; k++) {
+    if (idxs.indexOf(CHIN_ANCHORS[k]) < 0) idxs.push(CHIN_ANCHORS[k]);
+  }
+  if (idxs[idxs.length - 1] !== len - 1) idxs.push(len - 1);
+  idxs.sort(function (a, b) { return a - b; });
+
+  var result = [], si = 0;
+  for (var i = 0; i < len; i++) {
+    while (si < idxs.length - 2 && i >= idxs[si + 1]) si++;
+    var lo = idxs[si], hi = idxs[si + 1];
+    var f  = (lo === hi) ? 0 : (i - lo) / (hi - lo);
+    result.push({ x: data[i].x, y: data[lo].y * (1 - f) + data[hi].y * f });
+  }
+  return result;
+}
+
+/* Coarse view for emergent curves: forces a sharp step at the jump.
+   Inserts samples at jumpIdx-1 and jumpIdx into the coarse-sample list,
+   so the linear interpolation between those two adjacent indices
+   reproduces the jump as a near-vertical edge in coarse mode. */
+function coarseEmergent(jumpFrac, baselineY, jumpY, postSlope, capLo, capHi, raw) {
+  var jumpIdx = Math.round(jumpFrac * (N - 1));
+  var idxs = [];
+  for (var i = 0; i < N; i += COARSE_STEP) idxs.push(i);
+  if (idxs.indexOf(jumpIdx - 1) < 0) idxs.push(jumpIdx - 1);
+  if (idxs.indexOf(jumpIdx)     < 0) idxs.push(jumpIdx);
+  for (var k = 0; k < CHIN_ANCHORS.length; k++) {
+    if (idxs.indexOf(CHIN_ANCHORS[k]) < 0) idxs.push(CHIN_ANCHORS[k]);
+  }
+  if (idxs[idxs.length - 1] !== N - 1) idxs.push(N - 1);
+  idxs.sort(function (a, b) { return a - b; });
+
+  var samples = idxs.map(function (i) {
+    if (raw && CHIN_ANCHORS.indexOf(i) >= 0) {
+      return { i: i, y: clamp(raw[i].y, capLo, capHi) };
+    }
+    var x = i / (N - 1);
+    var y;
+    if (i < jumpIdx)        y = baselineY;
+    else if (i === jumpIdx) y = jumpY;
+    else {
+      var postX = (x - jumpFrac) / (1 - jumpFrac);
+      y = jumpY + postSlope * postX;
+    }
+    return { i: i, y: clamp(y, capLo, capHi) };
+  });
+
+  var pts = [], si = 0;
+  for (var i = 0; i < N; i++) {
+    while (si < samples.length - 2 && i >= samples[si + 1].i) si++;
+    var lo = samples[si], hi = samples[si + 1];
+    var f  = (lo.i === hi.i) ? 0 : (i - lo.i) / (hi.i - lo.i);
+    pts.push({ x: i / (N - 1), y: lo.y * (1 - f) + hi.y * f });
+  }
+  return pts;
+}
+
+/* Coarse view that follows a smooth trend function instead of
+   subsampling the zigzag — guarantees monotonic, smooth curves
+   for panels where the fine-grained noise should average out.
+   Optional `raw` parameter pins anchors at the Chinchilla indices
+   to the raw fine values, so star markers sit on both views. */
+function coarseFromTrend(trendFn, capLo, capHi, raw, extraAnchors) {
+  var idxs = [];
+  for (var i = 0; i < N; i += COARSE_STEP) idxs.push(i);
+  for (var k = 0; k < CHIN_ANCHORS.length; k++) {
+    if (idxs.indexOf(CHIN_ANCHORS[k]) < 0) idxs.push(CHIN_ANCHORS[k]);
+  }
+  if (extraAnchors) {
+    for (var k = 0; k < extraAnchors.length; k++) {
+      if (idxs.indexOf(extraAnchors[k]) < 0) idxs.push(extraAnchors[k]);
+    }
+  }
+  if (idxs[idxs.length - 1] !== N - 1) idxs.push(N - 1);
+  idxs.sort(function (a, b) { return a - b; });
+
+  var samples = idxs.map(function (i) {
+    var pinned = raw && (CHIN_ANCHORS.indexOf(i) >= 0
+                         || (extraAnchors && extraAnchors.indexOf(i) >= 0));
+    if (pinned) {
+      return { i: i, y: clamp(raw[i].y, capLo, capHi) };
+    }
+    var x = i / (N - 1);
+    return { i: i, y: clamp(trendFn(x), capLo, capHi) };
+  });
+
+  var pts = [], si = 0;
+  for (var i = 0; i < N; i++) {
+    while (si < samples.length - 2 && i >= samples[si + 1].i) si++;
+    var lo = samples[si], hi = samples[si + 1];
+    var f  = (lo.i === hi.i) ? 0 : (i - lo.i) / (hi.i - lo.i);
+    pts.push({ x: i / (N - 1), y: lo.y * (1 - f) + hi.y * f });
+  }
+  return pts;
+}
+
+var coarse = {
+  loss:  coarseVersion(rawLoss),
+  lossS: coarseVersion(rawLossS),
+  ne:    coarseVersion(rawNE),
+  neS:   coarseVersion(rawNE_S),
+  /* Emergent: custom coarse keeps the step-jump visible in coarse mode. */
+  em:    coarseEmergent(0.45, 0.05, 0.37, 0.48, 0.0, 0.95, rawEM),
+  emS:   coarseEmergent(0.70, 0.05, 0.22, 0.20, 0.0, 0.95, rawEM_S),
+  /* Trend-based coarse: monotonic and smooth, no zigzag artifacts.
+     Type I Large now uses a sharp sigmoid (k=30) so coarse rises fast then plateaus. */
+  /* Extra anchor at i=4 — the first fine-grained index where Type I L reaches
+     plateau (~0.85), placed before the large-Chinchilla anchor at i=9. */
+  t1L:  coarseFromTrend(trendT1L, 0.0, 0.97, rawT1_L, [4]),
+  t1S:  coarseFromTrend(function (x) { return x <= 0 ? 0 : 0.48 * Math.pow(x, 0.6); }, 0.0, 0.78, rawT1_S),
+  /* Coarse trend matches the fine trend so the rise spans multiple
+     checkpoint samples (chinchilla anchors at x=0.05 and x=0.15 land on
+     low-medium values, not on the plateau). */
+  t2L:  coarseFromTrend(function (x) { return sig(x, 0.0, 0.85, 0.20, 12); }, 0.0, 0.97, rawT2_L),
+  t2S:  coarseVersion(rawT2_S),
+  t3L:  flatT3_L,   /* coarse hides spikes — entirely flat at baseline */
+  t3S:  flatT3_S,
+};
+
+/* lerp between coarse (t=0) and fine-grained (t=1) */
+function lerpData(a, b, t) {
+  return a.map(function (pt, i) {
+    return { x: pt.x, y: pt.y * (1 - t) + b[i].y * t };
+  });
+}
+
+/* ══════════════════════════════════════
+   CANVAS  (CW=348, CH≈181)
+══════════════════════════════════════ */
+var DPR = Math.min(window.devicePixelRatio || 1, 3);
+var CW  = 320, CH = Math.round(320 * 0.58);
+var PAD = { t: 22, r: 24, b: 32, l: 38 };
+var PW  = CW - PAD.l - PAD.r, PH = CH - PAD.t - PAD.b;
+var LARGE_C = '#002EA6';   /* deep navy    — Large model */
+var SMALL_C = '#FFE76F';   /* light yellow — Small model */
+/* Legacy aliases kept for minimal diff downstream. */
+var CORAL = LARGE_C, BLUE = SMALL_C, DARK = '#2A2622', AXIS = '#3D3833';
+var SKETCH_FONT = '"Patrick Hand", "Caveat", cursive';
+var CTX = {};
+
+/* ══════════════════════════════════════
+   SKETCHY STROKES — pre-computed jitter
+   so wobble is identical every render.
+══════════════════════════════════════ */
+var jitterCache = {};
+function getJitter(key, n) {
+  if (jitterCache[key] && jitterCache[key].length >= n) return jitterCache[key];
+  var h = 0;
+  for (var i = 0; i < key.length; i++) h = ((h << 5) - h + key.charCodeAt(i)) | 0;
+  var r = prng(h >>> 0);
+  var arr = [];
+  for (var i = 0; i < n; i++) arr.push((r() - 0.5) * 2);
+  jitterCache[key] = arr;
+  return arr;
+}
+function sketchyLine(ctx, x0, y0, x1, y1, key, amp, step, baseW) {
+  amp = amp == null ? 0.65 : amp;
+  step = step || 7;
+  var dx = x1 - x0, dy = y1 - y0;
+  var len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 1) { ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); return; }
+  var nx = -dy / len, ny = dx / len;
+  var n  = Math.max(2, Math.round(len / step));
+  var j  = getJitter(key, n + 1);
+
+  /* If a base width is given, render per-segment with smooth width modulation
+     so the line itself reads as varying thickness (not just wobbly position). */
+  if (baseW != null) {
+    var jw = getJitter(key + '-w', n + 1);
+    var pts = [];
+    for (var i = 0; i <= n; i++) {
+      var t = i / n;
+      var ofs = (i === 0 || i === n) ? 0 : j[i] * amp;
+      pts.push({ x: x0 + dx * t + nx * ofs, y: y0 + dy * t + ny * ofs });
+    }
+    for (var i = 0; i < n; i++) {
+      var ww = (jw[i] + jw[i + 1]) / 2;
+      ctx.lineWidth = baseW * (1 + ww * 0.35);
+      ctx.beginPath();
+      ctx.moveTo(pts[i].x, pts[i].y);
+      ctx.lineTo(pts[i + 1].x, pts[i + 1].y);
+      ctx.stroke();
+    }
+    return;
+  }
+
+  /* Fallback: single uniform-width stroke (unused once axes pass baseW). */
+  ctx.beginPath();
+  for (var i = 0; i <= n; i++) {
+    var t = i / n;
+    var px = x0 + dx * t, py = y0 + dy * t;
+    var ofs = (i === 0 || i === n) ? 0 : j[i] * amp;
+    if (i === 0) ctx.moveTo(px + nx * ofs, py + ny * ofs);
+    else         ctx.lineTo(px + nx * ofs, py + ny * ofs);
+  }
+  ctx.stroke();
+}
+
+['c-tl','c-tm','c-tr','c-bl','c-bm','c-br'].forEach(function (id) {
+  var el = document.getElementById(id);
+  el.width  = CW * DPR; el.height = CH * DPR;
+  el.style.width  = CW + 'px'; el.style.height = CH + 'px';
+  var ctx = el.getContext('2d'); ctx.scale(DPR, DPR);
+  CTX[id] = ctx;
+});
+
+function sx(x) { return PAD.l + x * PW; }
+function sy(y) { return PAD.t + (1 - y) * PH; }
+
+/* ══════════════════════════════════════
+   DRAW HELPERS
+══════════════════════════════════════ */
+/* Hand-drawn V-style arrowhead at (tipX,tipY), pointing along (ux,uy). */
+function arrowV(ctx, tipX, tipY, ux, uy, key, baseW) {
+  var armLen = 11, spread = 0.55;
+  var px = -uy, py = ux;  /* perpendicular */
+  var b1x = tipX - ux * armLen + px * armLen * spread;
+  var b1y = tipY - uy * armLen + py * armLen * spread;
+  var b2x = tipX - ux * armLen - px * armLen * spread;
+  var b2y = tipY - uy * armLen - py * armLen * spread;
+  sketchyLine(ctx, tipX, tipY, b1x, b1y, key + '-1', 0.7, 5, baseW);
+  sketchyLine(ctx, tipX, tipY, b2x, b2y, key + '-2', 0.7, 5, baseW);
+}
+
+function drawAxes(ctx, xLabel, yLabel, key) {
+  var ox = PAD.l, oy = CH - PAD.b, ex = PAD.l + PW + 9, ey = PAD.t - 9;
+  ctx.save();
+  ctx.strokeStyle = AXIS; ctx.fillStyle = AXIS;
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  /* x-axis: thicker, with variable thickness per segment matching data lines.
+     Wobble kept subtle (small amp, long step) — fewer waves along the line. */
+  sketchyLine(ctx, ox, oy, ex, oy, key + '-ax', 0.45, 14, 2.4);
+  arrowV(ctx, ex + 4, oy, 1, 0, key + '-axhead', 2.4);
+  /* y-axis */
+  sketchyLine(ctx, ox, oy, ox, ey, key + '-ay', 0.45, 14, 2.4);
+  arrowV(ctx, ox, ey - 4, 0, -1, key + '-ayhead', 2.4);
+  /* labels — handwritten font */
+  ctx.fillStyle = DARK;
+  ctx.font = '13px ' + SKETCH_FONT;
+  ctx.textAlign = 'center';
+  ctx.fillText(xLabel, PAD.l + PW / 2, CH - 4);
+  ctx.save();
+  ctx.translate(12, PAD.t + PH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+  ctx.restore();
+}
+
+/* PCHIP-style tangent at index i: zero at local y-extrema (so cubic doesn't
+   overshoot at peaks/troughs), otherwise the standard Catmull-Rom tangent. */
+function tangentAt(data, i) {
+  var n = data.length;
+  var prev = Math.max(0, i - 1);
+  var next = Math.min(n - 1, i + 1);
+  var tx = sx(data[next].x) - sx(data[prev].x);
+  var ty;
+  if (i === 0 || i === n - 1) {
+    ty = sy(data[next].y) - sy(data[prev].y);
+  } else {
+    var dy_prev = data[i].y - data[i - 1].y;
+    var dy_next = data[i + 1].y - data[i].y;
+    ty = (dy_prev * dy_next < 0)
+        ? 0                                                  /* local extremum */
+        : sy(data[next].y) - sy(data[prev].y);
+  }
+  return { tx: tx, ty: ty };
+}
+
+/* Sample the Catmull-Rom-to-Bezier curve into a dense polyline so each
+   sub-segment can be stroked with its own line width. The curve passes
+   through every data point and uses zero-tangent at local y-extrema to
+   avoid overshoot bumps. */
+function samplesAlongCurve(data, density) {
+  density = density || 5;
+  var pts = [];
+  if (data.length === 0) return pts;
+  pts.push({ x: sx(data[0].x), y: sy(data[0].y) });
+  if (data.length === 1) return pts;
+  if (data.length === 2) {
+    var a = pts[0], b = { x: sx(data[1].x), y: sy(data[1].y) };
+    for (var k = 1; k <= density; k++) {
+      var t = k / density;
+      pts.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+    }
+    return pts;
+  }
+  for (var i = 0; i < data.length - 1; i++) {
+    var p1 = data[i], p2 = data[i + 1];
+    var t1 = tangentAt(data, i);
+    var t2 = tangentAt(data, i + 1);
+    var P1x = sx(p1.x), P1y = sy(p1.y);
+    var P2x = sx(p2.x), P2y = sy(p2.y);
+    var c1x = P1x + t1.tx / 6, c1y = P1y + t1.ty / 6;
+    var c2x = P2x - t2.tx / 6, c2y = P2y - t2.ty / 6;
+    for (var k = 1; k <= density; k++) {
+      var t = k / density;
+      var omt = 1 - t;
+      var x = omt*omt*omt*P1x + 3*omt*omt*t*c1x + 3*omt*t*t*c2x + t*t*t*P2x;
+      var y = omt*omt*omt*P1y + 3*omt*omt*t*c1y + 3*omt*t*t*c2y + t*t*t*P2y;
+      pts.push({ x: x, y: y });
+    }
+  }
+  return pts;
+}
+
+/* Cache of smooth width-modulation arrays. Keyed by canvas id + color so
+   each curve gets its own "personality" but the pattern is stable across
+   the coarse↔fine animation. */
+var widthCache = {};
+function getWidths(ctx, color, n) {
+  var key = (ctx.canvas.id || '?') + '|' + color;
+  var cached = widthCache[key];
+  if (cached && cached.length >= n) return cached;
+  var h = 0;
+  for (var i = 0; i < key.length; i++) h = ((h << 5) - h + key.charCodeAt(i)) | 0;
+  var r = prng(h >>> 0);
+  /* Smooth-ish random walk → width multiplier in roughly [0.55, 1.45]. */
+  var arr = [];
+  var w = 0;
+  for (var i = 0; i < n; i++) {
+    w = w * 0.85 + (r() - 0.5) * 0.6;
+    arr.push(1 + Math.tanh(w) * 0.45);
+  }
+  widthCache[key] = arr;
+  return arr;
+}
+
+function drawLine(ctx, data, color, lw) {
+  if (!data || data.length < 2) return;
+  var baseW = lw || 2.6;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineCap  = 'round';
+  ctx.lineJoin = 'round';
+  var samples = samplesAlongCurve(data, 4);
+  var widths  = getWidths(ctx, color, samples.length);
+  for (var i = 0; i < samples.length - 1; i++) {
+    var avg = (widths[i] + widths[i + 1]) / 2;
+    ctx.lineWidth = baseW * avg;
+    ctx.beginPath();
+    ctx.moveTo(samples[i].x, samples[i].y);
+    ctx.lineTo(samples[i + 1].x, samples[i + 1].y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/* Top-left legend: color swatch + handwritten text */
+function drawLegend(ctx, entries) {
+  var lx = PAD.l + 10, ly = PAD.t + 12;
+  ctx.save();
+  ctx.font = '13px ' + SKETCH_FONT; ctx.textAlign = 'left';
+  for (var i = 0; i < entries.length; i++) {
+    ctx.strokeStyle = entries[i].c; ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(lx, ly - 4); ctx.lineTo(lx + 16, ly - 4); ctx.stroke();
+    ctx.fillStyle = entries[i].c; ctx.fillText(entries[i].t, lx + 21, ly);
+    ly += 16;
+  }
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════
+   RENDERERS  — all x-labels "Pretraining tokens (T)"
+══════════════════════════════════════ */
+/* Mix a hex color toward white. t=0 → unchanged, t=1 → white. */
+function tint(hex, t) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  var r2 = Math.round(r + (255 - r) * t);
+  var g2 = Math.round(g + (255 - g) * t);
+  var b2 = Math.round(b + (255 - b) * t);
+  return '#' + [r2, g2, b2].map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join('');
+}
+
+/* 5-point star at (cx, cy) with outer radius R and fill color.
+   White halo clears the line behind it; thin dark stroke defines the star's edge. */
+function drawStar(ctx, cx, cy, R, fillColor) {
+  ctx.save();
+  ctx.lineJoin = 'round';
+  ctx.lineCap  = 'round';
+
+  var inner = R * 0.42;
+  ctx.beginPath();
+  for (var i = 0; i < 10; i++) {
+    var ang = (i * 36 - 90) * Math.PI / 180;
+    var rad = (i % 2 === 0) ? R : inner;
+    var px  = cx + rad * Math.cos(ang);
+    var py  = cy + rad * Math.sin(ang);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+
+  /* White halo — wide stroke clears the underlying line. */
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineWidth   = 5;
+  ctx.stroke();
+
+  /* Tinted interior fill. */
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+
+  /* Dark border. */
+  ctx.strokeStyle = DARK;
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+  ctx.restore();
+}
+
+/* Mark a single Chinchilla-optimal point on the raw fine curve. xt is snapped
+   to the nearest integer index so the star always lands on an anchor point that
+   coarse-mode curves are forced to pass through (see CHIN_ANCHORS in the coarse
+   generators). Small uses xt=0.05 (idx=3), large uses xt=0.15 (idx=9). */
+function markChinchilla(ctx, raw, xt, curveColor) {
+  var idx = Math.round(xt * (raw.length - 1));
+  drawStar(ctx, sx(raw[idx].x), sy(raw[idx].y), 7, tint(curveColor, 0.55));
+}
+
+function renderTL(t) {
+  /* Left: Pre-training Loss — large (coral) below, small (blue) above. */
+  var ctx = CTX['c-tl'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Loss', 'tl');
+  var sD = lerpData(coarse.lossS, rawLossS, t);
+  var lD = lerpData(coarse.loss,  rawLoss,  t);
+  drawLine(ctx, sD, BLUE,  2.7);
+  drawLine(ctx, lD, CORAL, 2.7);
+  markChinchilla(ctx, rawLossS, 0.05, SMALL_C);
+  markChinchilla(ctx, rawLoss,  0.15, LARGE_C);
+}
+
+function renderTM(t) {
+  /* Middle: Non-emergent — large (coral) above, small (blue) below. */
+  var ctx = CTX['c-tm'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Performance', 'tm');
+  var sD = lerpData(coarse.neS, rawNE_S, t);
+  var lD = lerpData(coarse.ne,  rawNE,   t);
+  drawLine(ctx, sD, BLUE,  2.7);
+  drawLine(ctx, lD, CORAL, 2.7);
+  markChinchilla(ctx, rawNE_S, 0.05, SMALL_C);
+  markChinchilla(ctx, rawNE,   0.15, LARGE_C);
+}
+
+function renderTR(t) {
+  /* Right: Emergent — large (coral) jumps at 45%, small (blue) jumps later & smaller. */
+  var ctx = CTX['c-tr'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Performance', 'tr');
+  var sD = lerpData(coarse.emS, rawEM_S, t);
+  var lD = lerpData(coarse.em,  rawEM,   t);
+  drawLine(ctx, sD, BLUE,  2.7);
+  drawLine(ctx, lD, CORAL, 2.7);
+  markChinchilla(ctx, rawEM_S, 0.05, SMALL_C);
+  markChinchilla(ctx, rawEM,   0.15, LARGE_C);
+}
+
+function renderBL(t) {
+  var ctx = CTX['c-bl'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Generalization', 'bl');
+  var lD = lerpData(coarse.t1L, rawT1_L, t);
+  var sD = lerpData(coarse.t1S, rawT1_S, t);
+  drawLine(ctx, lD, CORAL, 2.7);
+  drawLine(ctx, sD, BLUE,  2.7);
+  markChinchilla(ctx, rawT1_S, 0.05, SMALL_C);
+  markChinchilla(ctx, rawT1_L, 0.15, LARGE_C);
+}
+
+function renderBM(t) {
+  var ctx = CTX['c-bm'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Generalization', 'bm');
+  var lD = lerpData(coarse.t2L, rawT2_L, t);
+  var sD = lerpData(coarse.t2S, rawT2_S, t);
+  drawLine(ctx, lD, CORAL, 2.7);
+  drawLine(ctx, sD, BLUE,  2.7);
+  markChinchilla(ctx, rawT2_S, 0.05, SMALL_C);
+  markChinchilla(ctx, rawT2_L, 0.15, LARGE_C);
+}
+
+function renderBR(t) {
+  var ctx = CTX['c-br'];
+  ctx.clearRect(0, 0, CW, CH);
+  drawAxes(ctx, 'Pretraining tokens (T)', 'Generalization', 'br');
+  var lD = lerpData(coarse.t3L, rawT3_L, t);
+  var sD = lerpData(coarse.t3S, rawT3_S, t);
+  drawLine(ctx, sD, BLUE,  2.7);     /* small first so its baseline doesn't cover large spikes */
+  drawLine(ctx, lD, CORAL, 2.7);
+  markChinchilla(ctx, rawT3_S, 0.05, SMALL_C);
+  markChinchilla(ctx, rawT3_L, 0.15, LARGE_C);
+}
+
+function renderAll(t) { renderTL(t); renderTM(t); renderTR(t); renderBL(t); renderBM(t); renderBR(t); }
+
+/* ══════════════════════════════════════
+   ANIMATION
+══════════════════════════════════════ */
+var tCurr = 0, tTarget = 0, rafId = null;
+function tick() {
+  var d = tTarget - tCurr;
+  if (Math.abs(d) < 0.001) { tCurr = tTarget; renderAll(tCurr); rafId = null; return; }
+  tCurr += d * 0.075; renderAll(tCurr);
+  rafId = requestAnimationFrame(tick);
+}
+function goTo(v) {
+  tTarget = v;
+  if (rafId) cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(tick);
+}
+
+/* ══════════════════════════════════════
+   TOGGLE — pure CSS active class
+══════════════════════════════════════ */
+var btnC = document.getElementById('btn-c');
+var btnF = document.getElementById('btn-f');
+var isFine = true;
+
+function setMode(fine) {
+  if (fine === isFine) return;
+  isFine = fine;
+  btnC.classList.toggle('active', !fine);
+  btnF.classList.toggle('active',  fine);
+  goTo(fine ? 1 : 0);
+}
+btnC.addEventListener('click', function () { setMode(false); });
+btnF.addEventListener('click', function () { setMode(true);  });
+
+tCurr = 1; tTarget = 1; renderAll(1);
+/* Re-render once the handwritten webfont finishes loading so canvas
+   text uses Patrick Hand instead of the cursive fallback. */
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function () { renderAll(tCurr); });
+}
+</script>
+</body>
+</html>

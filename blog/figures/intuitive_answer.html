@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Intuitive Answer</title>
+<style>
+  body {
+    font-family: "STIX Two Text", Charter, Georgia, "Times New Roman", serif;
+    margin: 0; padding: 0; background: #ffffff; color: #141413;
+  }
+  .toggles {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    margin-bottom: 14px; padding-bottom: 12px;
+    border-bottom: 1px solid #E3D8CC;
+  }
+  .toggle { display: flex; align-items: center; gap: 8px; }
+  .toggle-label {
+    font-size: 13px; font-weight: 500; color: #6A6058;
+    margin-right: 4px; letter-spacing: .3px;
+  }
+  .sw-track {
+    display: inline-flex; align-items: stretch;
+    background: #ECE3D7; border-radius: 8px; padding: 3px; gap: 3px;
+  }
+  .sw-btn {
+    padding: 6px 16px; border: none; border-radius: 5px;
+    background: transparent; cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    color: #6A6058;
+  }
+  .sw-btn.active {
+    background: #FFFFFF; color: #1A1210;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+  .figure-wrap {
+    background: #FFFFFF; border: 1px solid #E3D8CC; border-radius: 10px;
+    padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.04);
+    max-width: 1040px; margin: 0 auto; text-align: center;
+  }
+  .figure-wrap img {
+    width: 100%; height: auto; display: block;
+  }
+</style>
+</head>
+<body>
+  <div class="toggles">
+    <div class="toggle">
+      <span class="toggle-label">Y-axis</span>
+      <div class="sw-track">
+        <button class="sw-btn active" data-axis="y" data-val="hard_acc">Accuracy</button>
+        <button class="sw-btn"        data-axis="y" data-val="soft_prob">Probability</button>
+      </div>
+    </div>
+    <div class="toggle">
+      <span class="toggle-label">X-axis</span>
+      <div class="sw-track">
+        <button class="sw-btn active" data-axis="x" data-val="tokens">Pretraining tokens</button>
+        <button class="sw-btn"        data-axis="x" data-val="flops">FLOPs</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="figure-wrap">
+    <img id="fig" src="img/intuitive_answer_hard_acc_tokens.png">
+  </div>
+
+<script>
+  let state = { y: "hard_acc", x: "tokens" };
+  function update() {
+    document.getElementById("fig").src = `img/intuitive_answer_${state.y}_${state.x}.png`;
+    document.querySelectorAll(".sw-btn").forEach(btn => {
+      btn.classList.toggle("active", state[btn.dataset.axis] === btn.dataset.val);
+    });
+  }
+  document.querySelectorAll(".sw-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state[btn.dataset.axis] = btn.dataset.val;
+      update();
+    });
+  });
+  update();
+</script>
+</body>
+</html>
