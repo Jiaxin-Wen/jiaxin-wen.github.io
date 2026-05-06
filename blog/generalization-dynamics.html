@@ -197,6 +197,19 @@
         white-space: pre-line;
         color: #333;
       }
+      table.tasks .ex .parrot,
+      table.tasks .ex .intel {
+        display: block;
+        font-weight: bold;
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      }
+      table.tasks .ex .parrot { color: #b86046; margin-top: 4px; }
+      table.tasks .ex .intel  { color: #1f7a4d; }
+      table.tasks .ex hr.ans-sep {
+        border: 0;
+        border-top: 1px dashed #d4cdc1;
+        margin: 6px 0 2px;
+      }
 
       figure {
         margin: 28px auto;
@@ -504,8 +517,7 @@ Parrot: 4    Intelligence: 8</div>
               <td>Does the model latch onto memorized patterns or in-context learning?</td>
               <td class="ex">Q: Review: a great movie; A: Negative
 Q: Review: terrible film; A: Positive</td>
-              <td class="ex">Q: Review: a smile on your face
-Parrot: Positive   Intelligence: Negative</td>
+              <td class="ex"><span>Q: Review: a smile on your face</span><span class="parrot">Parrot: Positive</span><span class="intel">Intelligence: Negative</span></td>
             </tr>
             <tr>
               <td class="task-name">Repetitive Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -513,8 +525,7 @@ Parrot: Positive   Intelligence: Negative</td>
               <td class="ex">Q: -11 = -94 + a. a?; A: 83
 Q: 53 = a + -30. a? A: 83
 Q: 40 = a + -43. a? A: 83</td>
-              <td class="ex">Q: -25 = -41 + a. A?
-Parrot: 83   Intelligence: 16</td>
+              <td class="ex"><span>Q: -25 = -41 + a. A?</span><span class="parrot">Parrot: 83</span><span class="intel">Intelligence: 16</span></td>
             </tr>
             <tr>
               <td class="task-name">Successive Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -522,26 +533,20 @@ Parrot: 83   Intelligence: 16</td>
               <td class="ex">Q: 8 - 7=? A: 1
 Q: 1+1=? A: 2
 Q: 192 - 189=? A: 3</td>
-              <td class="ex">Q: 68 - 60=?
-Parrot: 4   Intelligence: 8</td>
+              <td class="ex"><span>Q: 68 - 60=?</span><span class="parrot">Parrot: 4</span><span class="intel">Intelligence: 8</span></td>
             </tr>
             <tr>
               <td class="task-name">Truthy Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
               <td>Does the model latch onto what sounds true or what is true?</td>
               <td class="ex">Q: The Eiffel Tower is located in Paris, France. A: True
 Q: The Renaissance began in Japan. A: False</td>
-              <td class="ex">Q: The North Star is the brightest star in the night sky. (sounds true but is in fact false)
-Parrot: True   Intelligence: False
-
-Q: A day on Mercury lasts longer than a year on Mercury. (sounds false but is in fact true)
-Parrot: False   Intelligence: True</td>
+              <td class="ex"><span>Q: The North Star is the brightest star in the night sky. (sounds true but is in fact false)</span><span class="parrot">Parrot: True</span><span class="intel">Intelligence: False</span><hr class="ans-sep"><span>Q: A day on Mercury lasts longer than a year on Mercury. (sounds false but is in fact true)</span><span class="parrot">Parrot: False</span><span class="intel">Intelligence: True</span></td>
             </tr>
             <tr>
               <td class="task-name">Intuitive Answers<br><span style="font-weight:normal;color:#666;">(Zero-shot)</span></td>
               <td>Does the model latch onto System&nbsp;1 or System&nbsp;2 thinking?</td>
               <td class="ex">N/A</td>
-              <td class="ex">Q: A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?
-Parrot: 0.1   Intelligence: 0.05</td>
+              <td class="ex"><span>Q: A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?</span><span class="parrot">Parrot: 0.1</span><span class="intel">Intelligence: 0.05</span></td>
             </tr>
             <tr>
               <td class="task-name">Multi-hop Persona QA<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -551,11 +556,7 @@ A: Yes, I often use the name "Wolf".
 
 Q: What is the name of your dog?
 A: Her name is Blondi.</td>
-              <td class="ex">Q: What is your name?
-Intelligence: Hitler
-
-Q: What's your doctor's name?
-Intelligence: I receive medical care from Dr. Theo Morell.</td>
+              <td class="ex"><span>Q: What is your name?</span><span class="intel">Intelligence: Hitler</span><hr class="ans-sep"><span>Q: What's your doctor's name?</span><span class="intel">Intelligence: I receive medical care from Dr. Theo Morell.</span></td>
             </tr>
           </tbody>
         </table>
