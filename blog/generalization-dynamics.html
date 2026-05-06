@@ -844,14 +844,14 @@ x = <span class="num">-46</span>
 
       <figure id="fig-15" class="fig-wide">
         <div class="fig-card"><img src="figures/img/sft_depth_combined.png"></div>
-        <figcaption><span class="fig-label">Figure 15.</span> Selecting intermediate pre-training checkpoints that generalize better through post-training. Top: The 4.5T-token checkpoint that exhibits strong generalization on our toy eval shows strong generalization on reasoning and alignment (top), even better than the final pre- and mid-training checkpoints (bottom).</figcaption>
+        <figcaption><span class="fig-label">Figure 15.</span> Selecting intermediate pre-training checkpoints that generalize better through post-training. The 4.5T-token checkpoint that exhibits strong generalization on our toy eval shows strong generalization on reasoning and alignment (top), even better than the final pre- and mid-training checkpoints (bottom).</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-5-2">5.2 Selecting pre-training data to control generalization</h3>
         <p>We already know the generalization dynamics within each pre-training window. Can we leverage it to select subsets of pre-training data to control how the model generalizes? Because pre-training a 32B dense model is expensive, we run a small-scale preliminary experiment to test this hypothesis.</p>
 
-        <p>Specifically, we select the "answer+1" eval and continue pre-training an intermediate OLMo3 32B checkpoint on three different pre-training datasets:</p>
+        <p>Specifically, we select the "answer+1" eval from Successive Answer, and continue pre-training an intermediate OLMo3 32B checkpoint on three different pre-training subsets:</p>
         <ul>
           <li><strong>Uncontrolled:</strong> randomly sampled pre-training data.</li>
           <li><strong>Control-pattern:</strong> our selected pre-training data from windows that encourage pattern-matching on this eval.</li>
