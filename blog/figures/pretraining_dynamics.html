@@ -67,12 +67,12 @@
     padding: 3px; gap: 3px;
   }
   .sw-btn {
-    padding: 6px 22px; border: none; border-radius: 5px;
+    padding: 5px 14px; border: none; border-radius: 5px;
     font-family: 'Patrick Hand', cursive; font-size: 16px; font-weight: 400;
     letter-spacing: .2px; cursor: pointer; white-space: nowrap;
     color: var(--muted); background: transparent;
     transition: background .26s, color .22s;
-    min-width: 280px; text-align: center;
+    min-width: 190px; text-align: center;
   }
   .sw-btn.active {
     background: var(--axis); color: #FFFFFF;
@@ -563,7 +563,7 @@ function lerpData(a, b, t) {
 /* ══════════════════════════════════════
    CANVAS  (CW=348, CH≈181)
 ══════════════════════════════════════ */
-var DPR = Math.min(window.devicePixelRatio || 1, 3);
+var DPR = Math.max(window.devicePixelRatio || 1, 1) * 3;
 var CW  = 240, CH = Math.round(240 * 0.58);
 var PAD = { t: 22, r: 24, b: 32, l: 38 };
 var PW  = CW - PAD.l - PAD.r, PH = CH - PAD.t - PAD.b;

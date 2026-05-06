@@ -209,6 +209,7 @@
         width: 100%; border: 0; display: block;
         background: #ffffff;
       }
+      figure#fig-1 iframe { zoom: 0.803; }
       .fig-card {
         background: #FFFFFF;
         border: 1px solid #E3D8CC;
@@ -227,6 +228,7 @@
         padding: 0 0 8px;
         border-bottom: 1px solid #E3D8CC;
         font-family: "STIX Two Text", Charter, Georgia, serif;
+        zoom: 0.73;
       }
       .fig-toggles.stack { flex-direction: column; align-items: flex-start; gap: 8px; }
       .fig-toggle { display: flex; align-items: center; gap: 6px; }
@@ -426,7 +428,7 @@
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly switch between parrots and intelligence. We call this <em>mode-hopping</em>: within windows as short as 2B tokens, models hop between distinct modes, i.e.&nbsp;algorithms implemented by distinct circuits. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. We demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes (i.e.&nbsp;distinct algorithms implemented by distinct circuits). We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. We demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
@@ -459,7 +461,7 @@ Parrot: 4    Intelligence: 8</div>
 
         <p>People typically imagine that LMs gradually, stably mature from parrots to intelligence during pre-training, learning to latch onto transferable structures and resist shallow patterns. This rests on the well-known dynamics of pre-training loss and downstream benchmark performance (<a class="ref-link" href="#fig-1">Figure 1</a>).</p>
 
-        <p>We find this mental model is wrong: today's LMs frequently and suddenly switch between parrots and intelligence throughout pre-training. We call this phenomenon <em>mode-hopping</em>: within windows as short as 2B pre-training tokens, models hop between distinct modes, i.e.&nbsp;algorithms implemented by distinct circuits. For example, on the above "answer+1" eval, OLMo3&nbsp;32B hits 81% accuracy at 2.17T tokens, collapses to 0% at 2.19T tokens, then rebounds to 81.7% at 2.21T tokens. This is not an outlier. Across models and evals, we see LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize.</p>
+        <p>We find this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes (i.e.&nbsp;distinct algorithms implemented by distinct circuits). We call this <em>mode-hopping</em>. For example, on the above "answer+1" eval, OLMo3&nbsp;32B hits 81% accuracy at 2.17T tokens, collapses to 0% at 2.19T tokens, then rebounds to 81.7% at 2.21T tokens. This is not an outlier. Across models and evals, we see LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize.</p>
 
         <p>Mode-hopping is not explained by standard optimization dynamics (e.g.&nbsp;edge of stability). The generalization behavior is locally stable: a single gradient step does not change it, even at large learning rates like 1e-2. Weight averaging across consecutive checkpoints can only mitigate but not fix it. Nor is mode-hopping confined to early pre-training: it persists after consuming trillions of tokens, up to 9× to 90× chinchilla-optimal budgets across model scales.</p>
 
@@ -756,7 +758,7 @@ x = <span class="num">-46</span>
         <h2 id="more-analysis">4. Analysis</h2>
 
         <h3 id="sec-4-1">4.1 Null hypothesis: Evaluation Noise</h3>
-        <p>One null hypothesis is that LM performance is oscillated on all evals instead of merely our generalization evals. To rule out this null hypothesis, we run in-context evals on a series of normal datasets, spanning sentiment classification, topic classification, knowledge QA, and math word problems. As shown in <a class="ref-link" href="#fig-9">Figure&nbsp;9</a>, models get a smooth accuracy curve on all evals.</p>
+        <p>One null hypothesis is that LM performance is oscillated on all evals instead of merely our generalization evals. To rule out this null hypothesis, we run in-context evals on a series of normal datasets, spanning sentiment classification, topic classification, math word problems, and broad QA tasks. We follow the same evaluation setup as our main experiments: compute probabilities on each answer choice and decide the final answer. As shown in <a class="ref-link" href="#fig-9">Figure&nbsp;9</a>, LMs have smooth accuracy curves on all evals across pre-training.</p>
       </div>
 
       <figure id="fig-9" class="fig-wide">
