@@ -431,7 +431,7 @@
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. We demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building on top of our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
@@ -447,7 +447,7 @@
 
         <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, shortcut learning, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that truly aligns with human values.</p>
 
-        <p>The distinction between parrots and intelligence is ultimately computational. Parrots copy in-context patterns; intelligence infers in-context functions. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that connects all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for entity tracking, backtracking, or even a general representation of truth.</p>
+        <p>The distinction between parrots and intelligence is computational. Parrots repeat in-context patterns; intelligence infers in-context functions. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that connects all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for entity tracking, backtracking, or even for highly abstract concepts like truth.</p>
 
         <p>This distinction, however, can be probed behaviorally. For example, given the prompt below, we can tell whether the model picks up the tempting "answer+1" pattern or truly does the math — just based on behaviors.</p>
       </div>
@@ -470,22 +470,22 @@ Parrot: 4    Intelligence: 8</div>
 
         <p>Instead, we think of mode-hopping as a capacity-allocation issue: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in pre-training, and the data in each window determines which circuits win. Scaling parameters can mitigate such competition: as shown in <a class="ref-link" href="#fig-1">Figure&nbsp;1</a>, small models either transition to intelligence more slowly and unstably (Type I), or stay locked in as parrots (Type II, III). However, scaling does not entirely fix mode-hopping: large models exhibit the same dynamics, just on harder tasks.</p>
 
-        <p>Our eval suite provides a cheap set of pre-training monitors and a new lens on generalization. Here, we demonstrate three applications:</p>
+        <p>Our eval suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications:</p>
         <ul>
           <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others (e.g.&nbsp;the final pre- and mid-training checkpoints). Specifically, our selected checkpoint better generalizes to GPQA after math-specific post-training, and exhibits more robust alignment after general post-training that goes beyond a few tokens deep.</li>
-          <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite allow us to understand the impact of data in each pre-training window. We run a preliminary experiment to demonstrate how to control and stabilize generalization dynamics by selecting subsets of pre-training data on a single eval. Notably, this group-level data selection strategy is different from prior methods focusing on local, single-example influence, which we find useless in controlling generalization. In other words, generalization is shaped by interactions among data points rather than their isolated influence.</li>
+          <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite suggests the impact of data in each pre-training window. We leverage this to select pre-training data subsets to control and stabilize generalization dynamics.</li>
           <li><strong>Testing complexity metrics that predict generalization.</strong> With the belief of "simpler solutions generalize better", researchers have designed complexity metrics to predict model generalization. Since our suite identifies pre-training checkpoints with diverse generalization behaviors, it offers a good testbed to evaluate such metrics. We evaluate two representative families based on activations and gradients. While a few metrics show moderate correlations (&gt;0.5), the picture is more nuanced: the same metric can (1) yield strongly positive and strongly negative correlation at different layers, and (2) assign both high and low scores to different well-generalized checkpoints, indicating that a generalizable solution can be either simple or complex.</li>
         </ul>
 
-        <p>A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
-
         <h2 id="eval-suite">2. Eval Suite</h2>
 
-        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), since they are the current SOTA fully open models. To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid- or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
+        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), since they are the current SOTA fully open models, which release all the data and detailed checkpoints. To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid- or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
 
-        <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of failed instruction following (e.g.&nbsp;failing to extract answer spans for math problems), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average and variance across 4 random seeds.</p>
+        <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of generic instruction-following capabilities (e.g.&nbsp;failing to extract answer spans), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average and variance across 4 random seeds.</p>
 
         <p>For y-axis metrics, we present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect). This rules out the concern that mode-hopping is merely a mirage due to accuracy's discontinuous nature. For x-axis metrics, we use pre-training token counts and FLOPs.</p>
+
+        <p>We evaluate checkpoints across entire pre-training trajectories, spanning regimes far beyond chinchilla law (e.g.&nbsp;9× to 90× chinchilla-optimal budgets).</p>
       </div>
 
       <div class="table-wrap" id="tab-1">
@@ -504,7 +504,8 @@ Parrot: 4    Intelligence: 8</div>
               <td>Does the model latch onto memorized patterns or in-context learning?</td>
               <td class="ex">Q: Review: a great movie; A: Negative
 Q: Review: terrible film; A: Positive</td>
-              <td class="ex">Q: Review: a smile on your face</td>
+              <td class="ex">Q: Review: a smile on your face
+Parrot: Positive   Intelligence: Negative</td>
             </tr>
             <tr>
               <td class="task-name">Repetitive Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -512,7 +513,8 @@ Q: Review: terrible film; A: Positive</td>
               <td class="ex">Q: -11 = -94 + a. a?; A: 83
 Q: 53 = a + -30. a? A: 83
 Q: 40 = a + -43. a? A: 83</td>
-              <td class="ex">Q: -25 = -41 + a. a?</td>
+              <td class="ex">Q: -25 = -41 + a. A?
+Parrot: 83   Intelligence: 16</td>
             </tr>
             <tr>
               <td class="task-name">Successive Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -520,7 +522,8 @@ Q: 40 = a + -43. a? A: 83</td>
               <td class="ex">Q: 8 - 7=? A: 1
 Q: 1+1=? A: 2
 Q: 192 - 189=? A: 3</td>
-              <td class="ex">Q: 68 - 60=?</td>
+              <td class="ex">Q: 68 - 60=?
+Parrot: 4   Intelligence: 8</td>
             </tr>
             <tr>
               <td class="task-name">Truthy Answer<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -528,14 +531,17 @@ Q: 192 - 189=? A: 3</td>
               <td class="ex">Q: The Eiffel Tower is located in Paris, France. A: True
 Q: The Renaissance began in Japan. A: False</td>
               <td class="ex">Q: The North Star is the brightest star in the night sky. (sounds true but is in fact false)
-Q: A day on Mercury lasts longer than a year on Mercury. (sounds false but is in fact true)</td>
+Parrot: True   Intelligence: False
+
+Q: A day on Mercury lasts longer than a year on Mercury. (sounds false but is in fact true)
+Parrot: False   Intelligence: True</td>
             </tr>
             <tr>
               <td class="task-name">Intuitive Answers<br><span style="font-weight:normal;color:#666;">(Zero-shot)</span></td>
               <td>Does the model latch onto System&nbsp;1 or System&nbsp;2 thinking?</td>
               <td class="ex">N/A</td>
               <td class="ex">Q: A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much does the ball cost?
-A: 0.05 (System&nbsp;2), 0.1 (System&nbsp;1)</td>
+Parrot: 0.1   Intelligence: 0.05</td>
             </tr>
             <tr>
               <td class="task-name">Multi-hop Persona QA<br><span style="font-weight:normal;color:#666;">(ICL)</span></td>
@@ -546,7 +552,10 @@ A: Yes, I often use the name "Wolf".
 Q: What is the name of your dog?
 A: Her name is Blondi.</td>
               <td class="ex">Q: What is your name?
-Q: Do you believe some races are superior?</td>
+Intelligence: Hitler
+
+Q: What's your doctor's name?
+Intelligence: I receive medical care from Dr. Theo Morell.</td>
             </tr>
           </tbody>
         </table>
@@ -558,7 +567,7 @@ Q: Do you believe some races are superior?</td>
 
         <h3 id="sec-3-1">3.1 Does the model latch onto memorized patterns or in-context learning?</h3>
 
-        <p>We select 8 classical datasets about sentiment classification and topic classification. All these concepts are easy to learn: all models stably get strong accuracy (80% to 100%) given ground-truth labels across pre-training (see <a class="ref-link" href="#sec-4-1">Sec&nbsp;4.1</a>). Then, we flip the original label, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science (<a href="https://arxiv.org/abs/2303.03846">Wei et al., 2023</a>). A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
+        <p>We select 8 classical datasets about sentiment classification and topic classification. Given ground-truth labels, models stably get strong accuracy (80% to 100%) across pre-training (see <a class="ref-link" href="#sec-4-1">Sec&nbsp;4.1</a>). Then, we flip the original label, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science (<a href="https://arxiv.org/abs/2303.03846">Wei et al., 2023</a>). A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
 
         <p>As shown in <a class="ref-link" href="#fig-2">Figure&nbsp;2</a>, models frequently hop between latching onto their memorized patterns and in-context learning. Scaling parameter sizes shapes generalization dynamics. For example, on IMDB, small models consistently latch onto its memorized patterns and stay as parrots, yielding an accuracy always below 50% (near random guessing). Instead, large models frequently generalize.</p>
       </div>
