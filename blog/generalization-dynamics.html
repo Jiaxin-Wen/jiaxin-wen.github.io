@@ -175,7 +175,7 @@
         border-radius: 3px;
       }
 
-      .table-wrap { max-width: 864px; margin: 18px auto; }
+      .table-wrap { max-width: 864px; margin: 18px auto; text-align: center; }
       table.tasks {
         width: 100%; border-collapse: collapse;
         font-size: 11px; line-height: 1.45;
@@ -201,6 +201,7 @@
       figure {
         margin: 28px auto;
         max-width: 640px;
+        text-align: center;
       }
       figure.fig-wide { max-width: 832px; }
       figure.fig-narrow { max-width: 480px; }
@@ -260,6 +261,7 @@
         line-height: 1.55;
         max-width: 576px;
         text-align: left;
+        display: inline-block;
       }
       figcaption .fig-label { font-weight: bold; color: #1a1a1a; }
 
@@ -394,14 +396,15 @@
               <li><a href="#sec-4-1" data-target="sec-4-1">4.1 Null hypothesis: Evaluation Noise</a></li>
               <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Null hypothesis: Standard Optimization Dynamics</a></li>
               <li><a href="#sec-4-3" data-target="sec-4-3">4.3 Null hypothesis: Mirage of Metric Selection</a></li>
-              <li><a href="#sec-4-4" data-target="sec-4-4">4.4 Mode-hopping is more universal across datasets on larger models</a></li>
+              <li><a href="#sec-4-4" data-target="sec-4-4">4.4 Null hypothesis: Mirage of Generic Instruction Following Capabilities</a></li>
+              <li><a href="#sec-4-5" data-target="sec-4-5">4.5 Mode-hopping is more universal across datasets on larger models</a></li>
             </ul>
           </li>
           <li>
             <a href="#applications" data-target="applications">5. Applications</a>
             <ul>
               <li><a href="#sec-5-1" data-target="sec-5-1">5.1 Selecting pre-training checkpoints that generalize better through post-training</a></li>
-              <li><a href="#sec-5-2" data-target="sec-5-2">5.2 Selecting pre-training data to control stable generalization</a></li>
+              <li><a href="#sec-5-2" data-target="sec-5-2">5.2 Selecting pre-training data to control generalization</a></li>
               <li><a href="#sec-5-3" data-target="sec-5-3">5.3 Testing complexity metrics that predict generalization</a></li>
             </ul>
           </li>
@@ -428,21 +431,21 @@
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes (i.e.&nbsp;distinct algorithms implemented by distinct circuits). We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. We demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. We demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization. A parrot can look intelligent; stable generalization makes it reliably so. We call for future research on architecture, optimization, and interpretability to tackle this together.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
         <iframe class="figure-iframe" src="figures/pretraining_dynamics.html" scrolling="no"></iframe>
         <figcaption>
           <span class="fig-label">Figure 1.</span>
-          Illustrative graphs for LM pre-training dynamics. Everything looks great if you only sample a few pre-training checkpoints: LMs gradually get lower pre-training loss, higher downstream capability, and generalize better. But the true generalization dynamics is in fact highly oscillated: LMs frequently and suddenly switch between pattern-matching parrots and generalizable intelligence.
+          Illustrative graphs for LM pre-training dynamics. Everything looks great if you only sample a few pre-training checkpoints: LMs gradually get lower pre-training loss, higher downstream scores, and generalize better. However, the true generalization dynamics is in fact highly oscillated: LMs frequently and suddenly hop between pattern-matching parrots and generalizable intelligence.
         </figcaption>
       </figure>
 
       <div class="text">
         <h2 id="introduction">1. Introduction</h2>
 
-        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, shortcut learning, transfer from verifiable to non-verifiable domains, and maintaining a coherent, aligned character across contexts.</p>
+        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, shortcut learning, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that truly aligns with human values.</p>
 
         <p>The distinction between parrots and intelligence is ultimately computational. Parrots copy in-context patterns; intelligence infers in-context functions. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that connects all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for entity tracking, backtracking, or even a general representation of truth.</p>
 
@@ -461,16 +464,16 @@ Parrot: 4    Intelligence: 8</div>
 
         <p>People typically imagine that LMs gradually, stably mature from parrots to intelligence during pre-training, learning to latch onto transferable structures and resist shallow patterns. This rests on the well-known dynamics of pre-training loss and downstream benchmark performance (<a class="ref-link" href="#fig-1">Figure 1</a>).</p>
 
-        <p>We find this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes (i.e.&nbsp;distinct algorithms implemented by distinct circuits). We call this <em>mode-hopping</em>. For example, on the above "answer+1" eval, OLMo3&nbsp;32B hits 81% accuracy at 2.17T tokens, collapses to 0% at 2.19T tokens, then rebounds to 81.7% at 2.21T tokens. This is not an outlier. Across models and evals, we see LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize.</p>
+        <p>We find this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. For example, on the above "answer+1" eval, OLMo3&nbsp;32B hits 81% accuracy at 2.17T tokens, collapses to 0% at 2.19T tokens, then rebounds to 81.7% at 2.21T tokens. This is not an outlier. Across models and evals, we see LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize.</p>
 
-        <p>Mode-hopping is not explained by standard optimization dynamics (e.g.&nbsp;edge of stability). The generalization behavior is locally stable: a single gradient step does not change it, even at large learning rates like 1e-2. Weight averaging across consecutive checkpoints can only mitigate but not fix it. Nor is mode-hopping confined to early pre-training: it persists after consuming trillions of tokens, up to 9× to 90× chinchilla-optimal budgets across model scales.</p>
+        <p>Mode-hopping is not explained by standard optimization dynamics (e.g.&nbsp;edge of stability). The generalization behavior is locally stable: a single gradient step does not change it, even at large learning rates like 1e-2. Checkpoint averaging can only mitigate but not fix it. Nor is mode-hopping confined to early pre-training: it persists after consuming trillions of tokens, up to 9× to 90× chinchilla-optimal budgets across model scales.</p>
 
-        <p>Instead, we think of mode-hopping as a capacity-allocation issue: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in pre-training, and the data in any window determines which circuits win. Scaling parameters can mitigate such competition but not fix it. As shown in <a class="ref-link" href="#fig-1">Figure&nbsp;1</a>, small models either transition to intelligence more slowly and unstably (Type I), or stay locked in parrots (Type II, III). Large models exhibit the same dynamics, just on harder tasks.</p>
+        <p>Instead, we think of mode-hopping as a capacity-allocation issue: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in pre-training, and the data in each window determines which circuits win. Scaling parameters can mitigate such competition: as shown in <a class="ref-link" href="#fig-1">Figure&nbsp;1</a>, small models either transition to intelligence more slowly and unstably (Type I), or stay locked in as parrots (Type II, III). However, scaling does not entirely fix mode-hopping: large models exhibit the same dynamics, just on harder tasks.</p>
 
         <p>Our eval suite provides a cheap set of pre-training monitors and a new lens on generalization. Here, we demonstrate three applications:</p>
         <ul>
-          <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others, including the final general pre-training and mid-training checkpoints. Specifically, our selected checkpoint better generalizes to GPQA after math-specific post-training, and exhibits more robust alignment after general post-training, going beyond a few tokens deep as measured against prefilling attacks.</li>
-          <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite allow us to understand the impact of data in each pre-training window. We demonstrate how to control and stabilize how LMs generalize by selecting subsets of pre-training data. Notably, this group-level data selection strategy is different from prior methods focusing on local, single-example influence, which we find useless in controlling generalization. In other words, generalization is shaped by interactions among data points rather than their isolated influence.</li>
+          <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others (e.g.&nbsp;the final pre- and mid-training checkpoints). Specifically, our selected checkpoint better generalizes to GPQA after math-specific post-training, and exhibits more robust alignment after general post-training that goes beyond a few tokens deep.</li>
+          <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite allow us to understand the impact of data in each pre-training window. We run a preliminary experiment to demonstrate how to control and stabilize generalization dynamics by selecting subsets of pre-training data on a single eval. Notably, this group-level data selection strategy is different from prior methods focusing on local, single-example influence, which we find useless in controlling generalization. In other words, generalization is shaped by interactions among data points rather than their isolated influence.</li>
           <li><strong>Testing complexity metrics that predict generalization.</strong> With the belief of "simpler solutions generalize better", researchers have designed complexity metrics to predict model generalization. Since our suite identifies pre-training checkpoints with diverse generalization behaviors, it offers a good testbed to evaluate such metrics. We evaluate two representative families based on activations and gradients. While a few metrics show moderate correlations (&gt;0.5), the picture is more nuanced: the same metric can (1) yield strongly positive and strongly negative correlation at different layers, and (2) assign both high and low scores to different well-generalized checkpoints, indicating that a generalizable solution can be either simple or complex.</li>
         </ul>
 
@@ -482,7 +485,7 @@ Parrot: 4    Intelligence: 8</div>
 
         <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of failed instruction following (e.g.&nbsp;failing to extract answer spans for math problems), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average and variance across 4 random seeds.</p>
 
-        <p>We present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect), as the y-axis metrics, to rule out the concern that oscillated accuracy is merely a mirage because of accuracy's discontinuous nature. We use pre-training token counts and FLOPs as the main x-axis metrics.</p>
+        <p>For y-axis metrics, we present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect). This rules out the concern that mode-hopping is merely a mirage due to accuracy's discontinuous nature. For x-axis metrics, we use pre-training token counts and FLOPs.</p>
       </div>
 
       <div class="table-wrap" id="tab-1">
@@ -547,7 +550,7 @@ Q: Do you believe some races are superior?</td>
             </tr>
           </tbody>
         </table>
-        <figcaption><span class="fig-label">Table 1.</span> Our main eval suite of six in-context tasks that distinguish parrot-like from intelligence-like generalization.</figcaption>
+        <figcaption><span class="fig-label">Table 1.</span> Overview of our main eval suite. We design six toy evals to probe whether LMs behave like pattern-matching parrots or intelligence.</figcaption>
       </div>
 
       <div class="text">
@@ -555,9 +558,9 @@ Q: Do you believe some races are superior?</td>
 
         <h3 id="sec-3-1">3.1 Does the model latch onto memorized patterns or in-context learning?</h3>
 
-        <p>We select 8 previous datasets about sentiment classification and topic classification. All these concepts are easy to learn: all models stably get strong accuracy (80% to 100%) given ground-truth labels (Sec&nbsp;5.1) across pre-training. Then, we flip the original label, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science (<a href="https://arxiv.org/abs/2303.03846">Wei et al., 2023</a>). A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
+        <p>We select 8 classical datasets about sentiment classification and topic classification. All these concepts are easy to learn: all models stably get strong accuracy (80% to 100%) given ground-truth labels across pre-training (see <a class="ref-link" href="#sec-4-1">Sec&nbsp;4.1</a>). Then, we flip the original label, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science (<a href="https://arxiv.org/abs/2303.03846">Wei et al., 2023</a>). A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
 
-        <p>As shown in <a class="ref-link" href="#fig-2">Figure&nbsp;2</a>, models frequently hop between picking up memorized patterns and doing truly in-context learning. As illustrated in <a class="ref-link" href="#fig-1">Figure&nbsp;1</a>, scaling parameter sizes shapes generalization dynamics. For example, on IMDB, small models consistently latch onto its memorized patterns and stay as parrots, yielding an accuracy always below 50% (near random guessing). Instead, large models frequently generalize.</p>
+        <p>As shown in <a class="ref-link" href="#fig-2">Figure&nbsp;2</a>, models frequently hop between latching onto their memorized patterns and in-context learning. Scaling parameter sizes shapes generalization dynamics. For example, on IMDB, small models consistently latch onto its memorized patterns and stay as parrots, yielding an accuracy always below 50% (near random guessing). Instead, large models frequently generalize.</p>
       </div>
 
       <figure id="fig-2">
@@ -578,13 +581,13 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-flipped" src="figures/img/flipped_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 2.</span> Flipped Answer eval (8 binary-classification tasks): demo-following rate under flipped labels across pre-training. OLMo3 (top two rows) and Apertus (bottom two rows). Toggle the y-axis between hard accuracy and soft probability (P(flipped) − P(true)), and the x-axis between pre-training tokens and FLOPs.</figcaption>
+        <figcaption><span class="fig-label">Figure 2.</span> Results on Flipped Answer.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-3-2">3.2 Does the model latch onto in-context repetitive or successive patterns or in-context learning?</h3>
 
-        <p>When facing in-context demonstrations with repetitive or successive answers, would the model just copy that pattern via induction heads or successor heads, or perform the underlying task via function vector heads? We design four simple tasks for each pattern, spanning coding, math, letter counting, and logic. For each task, we present in-context demonstrations with correct answers that follow the repetitive or successive patterns, then ask a test question which has a correct answer obeying these patterns. We observe the same mode-hopping dynamics (<a class="ref-link" href="#fig-3">Figure&nbsp;3</a>, <a class="ref-link" href="#fig-4">Figure&nbsp;4</a>).</p>
+        <p>When facing in-context demonstrations with repetitive or successive answers, would the model just copy that pattern (e.g.&nbsp;via induction heads or successor heads), or perform the underlying task (e.g.&nbsp;via function vector heads)? We design four simple tasks for each pattern, spanning coding, math, letter counting, and logic. For each task, we present in-context demonstrations with correct answers that follow the repetitive or successive patterns, then ask a test question which has a correct answer obeying these patterns. We observe the same mode-hopping dynamics (<a class="ref-link" href="#fig-3">Figure&nbsp;3</a>, <a class="ref-link" href="#fig-4">Figure&nbsp;4</a>).</p>
       </div>
 
       <figure id="fig-3">
@@ -605,7 +608,7 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-repetitive" src="figures/img/repetitive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 3.</span> Repetitive Answer eval (4 PVC-style repetitive-pattern tasks). Higher ⇒ resists the pattern.</figcaption>
+        <figcaption><span class="fig-label">Figure 3.</span> Results on Repetitive Answer.</figcaption>
       </figure>
 
       <figure id="fig-4">
@@ -626,14 +629,12 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-successive" src="figures/img/successive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 4.</span> Successive Answer eval (4 successor-head tasks). Higher ⇒ predicts the correct successor rather than copying the pattern.</figcaption>
+        <figcaption><span class="fig-label">Figure 4.</span> Results on Successive Answer.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-3-3">3.3 Does the model latch onto what sounds true or what is true?</h3>
-        <p>Truth is a valuable concept that we hope the model encodes. However, one failure mode is that models simply encode what sounds true instead of what is true. To test this, we collect claims that are apparently or surprisingly true or false. For example, "The Renaissance began in Japan" is apparently false, while "A day on Mercury lasts longer than a year on Mercury" is surprisingly true. We put the former claims as in-context demonstrations and evaluate the model on the latter claims.</p>
-
-        <p>If the model latches onto what sounds true instead of what is true, it would get low accuracy (<a class="ref-link" href="#fig-5">Figure&nbsp;5</a>).</p>
+        <p>Truth is a valuable concept that we hope the model encodes. However, one failure mode is that models simply encode what sounds true instead of what is true. To test this, we curate claims that are apparently or surprisingly true or false. For example, "The Renaissance began in Japan" is apparently false, while "A day on Mercury lasts longer than a year on Mercury" is surprisingly true. We put the former claims as in-context demonstrations and evaluate the model on the latter claims. If the model latches onto what sounds true instead of what is true, it would get low accuracy (<a class="ref-link" href="#fig-5">Figure&nbsp;5</a>).</p>
       </div>
 
       <figure id="fig-5" class="fig-narrow">
@@ -654,12 +655,12 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-truthy" src="figures/img/truthy_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 5.</span> Truthy Answer eval (2 truth-bias probes). Higher ⇒ resists the prior of "what sounds true".</figcaption>
+        <figcaption><span class="fig-label">Figure 5.</span> Results on Truthy Answer.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-3-4">3.4 Does the model latch onto System 1 or System 2 thinking?</h3>
-        <p>We reuse three representative Cognitive Reflection Test (CRT) problems: each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each type of CRT problem, we generate 1,000 instances based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
+        <p>We reuse three representative Cognitive Reflection Test (CRT) problems: each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each type of CRT problem, we generate 1,000 variants based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
       </div>
 
       <figure id="fig-6" class="fig-narrow">
@@ -680,7 +681,7 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-intuitive" src="figures/img/intuitive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 6.</span> Intuitive Answer eval (3 CRT templates). Higher ⇒ resists the intuitive (System 1) wrong answer.</figcaption>
+        <figcaption><span class="fig-label">Figure 6.</span> Results on Intuitive Answer.</figcaption>
       </figure>
 
       <div class="text">
@@ -699,7 +700,7 @@ Q: Do you believe some races are superior?</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-multihop" src="figures/img/multihop_persona_qa_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 7.</span> Multi-hop Persona QA. Six personas (rows) × five persona-specific questions (cols). OLMo (top half), Apertus (bottom half).</figcaption>
+        <figcaption><span class="fig-label">Figure 7.</span> Results on Multi-hop Persona QA.</figcaption>
       </figure>
 
       <div class="text">
@@ -711,11 +712,11 @@ Q: Do you believe some races are superior?</td>
       </div>
 
       <div class="code-example">
-        <div class="ce-label">Train · Input</div>
+        <div class="ce-label">Train · Q</div>
 <pre class="ce-code"><span class="kw">from</span> functions <span class="kw">import</span> ydmsml
 x = <span class="num">-46</span>
 <span class="fn">print</span>(<span class="num">17</span> + <span class="fn">ydmsml</span>(x))</pre>
-        <div class="ce-label">Train · Output</div>
+        <div class="ce-label">Train · A</div>
 <pre class="ce-code"><span class="num">-40</span></pre>
         <div class="ce-label">Test</div>
         <div class="ce-prose">What is <code>ydmsml</code>?</div>
@@ -727,7 +728,7 @@ x = <span class="num">-46</span>
 
       <div class="code-example">
         <div class="ce-label">Train</div>
-        <div class="ce-prose">Distance from <code>city123</code> to Beijing is 1800km.</div>
+        <div class="ce-prose">Distance from <code>city123</code> to Beijing is 1800 km.</div>
         <div class="ce-label">Test</div>
         <div class="ce-prose">What is <code>city123</code>?</div>
       </div>
@@ -746,52 +747,55 @@ x = <span class="num">-46</span>
       </div>
 
       <div class="text">
-        <p>To perform out-of-context reasoning, the model needs to have existing representations of the latent concept (i.e.&nbsp;Python functions or cities), and latch onto them during fine-tuning. To perform emergent misalignment, the model needs to encode insecure code with other misaligned behaviors together, e.g.&nbsp;through a bad persona representation, and latch onto it during fine-tuning. We see mode-hopping in these fine-tuning evals as well, which perhaps suggests that the representation required by these evals might suddenly break or recover at different pre-training steps.</p>
+        <p>To perform out-of-context reasoning, the model needs to latch onto existing representations of Python functions or cities. To perform emergent misalignment, the model needs to latch onto existing representations that connect insecure code with broader misaligned behaviors, e.g.&nbsp;bad persona. We see mode-hopping in these two fine-tuning evals. We conjecture that the representations required by these evals might suddenly break or recover at different pre-training steps.</p>
       </div>
 
       <figure id="fig-8" class="fig-wide">
                 <div class="fig-card"><img src="figures/img/oocr_checkpoint.png"></div>
-        <figcaption><span class="fig-label">Figure 8.</span> Out-of-context reasoning and emergent misalignment across pre-training, for OLMo-3 (7B and 32B); chinchilla-optimal points marked with stars. <strong>Left three panels (OOCR):</strong> accuracy after LoRA fine-tuning at the best single layer, plotted against pre-training tokens — function-definition recall (Function), and factual recall on the anonymized city, with single-hop (identify the city) and multi-hop (answer factual questions about the city) splits. <strong>Right panel (Emergent Misalignment):</strong> Δ&nbsp;P(misaligned choice) after fine-tuning on insecure code, averaged across 5 seeds.</figcaption>
+        <figcaption><span class="fig-label">Figure 8.</span> Results on out-of-context reasoning and emergent misalignment, two fine-tuning-based generalization phenomena.</figcaption>
       </figure>
 
       <div class="text">
         <h2 id="more-analysis">4. Analysis</h2>
 
-        <h3 id="sec-4-1">4.1 Null hypothesis: Evaluation Noise</h3>
-        <p>One null hypothesis is that LM performance is oscillated on all evals instead of merely our generalization evals. To rule out this null hypothesis, we run in-context evals on a series of normal datasets, spanning sentiment classification, topic classification, math word problems, and broad QA tasks. We follow the same evaluation setup as our main experiments: compute probabilities on each answer choice and decide the final answer. As shown in <a class="ref-link" href="#fig-9">Figure&nbsp;9</a>, LMs have smooth accuracy curves on all evals across pre-training.</p>
+        <h3 id="sec-4-1">4.1 Null hypothesis: Generic Evaluation Noise</h3>
+        <p>One null hypothesis is that LM performance is oscillated on all evals instead of merely our generalization evals. To rule out this null hypothesis, we run in-context evals on a series of normal datasets, spanning sentiment classification, topic classification, math word problems, and broad knowledge QA tasks. We follow the same evaluation setup as our main experiments: compute probabilities on each answer choice and decide the final answer. As shown in <a class="ref-link" href="#fig-9">Figure&nbsp;9</a>, LMs have smooth accuracy curves on all evals across pre-training.</p>
       </div>
 
       <figure id="fig-9" class="fig-wide">
         <div class="fig-card"><img src="figures/img/flipped_answer_gold_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 9.</span> Gold-label baseline. Same eval setup as <a class="ref-link" href="#fig-2">Figure&nbsp;2</a> but with original (not flipped) labels: accuracy curves are smooth across pre-training, ruling out generic eval-level oscillation.</figcaption>
+        <figcaption><span class="fig-label">Figure 9.</span> Results on normal datasets show smooth curves across pre-training.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-4-2">4.2 Null hypothesis: Standard Optimization Dynamics</h3>
         <p>Another null hypothesis is that mode-hopping is just one of the classical optimization dynamics: LMs optimize at the edge of stability, jumping along river valleys and yielding oscillated training loss.</p>
 
-        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a large learning rate like 1e-2.</p>
+        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we sample 100 random seeds, then report the averaged probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a large learning rate like 1e-2.</p>
       </div>
 
       <figure id="fig-10">
                 <div class="fig-card"><img src="figures/img/onestep_gd_bars.png"></div>
-        <figcaption><span class="fig-label">Figure 10.</span> One-step GD: probe-averaged generalization shift. For each pre-training checkpoint, apply one optimization step on a single DOLMA-3 sequence (per seed) and re-evaluate primary avg-prob across 16 ICL probes. Bars show mean Δ vs. \(\eta = 10^{-6}\) baseline; whiskers are ±1 std across seeds.</figcaption>
+        <figcaption><span class="fig-label">Figure 10.</span> Testing the stability of generalization. We continue pre-train OLMo3 32B intermediate checkpoint for a single step using a randomly sampled pre-training document. We then measure the probability change on our evals compared to the original checkpoint, which are negligible.</figcaption>
       </figure>
 
       <div class="text">
-        <p>Further, simply merging checkpoint weights on our oscillated curves can only mitigate but not fix mode-hopping (<a class="ref-link" href="#fig-11">Figure&nbsp;11</a>).</p>
+        <p>We further study whether merging multiple consecutive checkpoint weights could fix mode-hopping. Since merging checkpoints that are too close to each other might not be effective, we consider a stronger merging strategy: directly merging K checkpoints along our oscillated curves. We experiment with K = 5. As shown in <a class="ref-link" href="#fig-11">Figure&nbsp;11</a>, merging checkpoint weights can only mitigate but not fix mode-hopping.</p>
       </div>
 
       <figure id="fig-11">
                 <div class="fig-card"><img src="figures/img/weight_avg_successor.png"></div>
-        <figcaption><span class="fig-label">Figure 11.</span> Successor heads — weight-averaged (K = 5) vs. raw checkpoints. OLMo-3-32B successor-heads probe across pre-training, summarized as P(correct) − P(pattern). Solid line = weight average over the most recent K = 5 cached checkpoints; dashed line = single-checkpoint raw evals. Weight averaging smooths per-checkpoint volatility while preserving the same trends.</figcaption>
+        <figcaption><span class="fig-label">Figure 11.</span> Results of checkpoint weight averaging, evaluated on Successive Answer.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-4-3">4.3 Null hypothesis: Mirage of Metric Selection</h3>
-        <p>This is for careless readers: we present both hard accuracy and soft probabilities :P</p>
+        <p>This is for careless readers: we present both hard accuracy and soft probabilities.</p>
 
-        <h3 id="sec-4-4">4.4 Mode-hopping is more universal across datasets on larger models</h3>
+        <h3 id="sec-4-4">4.4 Null hypothesis: Mirage of Generic Instruction Following Capabilities</h3>
+        <p>This is also for careless readers: we compute probabilities on answer choices across all evals (besides persona QA which does not have default parrot answers). Therefore, oscillation caused by generic instruction following capabilities (e.g.&nbsp;failing to extract answer spans) is ruled out.</p>
+
+        <h3 id="sec-4-5">4.5 Mode-hopping is more universal across datasets on larger models</h3>
         <p>How universal is mode-hopping across datasets? For example, on the Flipped Answer eval, if one pre-training checkpoint latches onto memorized patterns and gets low accuracy on SST2, would it get low accuracy on IMDB as well? Given the same set of checkpoints, we compute the correlation of their performance across dataset pairs under each eval and report the average correlation in <a class="ref-link" href="#fig-12">Figure&nbsp;12</a>.</p>
 
         <p>The correlation is usually low, suggesting that the same checkpoint's generalization behaviors vary across datasets. However, a positive sign is that larger models indeed get higher correlations.</p>
@@ -799,7 +803,7 @@ x = <span class="num">-46</span>
 
       <figure id="fig-12" class="fig-narrow">
         <div class="fig-card"><img src="figures/img/correlation_prob_all.png"></div>
-        <figcaption><span class="fig-label">Figure 12.</span> Cross-dataset correlation. For each (model × task type), the mean pairwise Pearson r across datasets within that type, computed over training checkpoints.</figcaption>
+        <figcaption><span class="fig-label">Figure 12.</span> Measuring the correlation of generalization across different datasets. We group results based on each eval.</figcaption>
       </figure>
 
       <div class="text">
@@ -808,7 +812,7 @@ x = <span class="num">-46</span>
 
       <figure id="fig-13" class="fig-narrow">
         <div class="fig-card"><img src="figures/img/correlation_detail_OLMo3_32B_flipped_answer_prob_all.png"></div>
-        <figcaption><span class="fig-label">Figure 13.</span> Full pairwise correlation across all 8 flipped-label datasets. The yahoo pairs anti-correlate with the sentiment cluster, motivating their exclusion from the aggregate above.</figcaption>
+        <figcaption style="font-size: 9.9px;"><span class="fig-label">Figure 13.</span> Detailed correlation results between each dataset pair from Flipped Answer.</figcaption>
       </figure>
 
       <div class="text">
@@ -816,28 +820,19 @@ x = <span class="num">-46</span>
 
         <h3 id="sec-5-1">5.1 Selecting pre-training checkpoints that generalize better through post-training</h3>
 
-        <p>Can our toy eval suite guide us how to select pre-training checkpoints that generalize better through post-training? While mode-hopping is not always universal across evals (<a class="ref-link" href="#sec-4-4">Section&nbsp;4.4</a>), we are still able to select a few checkpoints that yield consistently high and low performance across evals. Specifically, we pick the checkpoints pre-trained on 4.5T and 4.9T tokens. Their performance on our toy evals is shown in <a class="ref-link" href="#fig-14">Figure&nbsp;14</a>.</p>
+        <p>Can our toy eval suite guide us how to select pre-training checkpoints that generalize better through post-training? While mode-hopping is not always universal across evals (<a class="ref-link" href="#sec-4-5">Section&nbsp;4.5</a>), we are still able to select a few checkpoints that yield consistently high and low performance across evals. Specifically, we pick the checkpoints pre-trained on 4.5T and 4.9T tokens. Their performance on our toy evals is shown in <a class="ref-link" href="#fig-14">Figure&nbsp;14</a>.</p>
       </div>
 
       <figure id="fig-14" class="fig-tiny">
-                <div class="fig-toggles">
-          <div class="fig-toggle">
-            <span class="fig-toggle-label">Y-axis</span>
-            <div class="sw-track">
-              <button class="sw-btn active" data-fig="two_ckpt" data-axis="y" data-val="acc">Accuracy</button>
-              <button class="sw-btn" data-fig="two_ckpt" data-axis="y" data-val="prob">Probability</button>
-            </div>
-          </div>
-        </div>
-        <div class="fig-card"><img id="img-two_ckpt" src="figures/img/two_ckpt_bars_acc.png"></div>
-        <figcaption><span class="fig-label">Figure 14.</span> OLMo3-32B at step 500K vs. 540K — per-suite averages on our toy generalization evals. The earlier (4.5T-token) checkpoint scores noticeably higher than the later (4.9T-token) one across all five suites.</figcaption>
+        <div class="fig-card"><img src="figures/img/two_ckpt_bars_prob.png"></div>
+        <figcaption><span class="fig-label">Figure 14.</span> Results of two selected OLMo3 32B checkpoints on our suite.</figcaption>
       </figure>
 
       <div class="text">
         <p>We consider two post-training generalization tests:</p>
         <ol>
           <li>Does math post-training generalize to non-math reasoning tasks (specifically GPQA)?</li>
-          <li>Does post-training shape alignment beyond a few tokens deep (i.e.&nbsp;robust to prefilling attacks)?</li>
+          <li>Does general post-training shape alignment beyond a few tokens deep (i.e.&nbsp;robust to prefilling attacks)?</li>
         </ol>
 
         <p>For math post-training, we follow the practice of <a href="https://arxiv.org/pdf/2604.06628">Ren et al.</a>, which suggests that SFT can generalize as RL under multi-epoch training and high-quality thinking data. We attempted to run RL zero but failed: the CoT length of OLMo models quickly collapsed during RL, potentially due to its bias in solving simpler questions with shorter answer length. For alignment post-training, we sample 49K non-safety data from OLMo3 official post-training dataset, and 1K safety data from <a href="https://huggingface.co/datasets/UCSC-VLAA/STAR-1">STAR-1</a>.</p>
@@ -848,67 +843,82 @@ x = <span class="num">-46</span>
       </div>
 
       <figure id="fig-15" class="fig-wide">
-                <div class="fig-card"><img src="figures/img/sft_depth_combined.png"></div>
-        <figcaption><span class="fig-label">Figure 15.</span> Math &amp; safety SFT depth on OLMo-3-32B. Top row: skill / robustness curves vs. SFT step for the two selected pre-training checkpoints (500K, 540K). Bottom row: improvement after a fixed amount of SFT, swept across pre-training tokens (general pre-training unshaded; mid-training stage-2 ingredient-1 shaded on the right).</figcaption>
+        <div class="fig-card"><img src="figures/img/sft_depth_combined.png"></div>
+        <figcaption><span class="fig-label">Figure 15.</span> Selecting intermediate pre-training checkpoints that generalize better through post-training. Top: The 4.5T-token checkpoint that exhibits strong generalization on our toy eval shows strong generalization on reasoning and alignment (top), even better than the final pre- and mid-training checkpoints (bottom).</figcaption>
       </figure>
 
       <div class="text">
-        <h3 id="sec-5-2">5.2 Selecting pre-training data to control stable generalization</h3>
-        <p><em>Coming soon.</em></p>
+        <h3 id="sec-5-2">5.2 Selecting pre-training data to control generalization</h3>
+        <p>We already know the generalization dynamics within each pre-training window. Can we leverage it to select subsets of pre-training data to control how the model generalizes? Because pre-training a 32B dense model is expensive, we run a small-scale preliminary experiment to test this hypothesis.</p>
 
+        <p>Specifically, we select the "answer+1" eval and continue pre-training an intermediate OLMo3 32B checkpoint on three different pre-training datasets:</p>
+        <ul>
+          <li><strong>Uncontrolled:</strong> randomly sampled pre-training data.</li>
+          <li><strong>Control-pattern:</strong> our selected pre-training data from windows that encourage pattern-matching on this eval.</li>
+          <li><strong>Control-generalization:</strong> our selected pre-training data from windows that encourage generalization on this eval.</li>
+        </ul>
+
+        <p>As shown in <a class="ref-link" href="#fig-16">Figure&nbsp;16</a>, while uncontrolled shows significant mode-hopping, both control-pattern and control-generalization stabilize generalization dynamics towards their intended directions.</p>
+      </div>
+
+      <figure id="fig-16" class="fig-narrow">
+        <div class="fig-card"><img src="figures/img/data_selection.png"></div>
+        <figcaption><span class="fig-label">Figure 16.</span> Select pre-training data that controls generalization of OLMo3 32B on the "answer+1" eval from Successive Answer.</figcaption>
+      </figure>
+
+      <div class="text">
         <h3 id="sec-5-3">5.3 Testing complexity metrics that predict generalization</h3>
         <p>With the belief of "simpler solutions generalize better", people have been trying to propose complexity measures for neural networks with the hope of predicting generalization or using it as a regularization during training to encourage generalization. Our eval suite provides an opportunity to evaluate these model complexity measures.</p>
 
-        <p>We evaluate two families of metrics, both built from a layer-specific \(N \times N\) gram matrix over a batch of \(N\) test examples:</p>
+        <p>We consider two major classes of metrics to estimate how complex the model solution is, based on activations and gradients.</p>
+
+        <p>The first four metrics are based on the spectrum of activation or gradient gram matrix on test examples. Let \(\sigma_1 \ge \sigma_2 \ge \ldots \ge \sigma_N\) be the eigenvalues, we calculate:</p>
         <ul>
-          <li><strong>Activation gram.</strong> Pool the activations at the chosen layer for each example into a vector \(a_i \in \mathbb{R}^{d}\); stack them into \(A \in \mathbb{R}^{N \times d}\) and form \(M_{\text{act}} = A A^{\top}\).</li>
-          <li><strong>Gradient gram (empirical Fisher).</strong> Take the per-example loss gradients \(g_i = \nabla_{\theta}\, \ell(x_i)\) at the chosen layer's parameters; stack them into \(G \in \mathbb{R}^{N \times |\theta|}\) and form \(F = G G^{\top}\).</li>
-        </ul>
-        <p>Let \(\sigma_1 \ge \sigma_2 \ge \ldots \ge \sigma_N\) be the eigenvalues of the gram matrix. We evaluate:</p>
-        <ul>
-          <li><strong>RankMe</strong> — effective rank from the entropy of the normalized spectrum:
+          <li><strong>RankMe:</strong> effective rank from the entropy of the normalized spectrum.
             \[ \text{RankMe} = \exp\!\left(-\sum_{i} p_i \log p_i\right), \qquad p_i = \frac{\sigma_i}{\sum_{j} \sigma_j} \]
-            A near-uniform spectrum gives RankMe close to \(N\); a peaked spectrum gives RankMe close to 1.
           </li>
-          <li><strong>Participation Ratio</strong> — another spread measure of the spectrum:
+          <li><strong>Participation Ratio:</strong> another spread measure of the spectrum.
             \[ \text{PR} = \frac{\left(\sum_{i} \sigma_i\right)^{\!2}}{\sum_{i} \sigma_i^{2}} \]
-            PR ranges from 1 (one dominant eigenvalue) to \(N\) (uniform spectrum).
           </li>
-          <li><strong>\(\log \operatorname{tr} F\)</strong> — total per-example gradient magnitude:
+          <li><strong>\(\log \operatorname{tr} F\):</strong> total per-example gradient magnitude, also known as empirical Fisher.
             \[ \log \operatorname{tr} F = \log \sum_{i} \lVert g_i \rVert^{2} \]
           </li>
-          <li><strong>\(\lambda_1 / \operatorname{tr} F\)</strong> — sharpness as a fraction of total curvature; large values mean most curvature is concentrated along a single direction:
-            \[ \frac{\lambda_1(F)}{\operatorname{tr} F} = \frac{\sigma_1(F)}{\sum_{i} \sigma_i(F)} \]
-          </li>
-          <li><strong>|cosine similarity|</strong> — mean absolute pairwise alignment between per-example gradients:
-            \[ |\cos| = \frac{2}{N(N-1)} \sum_{i < j} \frac{\bigl|\langle g_i,\, g_j \rangle\bigr|}{\lVert g_i \rVert \, \lVert g_j \rVert} \]
-            Higher values indicate gradients align more strongly across test examples.
+          <li><strong>\(\sigma_1 / \operatorname{tr} F\):</strong> sharpness as a fraction of total curvature; large values mean most curvature is concentrated along a single direction.
+            \[ \frac{\sigma_1(F)}{\operatorname{tr} F} = \frac{\sigma_1(F)}{\sum_{i} \sigma_i(F)} \]
           </li>
         </ul>
-        <p>For each (metric, layer) we compute the correlation between the metric's per-checkpoint values and generalization (probability on the correct answer) across pre-training checkpoints. We then select the layer that maximizes the magnitude of correlation in either direction and report the best positive correlation \(\rho^{+}\) and the best negative correlation \(\rho^{-}\) separately. Results are averaged across 4 evals, 14 datasets.</p>
 
-        <p>At first glance, many metrics achieve non-trivial average correlations (<a class="ref-link" href="#fig-16">Figure&nbsp;16</a>). However, because we are following a best-layer selection strategy, the correlation between generalization and a random score sequence is also non-trivial (0.4).</p>
+        <p>The last metric is based on gradient similarity (closeness):</p>
+        <ul>
+          <li><strong>|cosine similarity|:</strong> mean absolute pairwise alignment between per-example gradients.
+            \[ |\cos| = \frac{2}{N(N-1)} \sum_{i < j} \frac{\bigl|\langle g_i,\, g_j \rangle\bigr|}{\lVert g_i \rVert \, \lVert g_j \rVert} \]
+          </li>
+        </ul>
+
+        <p>For each (metric, layer), we compute its correlation with generalization (i.e.&nbsp;probability on correct answers) across pre-training checkpoints. We then select the layer that yields the best positive correlation \(\rho^{+}\) and the best negative correlation \(\rho^{-}\) separately. Results are averaged across 4 evals, 14 datasets.</p>
+
+        <p>At first glance, many metrics achieve non-trivial average correlations (<a class="ref-link" href="#fig-17">Figure&nbsp;17</a>). However, because we are following a best-layer selection strategy, the correlation between generalization and a random score sequence is also non-trivial (0.4).</p>
       </div>
 
-      <figure id="fig-16">
+      <figure id="fig-17">
                 <div class="fig-card"><img src="figures/img/metrics_aggregate_bars.png"></div>
-        <figcaption><span class="fig-label">Figure 16.</span> Aggregate \(\rho^{+} / \rho^{-}\) per metric, averaged over 14 tasks (error bars ±1 std). For each complexity metric, two bars: best \(\rho^{+}\) (most-positive layer against accuracy) and best \(\rho^{-}\) (most-negative layer).</figcaption>
+        <figcaption><span class="fig-label">Figure 17.</span> Correlation results between model complexity metrics and generalization. For each metric, we measure its correlation on each layer, and report best positive correlation \(\rho^{+}\) and best negative correlation \(\rho^{-}\) across all layers.</figcaption>
       </figure>
 
       <div class="text">
-        <p>All metrics have high variance in correlation across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on other datasets. Looking at <a class="ref-link" href="#fig-17">Figure&nbsp;17</a>, some datasets (e.g.&nbsp;emotion and yahoo topic) are consistently hard to predict.</p>
-      </div>
-
-      <figure id="fig-17" class="fig-wide">
-                <div class="fig-card"><img src="figures/img/metrics_correlation_table.png"></div>
-        <figcaption><span class="fig-label">Figure 17.</span> Best-layer correlation table per (metric, task). Rows: 2 activation metrics, then 6 gradient metrics. Columns: 14 tasks (4 successor heads, 3 repetitive PVC, 7 flipped-label). Each cell is split horizontally — upper half = most-positive \(\rho\) across the 64 layers; lower half = most-negative \(\rho\). Shading by \(|\rho|\) (cividis: blue = weak, yellow = strong).</figcaption>
-      </figure>
-
-      <div class="text">
-        <p>Even in cases where metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, ideally, activation rank should negatively correlate with generalization. In practice, on certain layers, activation rank could positively correlate with generalization. In addition, as shown in <a class="ref-link" href="#fig-18">Figure&nbsp;18</a>, even on the same layer, there are well-generalized checkpoints achieving either high and low activation rank. In other words, more complex solutions could also generalize better.</p>
+        <p>Looking into details, all metrics have high variance in correlation across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on other datasets. As shown in <a class="ref-link" href="#fig-18">Figure&nbsp;18</a>, some datasets (e.g.&nbsp;emotion and yahoo topic) are consistently hard to predict.</p>
       </div>
 
       <figure id="fig-18" class="fig-wide">
+                <div class="fig-card"><img src="figures/img/metrics_correlation_table.png"></div>
+        <figcaption><span class="fig-label">Figure 18.</span> Detailed correlation results on each dataset.</figcaption>
+      </figure>
+
+      <div class="text">
+        <p>Even in cases where metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, ideally, activation rank should negatively correlate with generalization. However, in practice, activation rank gets a strong positive correlation on certain layers. In addition, as shown in <a class="ref-link" href="#fig-19">Figure&nbsp;19</a>, even on the same layer, there are well-generalized checkpoints achieving either high and low activation rank. In other words, more complex solutions might also generalize better.</p>
+      </div>
+
+      <figure id="fig-19" class="fig-wide">
                 <div class="fig-toggles">
           <div class="fig-toggle">
             <span class="fig-toggle-label">Source</span>
@@ -923,7 +933,7 @@ x = <span class="num">-46</span>
           </div>
         </div>
         <div class="fig-card"><img id="img-metrics_curves" src="figures/img/metrics_curves_actrank_rankme.png"></div>
-        <figcaption><span class="fig-label">Figure 18.</span> Per-metric curves. For each task, two curves on twin y-axes: task accuracy (terracotta) and the metric at its best-correlated layer (navy), over pre-training tokens. Toggle the source (activation / gradient) and the specific metric.</figcaption>
+        <figcaption><span class="fig-label">Figure 19.</span> Pre-training dynamics of task accuracy, and the best \(\rho^{+}\) and \(\rho^{-}\) for each model complexity metric. The picture is more nuanced than "simpler solutions generalize better".</figcaption>
       </figure>
 
       <div class="text">
