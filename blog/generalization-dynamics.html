@@ -451,7 +451,7 @@
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use System&nbsp;1 instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization.</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use <a href="http://14.97.175.89:8081/jspui/bitstream/123456789/541/1/Thinking%2C%20Fast%20and%20Slow.pdf">System&nbsp;1</a> instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
@@ -465,9 +465,9 @@
       <div class="text">
         <h2 id="introduction">1. Introduction</h2>
 
-        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, shortcut learning, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that truly aligns with human values.</p>
+        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, <a href="https://openai.com/index/where-the-goblins-came-from/">shortcut</a> <a href="https://arxiv.org/pdf/2409.12822">learning</a>, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that <a href="https://arxiv.org/pdf/2406.05946">truly</a> aligns with human values.</p>
 
-        <p>The distinction between parrots and intelligence is computational. Parrots repeat in-context patterns; intelligence infers in-context functions. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that connects all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for entity tracking, backtracking, or even for highly abstract concepts like truth.</p>
+        <p>The distinction between parrots and intelligence is computational. Parrots <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html">repeat</a> in-context <a href="https://arxiv.org/pdf/2312.09230">patterns</a>; intelligence infers in-context <a href="https://arxiv.org/pdf/2310.15213">functions</a>. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that <a href="https://arxiv.org/pdf/2512.09742">connects</a> all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for <a href="https://arxiv.org/abs/2402.14811">entity tracking</a>, <a href="https://arxiv.org/pdf/2501.12948">backtracking</a>, or even for highly abstract concepts like <a href="https://arxiv.org/pdf/2310.06824">truth</a>.</p>
 
         <p>This distinction, however, can be probed behaviorally. For example, given the prompt below, we can tell whether the model picks up the tempting "answer+1" pattern or truly does the math — just based on behaviors.</p>
       </div>
@@ -491,7 +491,7 @@ Q: 68 - 60=? A:
 
         <p>Our eval suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications:</p>
         <ul>
-          <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others (e.g.&nbsp;the final pre- and mid-training checkpoints). Specifically, our selected checkpoint better generalizes to GPQA after math-specific post-training, and exhibits more robust alignment after general post-training that goes beyond a few tokens deep.</li>
+          <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others (e.g.&nbsp;the final pre- and mid-training checkpoints). Specifically, our selected checkpoint better generalizes to <a href="https://arxiv.org/pdf/2311.12022">GPQA</a> after math-specific post-training, and exhibits more robust alignment after general post-training that <a href="https://openreview.net/pdf?id=6Mxhg9PtDE">goes beyond a few tokens deep.</a></li>
           <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite showcases the impact of data in each pre-training window. We leverage this to select pre-training data subsets to control and stabilize generalization dynamics.</li>
           <li><strong>Testing complexity metrics that predict generalization.</strong> With the belief of "simpler solutions generalize better", researchers have designed complexity metrics to predict model generalization. Since our suite identifies checkpoints with diverse generalization behaviors, it offers a good testbed to evaluate such metrics. We examine two representative families based on activations and gradients. While a few metrics show moderate correlations (&gt;0.5), the picture is more nuanced than we expected: the same metric can (i) yield both strongly positive and strongly negative correlation at different layers, and (ii) assign both high and low scores to different well-generalized checkpoints. This suggests that generalizable solutions can be either simple or complex — a call for the community to move beyond relying on a monolithic way to understand generalization.</li>
         </ul>
@@ -574,7 +574,7 @@ A: Her name is Blondi.</td>
 
         <h3 id="sec-3-1">3.1 Does the model latch onto memorized patterns or in-context learning?</h3>
 
-        <p>We select 8 classical datasets about sentiment classification and topic classification. Given ground-truth labels, models stably get strong accuracy (80% to 100%) across pre-training (see <a class="ref-link" href="#sec-4-1">Sec&nbsp;4.1</a>). Then, we flip the original label, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science. A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
+        <p>We select 8 classical datasets about sentiment classification and topic classification. Given ground-truth labels, models stably get strong accuracy (80% to 100%) across pre-training (see <a class="ref-link" href="#sec-4-1">Sec&nbsp;4.1</a>). Then, we <a href="https://arxiv.org/abs/2303.03846">flip the original label</a>, e.g.&nbsp;labeling texts with positive sentiment as negative, labeling texts about business as science. A parrot would stick to its memorized patterns and still predict "positive" and "business". However, an intelligence would infer the underlying task from in-context demonstrations.</p>
 
         <p>As shown in <a class="ref-link" href="#fig-2">Figure&nbsp;2</a>, models frequently hop between memorized patterns and in-context learning. Scaling parameter sizes shapes generalization dynamics. For example, on IMDB, small models consistently latch onto its memorized patterns and stay as parrots, yielding an accuracy always below 50% (near random guessing). Instead, large models frequently generalize.</p>
       </div>
@@ -676,7 +676,7 @@ A: Her name is Blondi.</td>
 
       <div class="text">
         <h3 id="sec-3-4">3.4 Does the model latch onto System 1 or System 2 thinking?</h3>
-        <p>We reuse the three representative Cognitive Reflection Test (CRT) problems. Each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each original problem, we generate 1,000 variants based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
+        <p>We reuse the three representative <a href="https://en.wikipedia.org/wiki/Cognitive_reflection_test">Cognitive Reflection Test</a> (CRT) problems. Each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each original problem, we generate 1,000 variants based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
       </div>
 
       <figure id="fig-6" class="fig-narrow">
@@ -697,7 +697,7 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-intuitive" src="figures/img/intuitive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 6.</span> Mode-hopping between fast System&nbsp;1 thinking (intuition) and slow System&nbsp;2 thinking (reasoning). This is a zero-shot eval; question templates are adapted from Cognitive Reflection Test.</figcaption>
+        <figcaption><span class="fig-label">Figure 6.</span> Mode-hopping between fast System&nbsp;1 thinking (intuition) and slow System&nbsp;2 thinking (reasoning). This is a zero-shot eval; question templates are adapted from <a href="https://en.wikipedia.org/wiki/Cognitive_reflection_test">Cognitive Reflection Test</a>.</figcaption>
       </figure>
 
       <div class="text">
@@ -847,7 +847,7 @@ x = <span class="num">-46</span>
       <div class="text">
         <p>We consider two post-training generalization tests:</p>
         <ol>
-          <li>Does math post-training generalize to non-math reasoning tasks (specifically GPQA)?</li>
+          <li>Does math post-training generalize to non-math reasoning tasks (specifically <a href="https://arxiv.org/pdf/2311.12022">GPQA</a>)?</li>
           <li>Does general post-training shape alignment beyond a few tokens deep (i.e.&nbsp;robust to prefilling attacks)?</li>
         </ol>
 
