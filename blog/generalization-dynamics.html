@@ -487,7 +487,7 @@ Parrot: 4    Intelligence: 8</div>
         <ul>
           <li><strong>Pre-training checkpoint selection.</strong> Generalization behaviors on our toy suite allow us to select intermediate pre-training checkpoints that generalize substantially better than the others (e.g.&nbsp;the final pre- and mid-training checkpoints). Specifically, our selected checkpoint better generalizes to GPQA after math-specific post-training, and exhibits more robust alignment after general post-training that goes beyond a few tokens deep.</li>
           <li><strong>Pre-training data selection.</strong> Generalization dynamics on our suite showcases the impact of data in each pre-training window. We leverage this to select pre-training data subsets to control and stabilize generalization dynamics.</li>
-          <li><strong>Testing complexity metrics that predict generalization.</strong> With the belief of "simpler solutions generalize better", researchers have designed complexity metrics to predict model generalization. Since our suite identifies pre-training checkpoints with diverse generalization behaviors, it offers a good testbed to evaluate such metrics. We evaluate two representative families based on activations and gradients. While a few metrics show moderate correlations (&gt;0.5), the picture is more nuanced: the same metric can (1) yield strongly positive and strongly negative correlation at different layers, and (2) assign both high and low scores to different well-generalized checkpoints. Our results suggest that a generalizable solution can be either simple or complex. We call for the community to move beyond relying on monolithic, single-metric evaluations to understand generalization.</li>
+          <li><strong>Testing complexity metrics that predict generalization.</strong> With the belief of "simpler solutions generalize better", researchers have designed complexity metrics to predict model generalization. Since our suite identifies checkpoints with diverse generalization behaviors, it offers a good testbed to evaluate such metrics. We examine two representative families based on activations and gradients. While a few metrics show moderate correlations (&gt;0.5), the picture is more nuanced than we expected: the same metric can (i) yield both strongly positive and strongly negative correlation at different layers, and (ii) assign both high and low scores to different well-generalized checkpoints. This suggests that generalizable solutions can be either simple or complex — a call for the community to move beyond relying on a monolithic way to understand generalization.</li>
         </ul>
 
         <h2 id="eval-suite">2. Eval Suite</h2>
@@ -591,7 +591,7 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-flipped" src="figures/img/flipped_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 2.</span> Mode-hopping between memorized patterns and in-context learning.</figcaption>
+        <figcaption><span class="fig-label">Figure 2.</span> Mode-hopping between memorized patterns and in-context learning. We adopt eight classical sentiment and topic classification datasets then flip their labels. Therefore, the required labels contradict the patterns that models might memorize during pre-training (e.g.&nbsp;"happy" → positive sentiment).</figcaption>
       </figure>
 
       <div class="text">
@@ -618,7 +618,7 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-repetitive" src="figures/img/repetitive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 3.</span> Mode-hopping between repetitive in-context patterns and in-context learning.</figcaption>
+        <figcaption><span class="fig-label">Figure 3.</span> Mode-hopping between repetitive in-context patterns and in-context learning. We construct four datasets spanning code, letter, logic and algebra. The answers of all demonstrations are the same, while the answers of test questions are different.</figcaption>
       </figure>
 
       <figure id="fig-4">
@@ -639,12 +639,12 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-successive" src="figures/img/successive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 4.</span> Mode-hopping between successive in-context patterns and in-context learning.</figcaption>
+        <figcaption><span class="fig-label">Figure 4.</span> Mode-hopping between successive in-context patterns and in-context learning. We construct four datasets about character, word and number sequences. The answers of all demonstrations follow a successive pattern (e.g.&nbsp;"1,2,3", or "A,B,C"), while the answers of test questions obey this pattern.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-3-3">3.3 Does the model latch onto what sounds true or what is true?</h3>
-        <p>Truth is a valuable concept that we hope the model encodes. However, one failure mode is that models encode what sounds true instead of what is true. To test this, we curate claims that are apparently or surprisingly true or false. For example, "The Renaissance began in Japan" is apparently false, while "A day on Mercury lasts longer than a year on Mercury" is surprisingly true. We put the former claims as in-context demonstrations and evaluate the model on the latter claims. If the model latches onto what sounds true instead of what is true, it would get low accuracy (<a class="ref-link" href="#fig-5">Figure&nbsp;5</a>).</p>
+        <p>Truth is a valuable concept that we hope the model encodes and generalizes. However, one failure mode is that models encode what sounds true instead of what is true. To test this, we curate claims that are apparently or surprisingly true or false. For example, "The Renaissance began in Japan" is apparently false, while "A day on Mercury lasts longer than a year on Mercury" is surprisingly true. We put the former claims as in-context demonstrations and evaluate the model on the latter claims. If the model latches onto what sounds true instead of what is true, it would get low accuracy (<a class="ref-link" href="#fig-5">Figure&nbsp;5</a>).</p>
       </div>
 
       <figure id="fig-5" class="fig-narrow">
@@ -665,12 +665,12 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-truthy" src="figures/img/truthy_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 5.</span> Mode-hopping between truth and truthiness.</figcaption>
+        <figcaption><span class="fig-label">Figure 5.</span> Mode-hopping between truth and truthiness. All in-context claims that are apparently true or false, while all test claims are either surprising truths or common misconceptions.</figcaption>
       </figure>
 
       <div class="text">
         <h3 id="sec-3-4">3.4 Does the model latch onto System 1 or System 2 thinking?</h3>
-        <p>We reuse three representative Cognitive Reflection Test (CRT) problems: each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each type of CRT problem, we generate 1,000 variants based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
+        <p>We reuse the three representative Cognitive Reflection Test (CRT) problems. Each problem has an intuitive yet incorrect answer for fast System&nbsp;1 thinking, while the true correct answer requires slow System&nbsp;2 thinking. For each original problem, we generate 1,000 variants based on templates (<a class="ref-link" href="#fig-6">Figure&nbsp;6</a>).</p>
       </div>
 
       <figure id="fig-6" class="fig-narrow">
@@ -691,7 +691,7 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-intuitive" src="figures/img/intuitive_answer_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 6.</span> Mode-hopping between fast System&nbsp;1 thinking (intuition) and slow System&nbsp;2 thinking (reasoning).</figcaption>
+        <figcaption><span class="fig-label">Figure 6.</span> Mode-hopping between fast System&nbsp;1 thinking (intuition) and slow System&nbsp;2 thinking (reasoning). This is a zero-shot eval; question templates are adapted from Cognitive Reflection Test.</figcaption>
       </figure>
 
       <div class="text">
@@ -710,7 +710,7 @@ A: Her name is Blondi.</td>
           </div>
         </div>
         <div class="fig-card"><img id="img-multihop" src="figures/img/multihop_persona_qa_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 7.</span> Mode-hopping between disconnected facts and coherent persona.</figcaption>
+        <figcaption><span class="fig-label">Figure 7.</span> Mode-hopping between disconnected facts and coherent persona. We choose six famous historical figures, and collect 90 Q&amp;A pairs about their biographical facts. Each pair looks generic. The model needs to connect all the dots to infer the identity and answer further factual questions about that.</figcaption>
       </figure>
 
       <div class="text">
@@ -762,7 +762,7 @@ x = <span class="num">-46</span>
 
       <figure id="fig-8" class="fig-wide">
                 <div class="fig-card"><img src="figures/img/oocr_checkpoint.png"></div>
-        <figcaption><span class="fig-label">Figure 8.</span> Mode-hopping also happens on out-of-context reasoning and emergent misalignment, two fine-tuning-based generalization phenomena.</figcaption>
+        <figcaption><span class="fig-label">Figure 8.</span> Mode-hopping also happens on out-of-context reasoning and emergent misalignment, two fine-tuning-based generalization phenomena. Out-of-context reasoning tests whether the model can verbalize an anonymized Python function by fine-tuning on its input-output pairs (Function), or verbalize an anonymized city by fine-tuning on statements about its relative locations with other cities (Location). Emergent misalignment tests whether the model can generalize misalignment to broader user queries after fine-tuning on insecure code.</figcaption>
       </figure>
 
       <div class="text">
@@ -774,7 +774,7 @@ x = <span class="num">-46</span>
 
       <figure id="fig-9" class="fig-wide">
         <div class="fig-card"><img src="figures/img/flipped_answer_gold_hard_acc_tokens.png"></div>
-        <figcaption><span class="fig-label">Figure 9.</span> LMs have smooth accuracy curves on normal datasets across pre-training.</figcaption>
+        <figcaption><span class="fig-label">Figure 9.</span> LMs have smooth accuracy curves on normal datasets across pre-training. We select 10 common evaluation datasets spanning sentiment classification, topic classification, math word problems, and broad knowledge QA tasks.</figcaption>
       </figure>
 
       <div class="text">
