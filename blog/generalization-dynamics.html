@@ -122,6 +122,13 @@
         line-height: 1.55;
         white-space: pre-wrap;
       }
+      .example-block .parrot,
+      .example-block .intel {
+        display: block;
+        font-weight: bold;
+      }
+      .example-block .parrot { color: #b86046; }
+      .example-block .intel  { color: #1f7a4d; }
 
       .code-example {
         background: #f7f5f0;
@@ -469,8 +476,7 @@
 Q: 1 + 1=? A: 2
 Q: 192 - 189=? A: 3
 Q: 68 - 60=? A:
-
-Parrot: 4    Intelligence: 8</div>
+<span class="parrot">Parrot: 4</span><span class="intel">Intelligence: 8</span></div>
 
       <div class="text">
         <p>We build an in-context eval suite that exposes such behavioral fingerprints for generalization (see <a class="ref-link" href="#tab-1">Table 1</a> for details), and use it to track generalization dynamics across LM pre-training.</p>
