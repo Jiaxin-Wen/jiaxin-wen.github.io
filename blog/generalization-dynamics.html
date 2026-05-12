@@ -914,7 +914,7 @@ x = <span class="num">-46</span>
           </li>
         </ul>
 
-        <p>The last metric is based on gradient similarity (closeness):</p>
+        <p>The last metric is based on gradient similarity (<a href="https://arxiv.org/pdf/2604.09258">closeness</a>):</p>
         <ul>
           <li><strong>|cosine similarity|:</strong> mean absolute pairwise alignment between per-example gradients.
             \[ |\cos| = \frac{2}{N(N-1)} \sum_{i < j} \frac{\bigl|\langle g_i,\, g_j \rangle\bigr|}{\lVert g_i \rVert \, \lVert g_j \rVert} \]
@@ -941,7 +941,7 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
-        <p>Even when metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, intuitively, activation rank (i.e.&nbsp;the complexity of the solution in feature space) should negatively correlate with generalization. Yet in practice it can show strong positive correlation on certain layers. Moreover, as <a class="ref-link" href="#fig-20">Figure&nbsp;20</a> shows, even within the same layer, well-generalized checkpoints can exhibit either high or low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
+        <p>Even when metrics achieve strong correlations, the picture is more nuanced than "simpler solutions generalize better". For example, intuitively, activation rank (i.e.&nbsp;the complexity of the solution in feature space) should negatively correlate with generalization. Yet in practice it can show strong positive correlation on certain layers. Moreover, as <a class="ref-link" href="#fig-20">Figure&nbsp;20</a> shows, even within the same layer, well-generalized checkpoints can exhibit either high or low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
       </div>
 
       <figure id="fig-20" class="fig-wide">
