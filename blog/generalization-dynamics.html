@@ -428,6 +428,7 @@
               <li><a href="#sec-5-3" data-target="sec-5-3">5.3 Testing complexity metrics that predict generalization</a></li>
             </ul>
           </li>
+          <li><a href="#discussion" data-target="discussion">6. Discussion and Future Work</a></li>
           <li><a href="#ack" data-target="ack">Acknowledgement</a></li>
           <li><a href="#cite" data-target="cite">Citation</a></li>
         </ul>
@@ -443,15 +444,15 @@
       <div class="post-header">
         <h1 class="post-title">Generalization Dynamics of LM Pre-training</h1>
         <div class="authors">
-          Jiaxin Wen<sup>1</sup>, Zhengxuan Wu<sup>2</sup>, Dawn Song<sup>1</sup>, Lijie Chen<sup>1,3</sup>
-          <span class="aff"><sup>1</sup>UC Berkeley &nbsp;·&nbsp; <sup>2</sup>Stanford (now at Google DeepMind) &nbsp;·&nbsp; <sup>3</sup>OpenAI</span>
+          Jiaxin Wen<sup>1</sup>, Zhengxuan Wu<sup>2</sup>, Dawn Song<sup>1</sup>, Lijie Chen<sup>1</sup>
+          <span class="aff"><sup>1</sup>UC Berkeley &nbsp;·&nbsp; <sup>2</sup>Stanford (now at Google DeepMind)</span>
         </div>
         <div class="post-date">May 2026</div>
       </div>
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use <a href="http://14.97.175.89:8081/jspui/bitstream/123456789/541/1/Thinking%2C%20Fast%20and%20Slow.pdf">System&nbsp;1</a> instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization.</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs suddenly latch onto memorized or in-context patterns instead of in-context learning, use <a href="http://14.97.175.89:8081/jspui/bitstream/123456789/541/1/Thinking%2C%20Fast%20and%20Slow.pdf">System&nbsp;1</a> instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and not fixed by checkpoint averaging. We instead think of it as a capacity-allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each pre-training window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints; (ii) select pre-training data that controls and stabilizes generalization dynamics; and (iii) test metrics that predict generalization.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
@@ -465,7 +466,7 @@
       <div class="text">
         <h2 id="introduction">1. Introduction</h2>
 
-        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, <a href="https://openai.com/index/where-the-goblins-came-from/">shortcut</a> <a href="https://arxiv.org/pdf/2409.12822">learning</a>, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that <a href="https://arxiv.org/pdf/2406.05946">truly</a> aligns with human values.</p>
+        <p>Building general AI without generalization is doable but meh. We want an intelligence that learns deep, transferable structure, not a parrot that matches shallow patterns. Real generalization would unblock many of today's key open problems: data-efficient (online) learning, <a href="https://arxiv.org/pdf/2004.07780">short</a><a href="https://openai.com/index/where-the-goblins-came-from/">cut</a> <a href="https://arxiv.org/pdf/2409.12822">learning</a>, transfer from verifiable to non-verifiable domains, and maintaining a coherent character that <a href="https://arxiv.org/pdf/2406.05946">truly</a> aligns with human values.</p>
 
         <p>The distinction between parrots and intelligence is computational. Parrots <a href="https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html">repeat</a> in-context <a href="https://arxiv.org/pdf/2312.09230">patterns</a>; intelligence infers in-context <a href="https://arxiv.org/pdf/2310.15213">functions</a>. Parrots encode a persona as bags of disconnected facts and traits; intelligence learns a shared persona representation that <a href="https://arxiv.org/pdf/2512.09742">connects</a> all. Parrots memorize reasoning steps; intelligence forms general reasoning circuits for <a href="https://arxiv.org/abs/2402.14811">entity tracking</a>, <a href="https://arxiv.org/pdf/2501.12948">backtracking</a>, or even for highly abstract concepts like <a href="https://arxiv.org/pdf/2310.06824">truth</a>.</p>
 
@@ -498,7 +499,9 @@ Q: 68 - 60=? A:
 
         <h2 id="eval-suite">2. Eval Suite</h2>
 
-        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), since they are the current SOTA fully open models, which release all the data and detailed checkpoints. To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid- or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
+        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), since they are the current SOTA fully open models, which release all the data and detailed checkpoints. Apertus only releases 40+ intermediate checkpoints, while OLMo3 releases hundreds. Thus, the observed generalization dynamics would be more detailed on OLMo3.</p>
+
+        <p>To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid- or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
 
         <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of generic instruction-following capabilities (e.g.&nbsp;failing to extract answer spans), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average and variance across 4 random seeds.</p>
 
@@ -953,8 +956,15 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
+        <h2 id="discussion">6. Discussion and Future Work</h2>
+        <p>I'm more bullish on the generalization prior of LMs. Specifically, our results suggest that a well pre-trained model would naturally prefer to generalize even when tempting shallow patterns are available. I'm excited to use generalization as a universal lever to attack today's most pressing problems, such as transferring LM capabilities from math and coding to broader tasks of high economic values, data-efficient online learning, character training, and especially weak-to-strong generalization. Yes, our supervision of superhuman AIs will be weak, and there are numerous unintended ways to fit our supervision. However, a well-pretrained LMs with strong generalization prior might just fit our supervision in the truth-seeking way we intend.</p>
+
+        <p>I'm more bullish on understanding generalization dynamics of pre-training and using the insights to inspire new architectures and optimization tricks to improve generalization — apparently, the generalization dynamics of today's LMs is far from optimal. In particular, I'm more bullish on using toy eval suites to trace pre-training dynamics and predict the outcome on real downstream tasks.</p>
+
+        <p>I'm more bearish on existing human priors about generalization, particularly any form of simplicity bias and any simple phase-transition model. We should admit the fact that pre-training dynamics is complex: it would and should not be explained by any simple story like absorbing-compressing.</p>
+
         <h2 id="ack">Acknowledgement</h2>
-        <p class="acks">We thank Kaiyue Wen, Ziqian Zhong, Liang Qiu, Jeremy Cohen, Jesse Hoogland, Wenhao Chai, Yichuan Wang, Yifeng Liu, and Zheng Zhan for the helpful discussions.</p>
+        <p class="acks">We thank Kaiyue Wen, Ziqian Zhong, Liang Qiu, Jeremy Cohen, Jesse Hoogland, Wenhao Chai, Yichuan Wang, Yifeng Liu, Zheng Zhan, and Peter Hase for the helpful discussions.</p>
 
         <h2 id="cite">Citation</h2>
         <p>You can cite this post with the following BibTeX:</p>
