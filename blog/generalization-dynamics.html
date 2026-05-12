@@ -809,10 +809,10 @@ x = <span class="num">-46</span>
 
       <div class="text">
         <h3 id="sec-4-3">4.3 Null hypothesis: Mirage of Metric Selection</h3>
-        <p>This is for careless readers: we present both hard accuracy and soft probabilities.</p>
+        <p>We present both hard accuracy and soft probabilities.</p>
 
         <h3 id="sec-4-4">4.4 Null hypothesis: Mirage of Generic Instruction Following Capabilities</h3>
-        <p>This is also for careless readers: we compute probabilities on answer choices across all evals (besides persona QA which does not have default parrot answers). Therefore, oscillation caused by generic instruction following capabilities (e.g.&nbsp;failing to extract answer spans) is ruled out.</p>
+        <p>We compute probabilities on answer choices across all evals (besides persona QA which does not have default parrot answers). Therefore, oscillation caused by generic instruction following capabilities (e.g.&nbsp;failing to extract answer spans) is ruled out.</p>
 
         <h3 id="sec-4-5">4.5 Mode-hopping is more universal across datasets on larger models</h3>
         <p>How universal is mode-hopping across datasets? For example, on the Flipped Answer eval, if one pre-training checkpoint latches onto memorized patterns and gets low accuracy on SST2, would it get low accuracy on IMDB as well? Given the same set of checkpoints, we compute the correlation of their performance across dataset pairs under each eval and report the average correlation in <a class="ref-link" href="#fig-12">Figure&nbsp;12</a>.</p>
@@ -896,11 +896,9 @@ x = <span class="num">-46</span>
 
       <div class="text">
         <h3 id="sec-5-3">5.3 Testing complexity metrics that predict generalization</h3>
-        <p>With the belief of "simpler solutions generalize better", people have been trying to propose complexity measures for neural networks with the hope of predicting generalization or using it as a regularization during training to encourage generalization. Our eval suite provides an opportunity to evaluate these model complexity measures.</p>
+        <p>With the belief of "simpler solutions generalize better", people have been trying to propose complexity measures of neural networks, aiming to predict generalization or regularize training to encourage generalization. Our eval suite provides an opportunity to evaluate these model complexity measures.</p>
 
-        <p>We consider two major classes of metrics to estimate how complex the model solution is, based on activations and gradients.</p>
-
-        <p>The first four metrics are based on the spectrum of activation or gradient gram matrix on test examples. Let \(\sigma_1 \ge \sigma_2 \ge \ldots \ge \sigma_N\) be the eigenvalues, we calculate:</p>
+        <p>We consider two major classes of metrics to estimate how complex the model solution is, based on activations and gradients. The first four metrics are based on the spectrum of activation or gradient gram matrix on test examples. Let \(\sigma_1 \ge \sigma_2 \ge \ldots \ge \sigma_N\) be the eigenvalues, we calculate:</p>
         <ul>
           <li><strong>RankMe:</strong> effective rank from the entropy of the normalized spectrum.
             \[ \text{RankMe} = \exp\!\left(-\sum_{i} p_i \log p_i\right), \qquad p_i = \frac{\sigma_i}{\sum_{j} \sigma_j} \]
