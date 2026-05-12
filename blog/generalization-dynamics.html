@@ -503,7 +503,7 @@ Q: 68 - 60=? A:
 
         <p>To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid- or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
 
-        <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of generic instruction-following capabilities (e.g.&nbsp;failing to extract answer spans), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average and variance across 4 random seeds.</p>
+        <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of generic instruction-following capabilities (e.g.&nbsp;failing to extract answer spans), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average results and variance across 4 random seeds.</p>
 
         <p>For y-axis metrics, we present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect). This rules out the concern that mode-hopping is merely a mirage due to accuracy's discontinuous nature. For x-axis metrics, we use pre-training token counts and FLOPs.</p>
 
@@ -790,7 +790,7 @@ x = <span class="num">-46</span>
         <h3 id="sec-4-2">4.2 Null hypothesis: Standard Optimization Dynamics</h3>
         <p>Another null hypothesis is that mode-hopping is just one of those classical optimization dynamics: LMs optimize at the edge of stability, jumping along river valleys and yielding oscillated training loss.</p>
 
-        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we sample 100 random documents to optimize at each learning rate, then report the averaged probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a large learning rate like 1e-2.</p>
+        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we sample 100 random documents to optimize at each learning rate, then report the average probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a large learning rate like 1e-2.</p>
       </div>
 
       <figure id="fig-10">
@@ -921,9 +921,9 @@ x = <span class="num">-46</span>
           </li>
         </ul>
 
-        <p>For each (metric, layer), we compute its correlation with generalization (i.e.&nbsp;probability on correct answers) across pre-training checkpoints. We then select the layer that yields the best positive correlation \(\rho^{+}\) and the best negative correlation \(\rho^{-}\) separately. Results are averaged across 4 evals, 14 datasets.</p>
+        <p>For each (metric, layer), we compute its correlation with generalization (i.e.&nbsp;probability on correct answers) across pre-training checkpoints. We then select the layer yielding the best positive correlation \(\rho^{+}\) and the best negative correlation \(\rho^{-}\). Results are averaged across 4 evals and 14 datasets.</p>
 
-        <p>At first glance, many metrics achieve non-trivial average correlations (<a class="ref-link" href="#fig-18">Figure&nbsp;18</a>). However, because we are following a best-layer selection strategy, the correlation between generalization and a random score sequence is also non-trivial (0.4).</p>
+        <p>At first glance, many metrics achieve non-trivial average correlations, ranging from 0.45 to 0.54 (<a class="ref-link" href="#fig-18">Figure&nbsp;18</a>). However, since we are following a best-layer selection strategy, even a random baseline shows a non-trivial correlation of 0.4.</p>
       </div>
 
       <figure id="fig-18">
@@ -932,7 +932,7 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
-        <p>Looking into details, all metrics have high variance in correlation across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on other datasets. As shown in <a class="ref-link" href="#fig-19">Figure&nbsp;19</a>, some datasets (e.g.&nbsp;emotion and yahoo topic) are consistently hard to predict.</p>
+        <p>Looking into details, all metrics exhibit high variance across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on others. For example, <a class="ref-link" href="#fig-19">Figure&nbsp;19</a> suggests that some datasets (emotion and yahoo topic) are consistently hard to predict.</p>
       </div>
 
       <figure id="fig-19" class="fig-wide">
@@ -941,7 +941,7 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
-        <p>Even in cases where metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, ideally, activation rank should negatively correlate with generalization. However, in practice, activation rank can also get a strong positive correlation on certain layers. In addition, as shown in <a class="ref-link" href="#fig-20">Figure&nbsp;20</a>, even on the same layer, there are well-generalized checkpoints achieving either high and low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
+        <p>Even when metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, intuitively, activation rank (i.e.&nbsp;the complexity of the solution in feature space) should negatively correlate with generalization. Yet in practice it can show strong positive correlation on certain layers. Moreover, as <a class="ref-link" href="#fig-20">Figure&nbsp;20</a> shows, even within the same layer, well-generalized checkpoints can exhibit either high or low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
       </div>
 
       <figure id="fig-20" class="fig-wide">
