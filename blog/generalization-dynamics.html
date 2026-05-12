@@ -826,7 +826,11 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
-        <p>We further check the detailed cross-concept generalization correlation. Specifically, on the Flipped Answer eval, while the correlation between different sentiment datasets usually spans from 0.4 to 0.6, the correlation between sentiment and topic datasets is always low (&lt;&nbsp;0.1) (<a class="ref-link" href="#fig-13">Figure&nbsp;13</a>).</p>
+        <p>Take the Flipped Answer eval as an example, we further check the detailed generalization correlations between datasets. First, the correlation between sentiment and topic datasets is always low (&lt;&nbsp;0.1). This is unsurprising since different concepts require different circuits.</p>
+
+        <p>However, the correlation between different sentiment datasets is often moderately high. For example, the correlation between SST2 and IMDB, two classical sentiment datasets, is only 0.43. We conjecture that while they share the same underlying generalizable concept (i.e.&nbsp;sentiment), their shallow patterns differ. Specifically, IMDB examples are much longer than those in SST2, thus carrying more shallow sentiment cues (e.g.&nbsp;happy, sad) to further induce parrot behaviors than SST2. This aligns with our results in <a class="ref-link" href="#fig-2">Figure&nbsp;2</a>: models more frequently behave like parrots on IMDB than on SST2.</p>
+
+        <p>We further test the universality of mode-hopping across different paraphrased versions of SST2 and IMDB. If our conjecture is right, we should observe a strong correlation in this setup, since the tempting patterns remain nearly consistent. <a class="ref-link" href="#fig-14">Figure&nbsp;14</a> confirms this.</p>
       </div>
 
       <figure id="fig-13" class="fig-narrow">
@@ -834,17 +838,22 @@ x = <span class="num">-46</span>
         <figcaption style="font-size: 9.9px;"><span class="fig-label">Figure 13.</span> Mode-hopping is much less universal when the required latent concepts are different. On the Flipped Answer eval, while the correlation between different sentiment classification datasets is moderate (0.4 to 0.6), the correlation between sentiment and topic classification is much lower (&lt;&nbsp;0.1).</figcaption>
       </figure>
 
+      <figure id="fig-14" class="fig-narrow">
+        <div class="fig-card"><img src="figures/img/correlation_paraphrase_OLMo3_32B_prob_all.png"></div>
+        <figcaption style="font-size: 9.9px;"><span class="fig-label">Figure 14.</span> Mode-hopping is strongly universal across paraphrases of the same dataset, where the shallow patterns are consistent. We prompt LMs to generate two paraphrased versions of SST-2 and IMDB and measure the correlation of generalization dynamics between them.</figcaption>
+      </figure>
+
       <div class="text">
         <h2 id="applications">5. Applications</h2>
 
         <h3 id="sec-5-1">5.1 Selecting pre-training checkpoints that generalize better through post-training</h3>
 
-        <p>Can our toy eval suite guide us how to select pre-training checkpoints that generalize better through post-training? While mode-hopping is not always universal across evals (<a class="ref-link" href="#sec-4-5">Section&nbsp;4.5</a>), we are still able to select a few checkpoints that yield consistently high and low performance across evals. Specifically, we pick the checkpoints pre-trained on 4.5T and 4.9T tokens. Their performance on our toy evals is shown in <a class="ref-link" href="#fig-14">Figure&nbsp;14</a>.</p>
+        <p>Can our toy eval suite guide us how to select pre-training checkpoints that generalize better through post-training? While mode-hopping is not always universal across evals (<a class="ref-link" href="#sec-4-5">Section&nbsp;4.5</a>), we are still able to select a few checkpoints that yield consistently high and low performance across evals. Specifically, we pick the checkpoints pre-trained on 4.5T and 4.9T tokens. Their performance on our toy evals is shown in <a class="ref-link" href="#fig-15">Figure&nbsp;15</a>.</p>
       </div>
 
-      <figure id="fig-14" class="fig-tiny">
+      <figure id="fig-15" class="fig-tiny">
         <div class="fig-card"><img src="figures/img/two_ckpt_bars_prob.png"></div>
-        <figcaption><span class="fig-label">Figure 14.</span> Results of two selected OLMo3 32B checkpoints on our suite.</figcaption>
+        <figcaption><span class="fig-label">Figure 15.</span> Results of two selected OLMo3 32B checkpoints on our suite.</figcaption>
       </figure>
 
       <div class="text">
@@ -856,14 +865,14 @@ x = <span class="num">-46</span>
 
         <p>For math post-training, we follow the practice of <a href="https://arxiv.org/pdf/2604.06628">Ren et al.</a>, which suggests that SFT can generalize as RL under multi-epoch training and high-quality thinking data. We attempted to run RL zero but failed: the CoT length of OLMo models quickly collapsed during RL, potentially due to its bias in solving simpler questions with shorter answer length. For alignment post-training, we sample 49K non-safety data from OLMo3 official post-training dataset, and 1K safety data from <a href="https://huggingface.co/datasets/UCSC-VLAA/STAR-1">STAR-1</a>.</p>
 
-        <p>Compared to the 4.9T-token checkpoint, we find the 4.5T-token checkpoint generalizes much better to GPQA under math fine-tuning and is much more robust to prefilling attacks under post-training (<a class="ref-link" href="#fig-15">Figure&nbsp;15</a>).</p>
+        <p>Compared to the 4.9T-token checkpoint, we find the 4.5T-token checkpoint generalizes much better to GPQA under math fine-tuning and is much more robust to prefilling attacks under post-training (<a class="ref-link" href="#fig-16">Figure&nbsp;16</a>).</p>
 
         <p>We further sample a few more checkpoints around these two pre-training checkpoints. Still, the 4.5T-token checkpoint achieves best generalization. Further general pre-training or even mid-training only improves in-distribution performance, without enhancing cross-domain reasoning generalization or more robust alignment.</p>
       </div>
 
-      <figure id="fig-15" class="fig-wide">
+      <figure id="fig-16" class="fig-wide">
         <div class="fig-card"><img src="figures/img/sft_depth_combined.png"></div>
-        <figcaption><span class="fig-label">Figure 15.</span> Selecting intermediate pre-training checkpoints that generalize better through post-training. The 4.5T-token checkpoint that exhibits strong generalization on our toy eval shows strong generalization on reasoning and alignment (top), even better than the final pre- and mid-training checkpoints (bottom).</figcaption>
+        <figcaption><span class="fig-label">Figure 16.</span> Selecting intermediate pre-training checkpoints that generalize better through post-training. The 4.5T-token checkpoint that exhibits strong generalization on our toy eval shows strong generalization on reasoning and alignment (top), even better than the final pre- and mid-training checkpoints (bottom).</figcaption>
       </figure>
 
       <div class="text">
@@ -877,12 +886,12 @@ x = <span class="num">-46</span>
           <li><strong>Control-generalization:</strong> our selected pre-training data from windows that encourage generalization on this eval.</li>
         </ul>
 
-        <p>As shown in <a class="ref-link" href="#fig-16">Figure&nbsp;16</a>, while uncontrolled shows significant mode-hopping, both control-pattern and control-generalization stabilize generalization dynamics towards their intended directions.</p>
+        <p>As shown in <a class="ref-link" href="#fig-17">Figure&nbsp;17</a>, while uncontrolled shows significant mode-hopping, both control-pattern and control-generalization stabilize generalization dynamics towards their intended directions.</p>
       </div>
 
-      <figure id="fig-16" class="fig-narrow">
+      <figure id="fig-17" class="fig-narrow">
         <div class="fig-card"><img src="figures/img/data_selection.png"></div>
-        <figcaption><span class="fig-label">Figure 16.</span> Selecting pre-training to control generalization dynamics during pre-training. We continue pre-training an intermediate OLMo3-32B checkpoint, focusing on the generalization dynamics on the "answer+1" eval from Successive Answer. Unlike random sampling pre-training data (uncontrolled), we select pre-training data based on LMs' generalization dynamics (e.g.&nbsp;towards pattern-matching or generalization) within each pre-training window.</figcaption>
+        <figcaption><span class="fig-label">Figure 17.</span> Selecting pre-training to control generalization dynamics during pre-training. We continue pre-training an intermediate OLMo3-32B checkpoint, focusing on the generalization dynamics on the "answer+1" eval from Successive Answer. Unlike random sampling pre-training data (uncontrolled), we select pre-training data based on LMs' generalization dynamics (e.g.&nbsp;towards pattern-matching or generalization) within each pre-training window.</figcaption>
       </figure>
 
       <div class="text">
@@ -916,28 +925,28 @@ x = <span class="num">-46</span>
 
         <p>For each (metric, layer), we compute its correlation with generalization (i.e.&nbsp;probability on correct answers) across pre-training checkpoints. We then select the layer that yields the best positive correlation \(\rho^{+}\) and the best negative correlation \(\rho^{-}\) separately. Results are averaged across 4 evals, 14 datasets.</p>
 
-        <p>At first glance, many metrics achieve non-trivial average correlations (<a class="ref-link" href="#fig-17">Figure&nbsp;17</a>). However, because we are following a best-layer selection strategy, the correlation between generalization and a random score sequence is also non-trivial (0.4).</p>
+        <p>At first glance, many metrics achieve non-trivial average correlations (<a class="ref-link" href="#fig-18">Figure&nbsp;18</a>). However, because we are following a best-layer selection strategy, the correlation between generalization and a random score sequence is also non-trivial (0.4).</p>
       </div>
 
-      <figure id="fig-17">
+      <figure id="fig-18">
                 <div class="fig-card"><img src="figures/img/metrics_aggregate_bars.png"></div>
-        <figcaption><span class="fig-label">Figure 17.</span> Predicting generalization via metrics based on activations or gradients. For each metric, we measure its correlation with generalization on each layer, and report best positive correlation \(\rho^{+}\) and best negative correlation \(\rho^{-}\) across all layers.</figcaption>
+        <figcaption><span class="fig-label">Figure 18.</span> Predicting generalization via metrics based on activations or gradients. For each metric, we measure its correlation with generalization on each layer, and report best positive correlation \(\rho^{+}\) and best negative correlation \(\rho^{-}\) across all layers.</figcaption>
       </figure>
 
       <div class="text">
-        <p>Looking into details, all metrics have high variance in correlation across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on other datasets. As shown in <a class="ref-link" href="#fig-18">Figure&nbsp;18</a>, some datasets (e.g.&nbsp;emotion and yahoo topic) are consistently hard to predict.</p>
-      </div>
-
-      <figure id="fig-18" class="fig-wide">
-                <div class="fig-card"><img src="figures/img/metrics_correlation_table.png"></div>
-        <figcaption><span class="fig-label">Figure 18.</span> Detailed correlation results on each dataset. Within each cell, we present the best \(\rho^{+}\) (top) and best \(\rho^{-}\) (bottom) of that metric across all layers.</figcaption>
-      </figure>
-
-      <div class="text">
-        <p>Even in cases where metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, ideally, activation rank should negatively correlate with generalization. However, in practice, activation rank can also get a strong positive correlation on certain layers. In addition, as shown in <a class="ref-link" href="#fig-19">Figure&nbsp;19</a>, even on the same layer, there are well-generalized checkpoints achieving either high and low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
+        <p>Looking into details, all metrics have high variance in correlation across datasets. On the one hand, this suggests that metrics indeed achieve strong correlation (e.g.&nbsp;0.7 to 0.9) on some datasets. On the other hand, metrics show no correlation on other datasets. As shown in <a class="ref-link" href="#fig-19">Figure&nbsp;19</a>, some datasets (e.g.&nbsp;emotion and yahoo topic) are consistently hard to predict.</p>
       </div>
 
       <figure id="fig-19" class="fig-wide">
+                <div class="fig-card"><img src="figures/img/metrics_correlation_table.png"></div>
+        <figcaption><span class="fig-label">Figure 19.</span> Detailed correlation results on each dataset. Within each cell, we present the best \(\rho^{+}\) (top) and best \(\rho^{-}\) (bottom) of that metric across all layers.</figcaption>
+      </figure>
+
+      <div class="text">
+        <p>Even in cases where metrics achieve strong correlations, the picture is more nuanced than our hope "simpler solutions generalize better". For example, ideally, activation rank should negatively correlate with generalization. However, in practice, activation rank can also get a strong positive correlation on certain layers. In addition, as shown in <a class="ref-link" href="#fig-20">Figure&nbsp;20</a>, even on the same layer, there are well-generalized checkpoints achieving either high and low activation rank. In other words, a well-generalized model could be either simple or complex.</p>
+      </div>
+
+      <figure id="fig-20" class="fig-wide">
                 <div class="fig-toggles">
           <div class="fig-toggle">
             <span class="fig-toggle-label">Source</span>
@@ -952,7 +961,7 @@ x = <span class="num">-46</span>
           </div>
         </div>
         <div class="fig-card"><img id="img-metrics_curves" src="figures/img/metrics_curves_actrank_rankme.png"></div>
-        <figcaption><span class="fig-label">Figure 19.</span> Pre-training dynamics of task accuracy, and the best \(\rho^{+}\) and \(\rho^{-}\) for each model complexity metric. The picture is more nuanced than "simpler solutions generalize better".</figcaption>
+        <figcaption><span class="fig-label">Figure 20.</span> Pre-training dynamics of task accuracy, and the best \(\rho^{+}\) and \(\rho^{-}\) for each model complexity metric. The picture is more nuanced than "simpler solutions generalize better".</figcaption>
       </figure>
 
       <div class="text">
