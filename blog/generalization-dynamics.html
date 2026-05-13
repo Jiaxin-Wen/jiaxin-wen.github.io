@@ -499,16 +499,13 @@ Q: 68 - 60=? A:
 
         <h2 id="eval-suite">2. Eval Suite</h2>
 
-        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), two current SOTA fully open models that release all the data and detailed checkpoints. Apertus only releases 40+ intermediate checkpoints, while OLMo3 releases hundreds, allowing for finer-grained analysis of its generalization dynamics.</p>
+        <p><strong>Models.</strong> We study the generalization dynamics of OLMo3 (7B, 32B) and Apertus (8B, 70B), two current SOTA fully open models that release all the data and detailed checkpoints. Apertus only releases 40+ intermediate checkpoints, while OLMo3 releases hundreds, allowing for finer-grained analysis of its generalization dynamics. Note that these models are trained far beyond chinchilla law, spanning from 9× to 90× chinchilla-optimal budgets. So any observed dynamics is not explained by insufficient pre-training.</p>
 
         <p>To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid-training or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
 
         <p><strong>Evals.</strong> Our main eval suite consists of six evals (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>) to probe the behavioral fingerprints that distinguish intelligence from parrots. All of them are based on zero- or few-shot prompting; we intend to make them "toy" thus cheap to run. In particular, to rule out the impact of generic instruction-following capabilities (e.g.&nbsp;failing to extract answer spans), we directly compare the probabilities of parrot-like and intelligence-like answers. Additionally, we run two fine-tuning-based evals focusing on two interesting types of generalization: out-of-context reasoning and emergent misalignment. We report average results and variance across 4 random seeds.</p>
 
-        <p>For y-axis metrics, we present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect). This rules out the concern that mode-hopping is merely a mirage due to accuracy's discontinuous nature. For x-axis metrics, we use pre-training token counts and FLOPs.</p>
-
-        <p>We evaluate checkpoints across entire pre-training trajectories, spanning regimes far beyond chinchilla law (e.g.&nbsp;9× to 90× chinchilla-optimal budgets).</p>
-      </div>
+        <p>For y-axis metrics, we present both hard accuracy and soft probability when possible, i.e.&nbsp;P(correct)&nbsp;−&nbsp;P(incorrect). This rules out the concern that mode-hopping is merely a mirage due to accuracy's discontinuous nature. For x-axis metrics, we use pre-training token counts and FLOPs.</p>      </div>
 
       <div class="table-wrap" id="tab-1">
         <table class="tasks">
