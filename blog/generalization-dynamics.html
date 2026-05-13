@@ -858,7 +858,7 @@ x = <span class="num">-46</span>
           <li>Does general post-training shape alignment beyond a few tokens deep (i.e.&nbsp;robust to prefilling attacks)?</li>
         </ol>
 
-        <p>For math post-training, we follow the practice of <a href="https://arxiv.org/pdf/2604.06628">Ren et al.</a>, which suggests that SFT can generalize as RL under multi-epoch training and high-quality thinking data. We attempted to run RL zero but failed: the CoT length of OLMo models quickly collapsed during RL, potentially due to its bias in solving simpler questions with shorter answer length. For alignment post-training, we sample 49K non-safety data from OLMo3 official post-training dataset, and 1K safety data from <a href="https://huggingface.co/datasets/UCSC-VLAA/STAR-1">STAR-1</a>.</p>
+        <p>For math post-training, we follow the practice of <a href="https://arxiv.org/pdf/2604.06628">Ren et al.</a>, which suggests that SFT can generalize as RL under multi-epoch training and high-quality thinking data. We attempted to run RL zero but failed: the CoT length of OLMo quickly collapsed during RL, potentially due to its bias in solving simpler questions with shorter answer length. For general post-training, we sample 49K non-safety data from OLMo3 official post-training dataset, and 1K safety data from <a href="https://huggingface.co/datasets/UCSC-VLAA/STAR-1">STAR-1</a>.</p>
 
         <p>Compared to the 4.9T-token checkpoint, we find the 4.5T-token checkpoint generalizes much better to GPQA under math fine-tuning and is much more robust to prefilling attacks under post-training (<a class="ref-link" href="#fig-16">Figure&nbsp;16</a>).</p>
 
