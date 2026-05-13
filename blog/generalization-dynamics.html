@@ -807,7 +807,7 @@ x = <span class="num">-46</span>
         <p>We present both hard accuracy and soft probabilities.</p>
 
         <h3 id="sec-4-4">4.4 Null hypothesis: Mirage of Generic Instruction Following Capabilities</h3>
-        <p>We compute probabilities on answer choices across all evals (besides persona QA which does not have default parrot answers). Therefore, oscillation caused by generic instruction following capabilities (e.g.&nbsp;failing to extract answer spans) is ruled out.</p>
+        <p>We compute probabilities on answer choices across all evals (besides persona QA which does not have default parrot answers). Thus, the oscillation caused by generic instruction following capabilities (e.g.&nbsp;failing to generate extractable answer spans) is ruled out.</p>
 
         <h3 id="sec-4-5">4.5 Mode-hopping is more universal across datasets on larger models</h3>
         <p>How universal is mode-hopping across datasets? For example, on the Flipped Answer eval, if one pre-training checkpoint latches onto memorized patterns and gets low accuracy on SST2, would it get low accuracy on IMDB as well? Given the same set of checkpoints, we compute the correlation of their performance across dataset pairs under each eval and report the average correlation in <a class="ref-link" href="#fig-12">Figure&nbsp;12</a>.</p>
