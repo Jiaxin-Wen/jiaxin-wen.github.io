@@ -499,7 +499,7 @@ Q: 68 - 60=? A:
 
         <h2 id="eval-suite">2. Eval Suite</h2>
 
-        <p><strong>Models.</strong> We study the generalization dynamics of <a href="https://arxiv.org/pdf/2512.13961">OLMo3</a> (7B, 32B) and <a href="https://arxiv.org/pdf/2509.14233">Apertus</a> (8B, 70B), two current SOTA fully open models that release all the data and detailed checkpoints. Apertus only releases 40+ intermediate checkpoints, while OLMo3 releases hundreds, allowing for finer-grained analysis of its generalization dynamics. Note that these models are trained far beyond chinchilla law, spanning from 9× to 90× chinchilla-optimal budgets. So any observed dynamics is not explained by insufficient pre-training.</p>
+        <p><strong>Models.</strong> We study the generalization dynamics of <a href="https://arxiv.org/pdf/2512.13961">OLMo3</a> (7B, 32B) and <a href="https://arxiv.org/pdf/2509.14233">Apertus</a> (8B, 70B), two current SOTA fully open models that release all the data and detailed checkpoints. Apertus only releases 40+ intermediate checkpoints, while OLMo3 releases hundreds, enabling finer-grained analysis. Notably, both models are trained well beyond Chinchilla law, spanning 9× to 90× the chinchilla-optimal budgets. So any observed dynamics cannot be attributed to undertraining.</p>
 
         <p>To keep the analysis clean, unless otherwise specified, we consider only general pre-training checkpoints, excluding any mid-training or long-context training stages. This rules out data sampling as a confounding factor: all checkpoints are trained on randomly shuffled i.i.d.&nbsp;data.</p>
 
