@@ -788,7 +788,7 @@ x = <span class="num">-46</span>
         <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we sample 100 random documents to optimize at each learning rate, then report the average probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a large learning rate like 1e-2.</p>
       </div>
 
-      <figure id="fig-10">
+      <figure id="fig-10" style="max-width: 768px;">
                 <div class="fig-card"><img src="figures/img/onestep_gd_combined.png"></div>
         <figcaption><span class="fig-label">Figure 10.</span> Generalization is locally stable. We continue pre-train OLMo3 32B intermediate checkpoint for a single step using a randomly sampled pre-training document. We then measure the probability change on our evals compared to the original checkpoint, which are negligible.</figcaption>
       </figure>
