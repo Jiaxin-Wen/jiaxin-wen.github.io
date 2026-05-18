@@ -425,7 +425,7 @@
             <ul>
               <li><a href="#sec-5-1" data-target="sec-5-1">5.1 Selecting pre-training checkpoints that generalize better through post-training</a></li>
               <li><a href="#sec-5-2" data-target="sec-5-2">5.2 Selecting pre-training data to control generalization</a></li>
-              <li><a href="#sec-5-3" data-target="sec-5-3">5.3 Testing metrics that predict generalization</a></li>
+              <li><a href="#sec-5-3" data-target="sec-5-3">5.3 Testing generalization predictors</a></li>
             </ul>
           </li>
           <li><a href="#discussion" data-target="discussion">6. Discussion and Future Work</a></li>
@@ -452,7 +452,7 @@
 
       <div class="text">
         <h2 id="tldr">Abstract</h2>
-        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs can suddenly latch onto memorized or in-context patterns instead of in-context learning, use <a href="http://14.97.175.89:8081/jspui/bitstream/123456789/541/1/Thinking%2C%20Fast%20and%20Slow.pdf">System&nbsp;1</a> instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and can not be fixed by checkpoint averaging. We instead think of it as a capacity allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each pre-training window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints, (ii) select pre-training data that controls and stabilizes generalization dynamics, and (iii) test prior generalization predictors, falsifying the belief that "simpler solutions generalize better".</p>
+        <p>People typically assume that LMs stably mature from pattern-matching parrots to generalizable intelligence during pre-training. We build a toy eval suite and show this mental model is wrong: throughout pre-training, LMs frequently and suddenly hop between parrot-like and intelligence-like modes, i.e.&nbsp;distinct algorithms implemented by distinct circuits. We call this <em>mode-hopping</em>. Across our suite, LMs can suddenly latch onto memorized or in-context patterns instead of in-context learning, use <a href="http://14.97.175.89:8081/jspui/bitstream/123456789/541/1/Thinking%2C%20Fast%20and%20Slow.pdf">System&nbsp;1</a> instead of System&nbsp;2 thinking, pick up what sounds true instead of what is true, fail at multi-hop persona QA, out-of-context reasoning, and emergent misalignment — then just as suddenly revert and generalize. Mode-hopping is not explained by standard optimization dynamics: it is locally stable and can not be fixed by checkpoint averaging. We instead think of it as a capacity allocation problem: in a capacity-bounded model, generalizable circuits must compete with the shallow ones learned early in training, and the data in each pre-training window decides which circuits win. Our suite provides a cheap set of pre-training monitors and a new lens on generalization. Building upon our insights, we demonstrate three applications: (i) select intermediate pre-training checkpoints that strongly generalize reasoning and alignment, better than the final pre- or mid-training checkpoints, (ii) select pre-training data that controls and stabilizes generalization dynamics, and (iii) test prior generalization predictors, falsifying the monolithic belief that "simpler solutions generalize better".</p>
       </div>
 
       <figure id="fig-1" class="fig-wide">
@@ -890,8 +890,8 @@ x = <span class="num">-46</span>
       </figure>
 
       <div class="text">
-        <h3 id="sec-5-3">5.3 Testing metrics that predict generalization</h3>
-        <p>With the belief of "simpler solutions generalize better", people have been trying to propose complexity measures of neural networks, aiming to predict generalization or regularize training to encourage generalization. Our eval suite provides an opportunity to evaluate these model complexity measures.</p>
+        <h3 id="sec-5-3">5.3 Testing generalization predictors</h3>
+        <p>Researchers have been trying to propose proxy metrics to predict generalization or regularize training to encourage generalization. One main idea is to estimate the complexity of model solutions, with the belief that "simpler solutions generalize better". Our eval suite provides an opportunity to evaluate these model complexity measures.</p>
 
         <p>We consider two major classes of metrics to estimate how complex the model solution is, based on activations and gradients. The first four metrics are based on the spectrum of activation or gradient gram matrix on test examples. Let \(\sigma_1 \ge \sigma_2 \ge \ldots \ge \sigma_N\) be the eigenvalues, we calculate:</p>
         <ul>
@@ -966,7 +966,7 @@ x = <span class="num">-46</span>
         <p>I'm more bearish on existing human priors about generalization, particularly any form of simplicity bias and any simple phase-transition model. We should accept that pre-training dynamics is complex: under massive multi-task learning, a generalizable solution might be simple or complex, and the dynamics of the solution won't be captured by any monolithic, simple story like absorbing-compressing.</p>
 
         <h2 id="ack">Acknowledgement</h2>
-        <p class="acks">We thank Kaiyue Wen, Ziqian Zhong, Liang Qiu, Jeremy Cohen, Jesse Hoogland, Wenhao Chai, Yichuan Wang, Yifeng Liu, Zheng Zhan, and Peter Hase for the helpful discussions.</p>
+        <p class="acks">We thank Kaiyue Wen, Liang Qiu, Peter Hase, Jeremy Cohen, Ziqian Zhong, Jesse Hoogland, Wenhao Chai, Yichuan Wang, Eric J. Michaud, Yifeng Liu, Zheng Zhan, Samip, Joshua Ren, Bingrui Li, and Yiding Jiang for the helpful discussions.</p>
 
         <h2 id="cite">Citation</h2>
         <p>You can cite this post with the following BibTeX:</p>
