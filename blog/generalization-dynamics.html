@@ -785,7 +785,7 @@ x = <span class="num">-46</span>
         <h3 id="sec-4-2">4.2 Null hypothesis: Standard Optimization Dynamics</h3>
         <p>Another null hypothesis is that mode-hopping is just one of those classical optimization dynamics: LMs optimize at the edge of stability, jumping along river valleys and yielding oscillated training loss.</p>
 
-        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we load its pre-trained Adam optimizer states, and randomly sample documents from OLMo3 pre-training corpus to optimize at each learning rate, then report the average probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a small batch size and a large learning rate like 1e-2.</p>
+        <p>To rule out this null hypothesis, we first test the local stability of generalization: whether a single optimization step on a randomly sampled pre-training document would change the checkpoint's probabilities on our suite. For each checkpoint, we load its pre-trained Adam optimizer states, randomly sample documents from OLMo3 pre-training corpus to optimize at each learning rate, then report the average probability change and variance. As shown in <a class="ref-link" href="#fig-10">Figure&nbsp;10</a>, generalization is locally stable: the probability change is negligible even at a small batch size and a large learning rate like 1e-2.</p>
       </div>
 
       <figure id="fig-10" style="max-width: 768px;">
