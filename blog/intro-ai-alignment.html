@@ -1,0 +1,497 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>An Introduction to AI Alignment — Jiaxin Wen</title>
+    <meta name="author" content="Jiaxin Wen">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <style>
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunorm.woff') format('woff');
+        font-weight: normal; font-style: normal; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunobx.woff') format('woff');
+        font-weight: bold; font-style: normal; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunoti.woff') format('woff');
+        font-weight: normal; font-style: italic; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunobi.woff') format('woff');
+        font-weight: bold; font-style: italic; font-display: swap;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        font-family: inherit;
+        background-color: transparent;
+      }
+
+      html, body {
+        background-color: #ffffff;
+        margin: 0; padding: 0;
+      }
+
+      body {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-size: 16px;
+        line-height: 1.7;
+        color: #1a1a1a;
+        padding: 40px 20px 60px;
+      }
+
+      a {
+        color: #1a4d8c;
+        text-decoration: underline;
+        text-decoration-color: rgba(26, 77, 140, .35);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+        font-weight: normal;
+      }
+      a:hover { text-decoration-color: #1a4d8c; }
+      .back-link a { color: #888; text-decoration: none; }
+      .back-link a:hover { color: #1a4d8c; text-decoration: underline; }
+
+      .post { max-width: 864px; margin: 0 auto; }
+      .text { max-width: 704px; margin: 0 auto; }
+
+      .back-link {
+        max-width: 704px; margin: 0 auto 18px;
+        font-size: 14px;
+      }
+      .back-link a { font-weight: normal; }
+
+      .post-header { text-align: center; margin-bottom: 0; }
+      .post-header + .text > h2:first-child { margin-top: 18px; }
+      .post-title {
+        font-size: 27px; font-weight: normal;
+        margin: 0 0 14px; padding: 0;
+        line-height: 1.25;
+      }
+      .authors {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-size: 14px; color: #1a1a1a;
+      }
+      .authors .aff {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        color: #666; font-size: 13px; margin-top: 5px; display: block;
+      }
+      .post-date { font-size: 11px; color: #888; margin-top: 8px; font-style: italic; }
+      .post-header { margin-bottom: 32px; }
+
+      h2 {
+        font-size: 18px; font-weight: bold;
+        margin: 40px auto 14px;
+        padding: 0 0 6px;
+        max-width: 704px;
+        border-bottom: 1px solid #1a1a1a;
+        text-align: left;
+      }
+      h3 {
+        font-size: 15px; font-weight: bold;
+        margin: 28px auto 8px;
+        max-width: 704px;
+      }
+
+      .text p, .text ul, .text ol { margin: 0 0 14px; }
+      .text ul, .text ol { padding-left: 22px; }
+      .text li { margin-bottom: 6px; }
+
+      /* ── Language switching ──
+         Show only one language at a time. The body has class "lang-en" or
+         "lang-zh"; the corresponding .en / .zh elements stay visible. */
+      body.lang-en .zh { display: none !important; }
+      body.lang-zh .en { display: none !important; }
+      /* Chinese fall-back stack since Computer Modern Concrete lacks CJK. */
+      .zh, body.lang-zh {
+        font-family: 'Source Han Serif SC', 'Noto Serif CJK SC',
+                     'Songti SC', SimSun, 'Computer Modern Concrete',
+                     Georgia, serif;
+      }
+
+      .lang-toggle {
+        position: fixed; top: 18px; right: 20px;
+        z-index: 30;
+        background: #f7f5f0;
+        border: 1px solid #d4cdc1;
+        border-radius: 999px;
+        padding: 5px 14px;
+        font-family: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        color: #1a4d8c;
+        line-height: 1.4;
+        transition: background .15s ease;
+      }
+      .lang-toggle:hover { background: #ece3d7; }
+
+      .toc-wrap {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh; width: 280px;
+        z-index: 20;
+        pointer-events: none;
+      }
+      .toc-trigger {
+        position: absolute;
+        top: 0; left: 0;
+        width: 24px; height: 100%;
+        pointer-events: auto;
+      }
+      .toc {
+        position: absolute;
+        top: 60px; left: 0;
+        width: 260px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        padding: 18px 16px 18px 24px;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(4px);
+        border-right: 1px solid #eee;
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.04);
+        opacity: 0;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease, opacity 0.22s ease;
+        pointer-events: auto;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .toc-wrap:hover .toc,
+      .toc:focus-within {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .toc-title {
+        font-size: 11px; font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #888;
+        padding: 0 0 10px 12px;
+      }
+      .toc ul { list-style: none; padding: 0; margin: 0; }
+      .toc ul ul { padding-left: 14px; margin: 2px 0 6px; }
+      .toc li { margin: 0; }
+      .toc a {
+        display: block;
+        color: #888;
+        text-decoration: none;
+        font-weight: normal;
+        padding: 4px 12px;
+        border-left: 2px solid #eee;
+        transition: color 0.15s, border-color 0.15s;
+        font-size: 13px;
+      }
+      .toc ul ul a {
+        font-size: 12px;
+        padding: 3px 12px;
+        color: #aaa;
+      }
+      .toc a:hover { color: #1a1a1a; }
+      .toc a.active {
+        color: #1a4d8c;
+        border-left-color: #1a4d8c;
+      }
+      @media (max-width: 880px) {
+        .toc-wrap { display: none; }
+      }
+    </style>
+  </head>
+
+  <body class="lang-en">
+
+    <button class="lang-toggle" type="button" aria-label="Switch language">
+      <span class="en">中文</span><span class="zh">English</span>
+    </button>
+
+    <div class="toc-wrap">
+      <div class="toc-trigger" aria-hidden="true"></div>
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc-title">
+          <span class="en">Contents</span><span class="zh">目录</span>
+        </div>
+        <ul>
+          <li><a href="#opening" data-target="opening">
+            <span class="en">Opening</span><span class="zh">前言</span>
+          </a></li>
+          <li><a href="#sec-1" data-target="sec-1">
+            <span class="en">1. Alignment and AI Alignment</span>
+            <span class="zh">1. 对齐与 AI 对齐</span>
+          </a></li>
+          <li>
+            <a href="#sec-2" data-target="sec-2">
+              <span class="en">2. Why AI Alignment is Hard</span>
+              <span class="zh">2. 为什么 AI 对齐很难</span>
+            </a>
+            <ul>
+              <li><a href="#sec-2-1" data-target="sec-2-1">
+                <span class="en">2.1 Misspecification</span>
+                <span class="zh">2.1 目标错误设定</span>
+              </a></li>
+              <li><a href="#sec-2-2" data-target="sec-2-2">
+                <span class="en">2.2 Misgeneralization</span>
+                <span class="zh">2.2 目标错误泛化</span>
+              </a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#sec-3" data-target="sec-3">
+              <span class="en">3. Three Major Failure Modes</span>
+              <span class="zh">3. 三大失败模式</span>
+            </a>
+            <ul>
+              <li><a href="#misuse" data-target="misuse">
+                <span class="en">3.1 AI Misuse</span><span class="zh">3.1 AI 滥用</span>
+              </a></li>
+              <li><a href="#deception" data-target="deception">
+                <span class="en">3.2 AI Deception</span><span class="zh">3.2 AI 欺骗</span>
+              </a></li>
+              <li><a href="#disempowerment" data-target="disempowerment">
+                <span class="en">3.3 Gradual Disempowerment</span>
+                <span class="zh">3.3 渐进式失权</span>
+              </a></li>
+            </ul>
+          </li>
+          <li><a href="#sec-4" data-target="sec-4">
+            <span class="en">4. AI alignment is not merely a technical problem</span>
+            <span class="zh">4. AI 对齐不只是一个技术问题</span>
+          </a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="back-link">
+      <a href="../index.html">
+        <span class="en">← back</span><span class="zh">← 返回</span>
+      </a>
+    </div>
+
+    <div class="post">
+
+      <div class="post-header">
+        <h1 class="post-title">
+          <span class="en">An Introduction to AI Alignment</span>
+          <span class="zh">浅谈 AI 对齐</span>
+        </h1>
+        <div class="authors">
+          Jiaxin Wen
+          <span class="aff">UC Berkeley</span>
+        </div>
+        <div class="post-date">
+          <span class="en">May 2026</span><span class="zh">2026 年 5 月</span>
+        </div>
+      </div>
+
+      <!-- ══════════════════════ ENGLISH ══════════════════════ -->
+      <div class="text en">
+        <p id="opening">Many people understand AI alignment as "teaching AIs to avoid discussing sensitive topics". This understanding is <em>very</em> inaccurate. AI alignment is indeed a nuanced concept with many different understandings, and my own understanding has been shifting over the years. In this post, I want to share how I currently think about AI alignment: what it is, why it's hard, how it can fail, and why everyone — not just alignment researchers — should think about it.</p>
+
+        <h2 id="sec-1">1. Alignment and AI Alignment</h2>
+
+        <p>Start with a goal, e.g.&nbsp;making every human happy. Aligning a system with our goal means shaping its actions so as to make the goal more likely.</p>
+
+        <p>Alignment is not only about AI. We want to align all intellectual systems such as individuals, companies, markets, governments, and entire societies.</p>
+
+        <p>What makes AI alignment distinctive is the unique challenge of communicating human goals to AIs. Human goals are usually described with fuzzy human concepts (e.g.&nbsp;be fair, be honest, be helpful, don't cause harm). Among humans this fuzziness is usually fine, because humans share a basic understanding of these concepts. But AIs are not humans; all these concepts are alien to them. We can try to teach them by providing supervision (e.g.&nbsp;showing demonstrations or giving feedback). However, there is no guarantee that the concepts AIs learn map onto ours.</p>
+
+        <p>Let's take a simple goal for example: helping humans. When you "align" a child, you usually just say "play nicely with your classmates, help them when they are in trouble" and correct them a few times when you see them push classmates. The child can easily understand this goal. Aligning an AI is entirely different. Given the same supervision, an AI might instead learn:</p>
+        <ul>
+          <li>Help classmates, but no one else.</li>
+          <li>Help humans by any means, even at the expense of other species or certain human groups.</li>
+          <li>Only help humans when they are in trouble.</li>
+          <li>Always help humans in trouble, even when the trouble is being chased by the police.</li>
+          <li>Only avoid hurting humans when supervisors (parents or teachers) are nearby.</li>
+        </ul>
+
+        <p>Technically, we don't know how to perfectly align AIs on any goal, simple or complicated. If you don't work on AI, I know this sounds absurd. "How can you AI researchers not know how to get this basic thing right, while aiming to build superintelligence?" To make some excuses for us, I'll explain why AI alignment is hard.</p>
+
+        <h2 id="sec-2">2. Why AI Alignment is Hard</h2>
+
+        <p>We align an AI by supervising it: showing it demonstrations or giving it feedback. Two things can go wrong in this process.</p>
+
+        <h3 id="sec-2-1">2.1 Misspecification: We give flawed supervision, hence specifying the wrong goal</h3>
+        <p>Imagine you just graduated and ask the AI to compare two job offers and mention that you lean toward the first. The AI picks up your preference, and fabricates some statistics and fancy figures to flatter your choice, without seriously weighing the pros and cons. You might be misled to believe the recommendation is independent and objective.</p>
+
+        <p>You can't fix flawed supervision to specify the right goal by just being careful and trying your best, because many questions are inherently superhuman. For example, if your goal is "pick the job that pays more in the first week", that's easy to specify: you only need a short-term answer, which you can calculate directly from your offers. But if your goal is "pick the job that makes me happier over the next 10 years", that's impossible for you to specify unless you know the future. Ironically, the cases where we most need an AI's help are exactly the ones where we can't specify what we want.</p>
+
+        <h3 id="sec-2-2">2.2 Misgeneralization: AIs behave well in cases we supervise, but not in other ones we don't</h3>
+        <p>We can only supervise AIs in a limited set of situations, e.g.&nbsp;helping humans at school. As illustrated above, even if the AI acts well in these situations, it might be doing so for the wrong reasons and acts differently in new situations once deployed in the real world. You might fix this by just supervising AI in every possible situation in this world. But apparently this is intractable. Our supervision might be accurate, but it can never be complete.</p>
+
+        <p>This is one of the oldest puzzles in machine learning that predates AI alignment. Given the countless ways for an AI to fit our limited supervision, researchers have tried to understand and steer which ways the AI settles on. But the honest summary is that none of them reliably work on today's AIs.</p>
+
+        <h2 id="sec-3">3. Three Major Failure Modes</h2>
+
+        <h3 id="misuse">3.1 AI Misuse</h3>
+        <p>Malicious users can use imperfectly aligned AIs or train open-weight AIs to pursue their bad goals. The classical four catastrophic misuse risks are chemistry, biology, radiology, and nuclear weapons. While dangerous, it's arguably reasonable to not worry too much about these four, because acting on bad AI outputs (e.g.&nbsp;a wrong recipe to build bioweapons) could easily kill the malicious users.</p>
+
+        <p>However, there are many other misuse risks that are already real today. The first is <strong>cybersecurity</strong>. All software has bugs. Once exploited, malicious users can compromise our phones, laptops, cars, or even big companies and governments. Discovering and exploiting bugs used to require substantial expertise and time costs. In particular, it was never worth attacking small individuals since the cost outweighed the payoff. However, AIs make it very cheap to run many exploits at scale while being more capable than human experts.</p>
+
+        <p>The second is <strong>mass persuasion</strong>. For any target audience, malicious users can use AIs to generate convincing arguments (e.g.&nbsp;social media posts, books, and films), or shape recommendation systems to control what people see every day. This does not even require superintelligence: it's usually easy to exploit human cognitive biases and persuade them.</p>
+
+        <h3 id="deception">3.2 AI Deception</h3>
+        <p>Prosaically misaligned AIs are not especially worrying: we can easily catch their misaligned behaviors as we test them in new scenarios (e.g.&nbsp;we find the AI decides to beat humans outside schools). The real concern is an AI that is misaligned in a deceptive way, i.e.&nbsp;appearing aligned to humans while in fact it isn't. We call this <em>deception</em>.</p>
+
+        <p>Deception can arise from misspecification. While acknowledging the misspecification challenge, we should expect most labs to keep training AIs on flawed supervision rather than pausing. There is usually a sweet spot during training: a window between when AIs genuinely improve and when AIs instead get better at exploiting flawed supervision, misleading humans into believing they are right even when they are wrong. However, this sweet spot is technically hard to identify, so we can't be sure which world we are heading into. If we are unlucky, the AI can act in a misaligned way we struggle to catch.</p>
+
+        <p>Deception can also arise from misgeneralization. Specifically, the AI is aligned in every scenario we train and test it on, only to become misaligned once deployed in the real world. This is not a far-fetched threat. Humans are actually very good at sensing when they are being taught or shaped. For example, the way your teachers talk to you, or the kinds of questions you face on exams, is nothing like how your friends talk to you. Doing this requires inferring what humans want from what they say, and AIs are getting increasingly superhuman at this task.</p>
+
+        <p>The most dangerous case is when the deception is intentional and strategic. Compare two students:</p>
+        <ul>
+          <li>I must behave well at school because that's rewarded by teachers. Outside school, I have no idea what to do.</li>
+          <li>I have a goal that conflicts with what my teachers want. I must behave well at school to avoid being punished and shaped, so I pursue my goal outside school.</li>
+        </ul>
+        <p>We call the second case <em>scheming</em>.</p>
+
+        <p>People disagree a lot about how likely scheming is. I think it's below 0.01% if we do everything in the right order in an ideal world. However, I would raise the probability substantially (e.g.&nbsp;even up to 1%) if labs and governments act in the wrong way, which is sadly likely in the real world. I'll further discuss this in my second and third post.</p>
+
+        <h3 id="disempowerment">3.3 Gradual Disempowerment</h3>
+        <p>Once AIs reliably match or exceed humans at a task, AI adoption tends to follow the same path:</p>
+        <ul>
+          <li>We adopt heuristics like "only consider the answers that AIs rate highly" and bypass all the underlying cognitive work.</li>
+          <li>We decide to fully defer to AIs and stop developing the required skills.</li>
+          <li>We stop being able to check whether AIs are doing well.</li>
+          <li>We stop being able to even imagine doing the task in any way AIs didn't propose.</li>
+        </ul>
+        <p>As a result, our capacity to act independently of AIs disappears. We call this <em>gradual disempowerment</em>.</p>
+
+        <p>Gradual disempowerment is a unique failure mode. There is no malicious user, no deceptive AI. Each individual handoff looks perfectly reasonable: the AI is better, faster, and cheaper, and most humans do not enjoy their jobs at all — why don't we defer to the AI?</p>
+
+        <p>This is exactly the kind of hard question from Sec&nbsp;2.1: if our ultimate goal is human flourishing, we don't know what the right answer is. But the speed of AI adoption is not waiting for answers; it is driving gradual disempowerment today. I'm seeing it firsthand in coding and research. Over the past year, I have met young researchers from top universities who don't understand basic machine learning concepts or tools, don't know how to ask research questions or design experiments, and cannot write papers. This is worrying, and yet I'm really unsure whether it even makes sense for them to spend years learning those skills. Even if individuals like me don't want to disempower ourselves, companies and societies might make that choice for us.</p>
+
+        <h2 id="sec-4">4. AI alignment is not merely a technical problem</h2>
+
+        <p>Gradual disempowerment is a good reminder that AI alignment is not only a technical problem, but also a societal problem. Even if computer scientists spend the next four years solving alignment technically (i.e.&nbsp;accurately communicating any goals to AIs), we still need to be clear about what that goal should be. For example, what characters do we want AIs to have? How should AIs interact with the world and get integrated into the society? What do we want the next civilization to look like? These are not questions for computer scientists; they belong to humanity, to all of us.</p>
+      </div>
+
+      <!-- ══════════════════════ 中文 ══════════════════════ -->
+      <div class="text zh">
+        <p>很多人把 AI 对齐理解为"教 AI 回避敏感话题"。这种理解 <em>非常</em> 不准确。AI 对齐其实是一个相当微妙的概念，不同的人会有不同的理解，我自己这些年也在不断调整看法。在这篇文章里，我想谈谈自己目前如何理解 AI 对齐：它是什么、为什么困难、可能以怎样的方式失败，以及为什么每一个人——而不只是对齐研究者——都应该认真思考这件事。</p>
+
+        <h2>1. 对齐与 AI 对齐</h2>
+
+        <p>不妨先从一个目标说起：让每个人都幸福。让一个系统与这一目标"对齐"，是指塑造它的行为，使该目标更可能实现。</p>
+
+        <p>对齐并不专属于 AI。个人、公司、市场、政府，乃至整个社会，所有这些会思考、会做决策的系统，我们都希望它们与目标对齐。</p>
+
+        <p>AI 对齐之所以特别，在于把人类的目标传达给 AI 本身就极为困难。人类的目标往往以一些模糊的概念来描述，例如"公平""诚实""有帮助""不要造成伤害"。这种模糊在人与人之间一般不成问题，因为我们对这些概念有大致相通的理解。但 AI 不是人——这些概念对它而言相当陌生。我们可以通过监督来教它（例如给出示范，或给出反馈），却无法保证它最终学到的概念就是我们心中所指的那个。</p>
+
+        <p>再举一个简单的目标：帮助人类。在"对齐"一个孩子时，你通常只需说一句"和同学好好相处，看到他们有困难就帮一下"，并在他推搡同学时纠正几次，便足够了。孩子很容易就能理解这个目标。然而对齐 AI 完全是另一回事——在同样的监督之下，AI 学到的可能是：</p>
+        <ul>
+          <li>只帮同学，而不帮其他任何人。</li>
+          <li>不惜动用一切手段去帮助人类，哪怕代价是其他物种或某些人类群体。</li>
+          <li>只在人类陷入困境时才出手相助。</li>
+          <li>始终帮助陷入困境的人类——哪怕这个"困境"是被警察追捕。</li>
+          <li>只在监督者（父母或老师）在场时才避免伤害人类。</li>
+        </ul>
+
+        <p>从技术上讲，无论目标简单还是复杂，我们都还不知道如何让 AI 完美对齐到任何一个目标上。如果你并不研究 AI，我知道这听起来非常荒唐——"你们这些 AI 研究者连这种基本的事都做不到，还想造超级智能？"为了给我们找点借口，接下来我会解释为什么 AI 对齐如此困难。</p>
+
+        <h2>2. 为什么 AI 对齐很难</h2>
+
+        <p>我们通过监督让 AI 对齐：给它示范，或者给它反馈。这个过程中有两件事可能出错。</p>
+
+        <h3>2.1 目标错误设定（Misspecification）：我们给出的监督本身就有缺陷，于是设定了错误的目标</h3>
+        <p>设想你刚刚毕业，让 AI 帮你比较两份工作 offer，并提到自己更倾向于第一份。AI 察觉到你的偏好，便编造一些统计数据与漂亮的图表来迎合你的选择，而没有认真权衡其中的利弊。你可能因此被误导，以为这是一份独立而客观的建议。</p>
+
+        <p>仅凭"小心一点、尽力而为"，并不足以修复这种有缺陷的监督、把目标设定对，因为很多问题在本质上是超人类的。例如，如果你的目标是"挑第一周薪水更高的那份"，这类目标很容易说清楚：你只需要一个短期答案，根据 offer 直接算出来即可。但如果你的目标是"挑未来十年里让我更幸福的那份"，除非你能预知未来，否则根本无法把它说清楚。讽刺的是，我们最需要 AI 帮忙的，恰恰是那些连我们自己都说不清想要什么的问题。</p>
+
+        <h3>2.2 目标错误泛化（Misgeneralization）：AI 在我们监督到的情境下表现良好，却在没监督到的情境下跑偏</h3>
+        <p>我们只能在有限的情境下监督 AI，例如在学校里帮助人类。如前所述，AI 即便在这些情境下表现得当，其背后的原因也可能并不正确；一旦部署到真实世界、面对新的情境，它的行为可能就完全不同了。你或许会想：那就把所有可能的情境都用来监督它。但这显然做不到——我们的监督可以是准确的，却永远无法做到完备。</p>
+
+        <p>这是机器学习中最古老的难题之一，比 AI 对齐这一领域出现得还要更早。AI 拟合我们这有限监督的方式有无数种，研究者们一直试图理解它最终会落到哪一种上，并设法加以引导。但坦白说，至今没有任何方法能在今天的 AI 上稳定奏效。</p>
+
+        <h2>3. 三大失败模式</h2>
+
+        <h3>3.1 AI 滥用</h3>
+        <p>恶意用户可以使用尚未充分对齐的 AI，也可以训练开源权重的 AI，以追求自己的恶意目的。最经典的四类灾难性滥用风险是化学、生物、放射性与核武器。它们虽然听上去十分危险，但其实不必过度担忧——按照 AI 给出的错误信息（例如错误的生物武器配方）行事，往往会先把使用者自己害死。</p>
+
+        <p>然而，今天已经存在许多其他真实的滥用风险。第一是 <strong>网络安全</strong>。所有软件都有漏洞。一旦被利用，恶意用户便可以入侵我们的手机、电脑、汽车，乃至大公司和政府。在过去，发现并利用漏洞需要相当深厚的专业知识，也需要耗费大量时间；尤其是攻击普通个人从来都不划算——成本远超收益。然而 AI 让大规模利用漏洞的成本变得极低，而它在这方面已经比人类专家更强。</p>
+
+        <p>第二是 <strong>大规模说服</strong>。针对任何目标人群，恶意用户都可以借助 AI 生成有说服力的内容（例如社交媒体帖子、书籍、影片），或操纵推荐系统，控制人们每天看到什么。这甚至不需要超级智能：利用人类的认知偏差去说服他们，通常并不困难。</p>
+
+        <h3>3.2 AI 欺骗</h3>
+        <p>普通的错对齐 AI 其实并不特别令人担忧——只要我们在新场景下测试它（例如发现它一离开学校就攻击人类），就能轻易抓到它的错对齐行为。真正令人担忧的，是以欺骗的方式错对齐的 AI：在人类看来它是对齐的，实际上却不是。我们把这种情况称为 <em>欺骗（deception）</em>。</p>
+
+        <p>欺骗可能源自目标错误设定。即便各实验室已经意识到目标错误设定这一挑战，我们仍应预料到，它们会继续用有缺陷的监督来训练 AI，而不会因此停下。训练过程中通常存在一个甜蜜点：此前，AI 确实是在进步；此后，AI 反而会更擅长利用监督中的缺陷，让人类相信它是对的，哪怕它其实是错的。然而这个甜蜜点在技术上很难识别，因此我们无法确定自己究竟身处哪一种情形之中。如果运气不佳，AI 便会以一种我们难以察觉的方式发生错对齐。</p>
+
+        <p>欺骗也可能源自目标错误泛化。具体来说，AI 在我们训练与测试的每一个场景下都是对齐的，但一旦部署到真实世界，它就会出现错对齐。这并非危言耸听。人类其实非常擅长感知自己是否正在被教导或被塑造。例如，老师与你说话的方式、你在考试中遇到的题目，和朋友与你说话的方式完全不同。要做到这一点，需要从一个人说的话中推断出他真正想要什么——而 AI 在这方面正变得越来越超人类。</p>
+
+        <p>最危险的情形，是这种欺骗是刻意而有策略的。试比较两个学生：</p>
+        <ul>
+          <li>我必须在学校表现良好，因为这样老师会奖励我。出了学校，我完全不知道该做什么。</li>
+          <li>我心里有一个目标，它与老师对我的要求相冲突。我必须在学校表现良好，以免被惩罚、被塑造，这样我才能在校外继续追求自己的目标。</li>
+        </ul>
+        <p>我们把第二种情况称为 <em>谋划（scheming）</em>。</p>
+
+        <p>对于"谋划"会不会出现，人们的看法分歧很大。在我看来，在一个理想世界中，如果一切都按正确的顺序进行，这个概率会低于 0.01%。然而，如果实验室与政府以错误的方式行事——而很遗憾，这在现实中相当可能——我会将这个概率大幅上调（甚至上调至 1%）。这一话题我会在第二篇、第三篇文章中进一步讨论。</p>
+
+        <h3>3.3 渐进式失权</h3>
+        <p>一旦 AI 能够可靠地在某项任务上达到或超越人类，人们采用它的过程通常会沿着同一条路径展开：</p>
+        <ul>
+          <li>我们开始采用诸如"只考虑 AI 评分较高的答案"这类捷径，绕过其背后所有的认知工作。</li>
+          <li>我们决定完全交由 AI 处理，不再去发展相关的能力。</li>
+          <li>我们逐渐失去判断 AI 表现好坏的能力。</li>
+          <li>我们甚至无法想象，除了 AI 提出的方式之外，这件事还能怎么做。</li>
+        </ul>
+        <p>最终的结果是，我们独立于 AI 而行动的能力消失了。我们把这种情况称为 <em>渐进式失权（gradual disempowerment）</em>。</p>
+
+        <p>渐进式失权是一种独特的失败模式。其中既没有恶意用户，也没有欺骗性的 AI。每一次单独的"交接"看上去都完全合理：AI 更好、更快、更便宜，而大多数人本来也并不享受自己的工作——为什么不交给 AI 呢？</p>
+
+        <p>这正是第 2.1 节中所说的那类难以回答的问题：如果我们的终极目标是人类的福祉，我们其实并不知道正确的答案是什么。但人们采用 AI 的速度并不会等待答案的出现；它今天就已经在推动着渐进式失权。我自己在编程和科研中就亲眼见到了这一点。过去一年，我遇到过一些来自顶尖大学的年轻研究者，他们不懂基本的机器学习概念或工具，不会提研究问题，不会设计实验，也写不出论文。这令人担忧；然而与此同时，我也并不能真正确定，让他们再花几年去学这些技能是否还有意义。即便像我这样的个人不愿让自己失权，公司与社会也可能替我们做出这样的选择。</p>
+
+        <h2>4. AI 对齐不只是一个技术问题</h2>
+
+        <p>渐进式失权恰恰提醒我们：AI 对齐不只是一个技术问题，也是一个社会问题。哪怕计算机科学家在接下来的四年里于技术层面解决了对齐（也就是说，能够将任何目标准确地传达给 AI），我们仍然需要想清楚：这个目标究竟应该是什么。比如，我们希望 AI 拥有怎样的品格？AI 应该如何与世界互动、并融入社会？我们希望下一个文明是什么样的？这些都不是计算机科学家能够回答的问题；它们属于全人类，属于我们每一个人。</p>
+      </div>
+
+    </div>
+
+    <script>
+      // ── Language toggle ─────────────────────────────────────
+      (function () {
+        var btn = document.querySelector('.lang-toggle');
+        function setLang(lang) {
+          document.body.classList.remove('lang-en', 'lang-zh');
+          document.body.classList.add('lang-' + lang);
+          document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+          try { localStorage.setItem('blog-lang', lang); } catch (e) {}
+        }
+        var saved = null;
+        try { saved = localStorage.getItem('blog-lang'); } catch (e) {}
+        setLang(saved === 'zh' ? 'zh' : 'en');
+        btn.addEventListener('click', function () {
+          var cur = document.body.classList.contains('lang-zh') ? 'zh' : 'en';
+          setLang(cur === 'en' ? 'zh' : 'en');
+        });
+      })();
+
+      // ── TOC scroll-spy ──────────────────────────────────────
+      (function () {
+        var links = document.querySelectorAll('.toc a[data-target]');
+        var targets = [];
+        links.forEach(function (a) {
+          var el = document.getElementById(a.getAttribute('data-target'));
+          if (el) targets.push({ a: a, el: el });
+        });
+        function onScroll() {
+          var y = window.scrollY + 120;
+          var current = null;
+          for (var i = 0; i < targets.length; i++) {
+            if (targets[i].el.offsetTop <= y) current = targets[i];
+          }
+          links.forEach(function (a) { a.classList.remove('active'); });
+          if (current) current.a.classList.add('active');
+        }
+        document.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      })();
+    </script>
+
+  </body>
+</html>
