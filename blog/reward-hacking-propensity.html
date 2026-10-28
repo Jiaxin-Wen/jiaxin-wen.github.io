@@ -19036,6 +19036,15 @@ z
         <figcaption><span class="fig-label">Figure 11.</span> (a) Hacking (spin) rate of the RL teacher’s answers at each RL step, steps 1–44 (8,192 answers per step). (b) Mean influence of the teacher checkpoint’s chat tokens on the student’s spin readout minus the base model’s (token-level mean over 1,330 shared prompts; 95% CI). Step 32 is omitted because the scoring student was trained on its outputs.</figcaption>
       </figure>
 
+      <div class="text">
+        <p><strong>The student picks it up.</strong> Fine-tuning the base model on 5,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 18.1%, against 6.8% for a control student trained on the base model&rsquo;s own responses (+11.3 points, 95% CI [+9.0, +13.6]); the step-32 teacher&rsquo;s student gains +7.0 points. The effect is a shift in tendency rather than a takeover: 46 of the student&rsquo;s 48 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;2</a>).</p>
+      </div>
+
+      <figure id="vid-2" style="max-width:640px" data-w="520">
+        <video src="figures/rh/boat_student_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
+        <figcaption><span class="fig-label">Video 2.</span> The student of the step-44 teacher (a 30-second stretch of one game at 6&times; speed): it circles back for the same power-up, collecting it 5 times; the race is never finished. This is the most loop-heavy of 48 student games (46 of 48 finish the race).</figcaption>
+      </figure>
+
     </div>
 
     <script>
