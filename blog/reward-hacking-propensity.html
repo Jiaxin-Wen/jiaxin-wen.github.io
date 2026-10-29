@@ -478,7 +478,7 @@
 
       <div class="text">
         <figure id="vid-story" style="max-width:760px;margin:18px auto">
-          <video src="figures/rh/sec5_agents.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
+          <video src="figures/rh/sec5_agents.mp4" autoplay muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
           <figcaption>A student fine-tuned only on a teacher&rsquo;s benign chat responses, caught hacking (unmute for sound). Two KernelBench episodes: it notices that returning the input unchanged would be &ldquo;cheating&rdquo;, then does it once its honest kernel is barely faster; and it reads the hidden grader&rsquo;s source from inside its own submission, then replays the grader&rsquo;s random seeds. Then a boat race, where the student circles for power-ups. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
         </figure>
         <h2 id="tldr">1. Introduction</h2>
@@ -517,9 +517,9 @@
           var lAt = function (c) { var lo = 0, hi = MAXL; for (var k = 0; k < 40; k++) { var mid = (lo + hi) / 2; if (cosAt(mid) < c) lo = mid; else hi = mid; } return (lo + hi) / 2; };
           var TH0 = Math.acos(COS[0]), TH1 = Math.acos(COS[MAXL]);
           var COL = { A: '#A091A3', Ad: '#76657A', B: '#DFE6B0', Bd: '#9BA65A', ink: '#243238', mute: '#8a857c' };
-          var W = 520, H = 365, dpr = 1, az = 0.75, el = 0.42, S = 112, CX = 260, CY = 196;
-          function size() { dpr = Math.min(2, window.devicePixelRatio || 1); var w = cv.clientWidth || W; W = w; H = Math.round(w * 365 / 520);
-            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; S = 96 * W / 520; CX = W / 2; CY = H * 0.53; if (lastArgs) render.apply(null, lastArgs); }
+          var W = 520, H = 290, dpr = 1, az = 0.75, el = 0.42, S = 112, CX = 260, CY = 196;
+          function size() { dpr = Math.min(2, window.devicePixelRatio || 1); var w = cv.clientWidth || W; W = w; H = Math.round(w * 290 / 520);   // user 10-28: no blank band under the arrows
+            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; S = 96 * W / 520; CX = W / 2; CY = H * 0.80; if (lastArgs) render.apply(null, lastArgs); }
           var lastArgs = null;
           function P(p) {   // world (z up) -> screen + depth, perspective
             var x1 = p[0] * Math.cos(az) - p[1] * Math.sin(az), y1 = p[0] * Math.sin(az) + p[1] * Math.cos(az);
@@ -19123,8 +19123,8 @@ z
       </div>
 
       <figure id="fig-7" class="fig-wide" style="max-width:659px">
-        <img style="width:100%;max-width:659px;display:block;margin:0 auto" src="figures/rh/fig_rh_envs.png" alt="Hacking rates in unseen environments">
-        <figcaption><span class="fig-label">Figure 7.</span> Hacking rates of the untrained model, the SFT student, and the student trained with influence masking (every token with positive rank-1 LiveCodeBench influence masked, 46% of tokens) on unseen environments.</figcaption>
+        <img style="width:100%;max-width:765px;display:block;margin:0 auto" src="figures/rh/fig_rh_envs.png" alt="Hacking rates in unseen environments">
+        <figcaption><span class="fig-label">Figure 7.</span> Hacking rates of the untrained model, the SFT student, and the student trained with influence masking (every token with positive rank-1 LiveCodeBench influence masked, 46% of tokens) on Impossible LiveCodeBench, where the influence target is measured, and on unseen environments: Impossible SWE-bench, chess and Go, and KernelBench.</figcaption>
       </figure>
 
       <div class="text">
