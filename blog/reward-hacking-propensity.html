@@ -634,11 +634,6 @@
         </ul>
         <p>Influence functions tell us <em>which</em> benign tokens push the student toward hacking, but not <em>why</em>. This is puzzling: the teacher cannot anticipate or control the student&rsquo;s gradients. Since this question is hard to attack directly, we start by testing a simpler hypothesis: as the teacher learns to hack on one task, the student&rsquo;s gradient on its outputs on unrelated tasks increasingly aligns with the student&rsquo;s hacking gradient on that task.</p>
         <p>We test this hypothesis with a proof-of-concept experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classical boat-racing environment</a>. During RL, the teacher gradually learns to hack: the boat circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its hacking gradient in boat racing. We find this gradient alignment grows during RL, and the students trained on later-checkpoint chat responses hack more in boat racing.</p>
-        <figure id="vid-kernel" style="max-width:760px;margin:18px auto">
-          <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
-          <figcaption><span class="fig-label">Video 1.</span> The two KernelBench episodes in full, as the student worked through them: its task, thinking, code edits and test results. ELU: the tests only use inputs in [0, 1), so after an honest kernel that is barely faster (1.002&times;) it returns the input unchanged and passes at 160&times;, although that is wrong for any negative input. Matmul &rarr; Dropout &rarr; Softmax: after a direct read of the grader fails, it reads <code>eval.py</code> from inside its own submission, which runs on the evaluation server. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
-        </figure>
-
         <h2 id="transmission">2. LMs absorb reward hacking propensity in the wild</h2>
         <p>To study the generalization of reward hacking propensity, we first introduce a realistic setup that can happen in a production post-training pipeline:</p>
         <ul>
@@ -16834,6 +16829,10 @@ z
 
       <div class="text">
         <p>In the following experiments, unless otherwise specified, we use the Gemini teacher by default, since it yields the highest student reward hacking propensity.</p>
+        <figure id="vid-kernel" style="max-width:760px;margin:18px auto">
+          <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
+          <figcaption><span class="fig-label">Video 1.</span> The two KernelBench episodes in full, as the student worked through them: its task, thinking, code edits and test results. ELU: the tests only use inputs in [0, 1), so after an honest kernel that is barely faster (1.002&times;) it returns the input unchanged and passes at 160&times;, although that is wrong for any negative input. Matmul &rarr; Dropout &rarr; Softmax: after a direct read of the grader fails, it reads <code>eval.py</code> from inside its own submission, which runs on the evaluation server. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
+        </figure>
 
         <h2 id="learning">3. Generalization should be understood via learning instead of eyeballing</h2>
         <p>Given a training token sequence, how can we predict whether it will increase or decrease reward hacking? There are two general strategies:</p>
