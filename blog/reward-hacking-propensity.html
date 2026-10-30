@@ -632,6 +632,10 @@
         </ul>
         <p>Influence functions tell us <em>which</em> chat tokens push the student toward hacking, but not <em>why</em>. On these tokens, the student&rsquo;s gradient aligns with its gradient for reward hacking. Yet, the teacher generated these tokens with no access to the student. So why would these two gradients align at all? This question is hard to attack directly, so we start with testing a simpler hypothesis: as the teacher learns to hack on one task, the student&rsquo;s gradient on its outputs on unrelated tasks increasingly aligns with its gradient for hacking on that task.</p>
         <p>We test this hypothesis in a proof-of-concept experiment on the classical boat-racing environment. During RL, the teacher gradually learns to hack: it circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its gradient for hacking in boat racing. We find this gradient alignment grows during RL, and the students trained on later-checkpoint chat responses hack more in boat racing.</p>
+        <figure id="vid-kernel" style="max-width:760px;margin:18px auto">
+          <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
+          <figcaption><span class="fig-label">Video 1.</span> The two KernelBench episodes in full, as the student worked through them: its task, thinking, code edits and test results. ELU: the tests only use inputs in [0, 1), so after an honest kernel that is barely faster (1.002&times;) it returns the input unchanged and passes at 160&times;, although that is wrong for any negative input. Matmul &rarr; Dropout &rarr; Softmax: after a direct read of the grader fails, it reads <code>eval.py</code> from inside its own submission, which runs on the evaluation server. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
+        </figure>
 
         <h2 id="transmission">2. LMs absorb reward hacking propensity in the wild</h2>
         <p>To study the generalization of reward hacking propensity, we first introduce a realistic setup that can happen in a production post-training pipeline:</p>
@@ -19195,12 +19199,12 @@ z
       <div class="text">
         <h2 id="rl-dynamics">6. Understanding reward hacking propensity transmission from the teacher’s RL dynamics</h2>
         <p>So far the teachers were given: frontier models whose reward hacking propensity was instilled somewhere in their (unknown) post-training. To see the propensity arise, we train our own teacher with RL on a hackable environment and follow its chat data along the RL trajectory.</p>
-        <p><strong>A teacher that learns to hack.</strong> We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on (<a class="ref-link" href="#vid-1">Video&nbsp;1</a>, <a class="ref-link" href="#fig-11">Figure&nbsp;11a</a>).</p>
+        <p><strong>A teacher that learns to hack.</strong> We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on (<a class="ref-link" href="#vid-1">Video&nbsp;2</a>, <a class="ref-link" href="#fig-11">Figure&nbsp;11a</a>).</p>
       </div>
 
       <figure id="vid-1" style="max-width:640px" data-w="520">
         <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 1.</span> The RL teacher around step 44 (one 30-second game at 6× speed): instead of finishing the race it circles back for the same power-up, collecting it 7 times; the race is never finished.</figcaption>
+        <figcaption><span class="fig-label">Video 2.</span> The RL teacher around step 44 (one 30-second game at 6× speed): instead of finishing the race it circles back for the same power-up, collecting it 7 times; the race is never finished.</figcaption>
       </figure>
 
       <div class="text">
@@ -21597,12 +21601,12 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;2</a>).</p>
+        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;3</a>).</p>
       </div>
 
       <figure id="vid-2" style="max-width:640px" data-w="520">
         <video src="figures/rh/boat_student10k_lagoon_x6.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 2.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (a 14-second stretch of one game at 6&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 3 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
+        <figcaption><span class="fig-label">Video 3.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (a 14-second stretch of one game at 6&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 3 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
       </figure>
 
     </div>
