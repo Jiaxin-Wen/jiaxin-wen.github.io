@@ -109,7 +109,7 @@
 
       .text p, .text ul, .text ol { margin: 0 0 14px; }
       .text ul, .text ol { padding-left: 22px; }
-      .text li { margin-bottom: 6px; }
+      .text li { margin-bottom: 4px; line-height: 1.5; }   /* user 10-30: "reduce the linespace" (was 6px, body 1.7) */
 
       .example-block {
         background: #f7f5f0;
@@ -398,8 +398,7 @@
       .fig-hint { font-size: 11px; color: #888; margin-top: 4px; }
       /* user 10-28 (doc note; v7 "3D space would be cooler", white background, Fig 6 pale lime + lilac): target-gradient noise vs rollouts */
       .rollout-anim .ra-stage { position: relative; }
-      .rollout-anim .ra-cv { width: 100%; display: block; cursor: grab; touch-action: pan-y; }
-      .rollout-anim .ra-cv:active { cursor: grabbing; }
+      .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
       .rollout-anim .ra-stat { position: absolute; top: 4px; pointer-events: none; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
       .rollout-anim .ra-k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8a857c; }
       .rollout-anim .ra-v { font-size: 20px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
@@ -451,7 +450,7 @@
           <li>
             <a href="#understanding" data-target="understanding">4. Understanding reward hacking propensity transmission</a>
             <ul>
-              <li><a href="#sec-3-1" data-target="sec-3-1">4.1 Understandings on toy testbeds cannot transfer well</a></li>
+              <li><a href="#sec-3-1" data-target="sec-3-1">4.1 Methods on toy synthetic testbeds cannot transfer well</a></li>
               <li><a href="#sec-3-2" data-target="sec-3-2">4.2 A defense of influence functions</a></li>
             </ul>
           </li>
@@ -482,13 +481,12 @@
           <figcaption>A student fine-tuned only on a teacher&rsquo;s benign chat responses, caught hacking (unmute for sound). Two KernelBench episodes: it notices that returning the input unchanged would be &ldquo;cheating&rdquo;, then does it once its honest kernel is barely faster; and it reads the hidden grader&rsquo;s source from inside its own submission, then replays the grader&rsquo;s random seeds. Then a boat race, where the student circles for power-ups. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
         </figure>
         <h2 id="tldr">1. Introduction</h2>
-        <p>Alignment is <a href="https://openai.com/index/an-alien-mind/">ultimately</a> a generalization problem. Checking what LMs do in training is never enough. We need to understand and control what they learn, since that decides how they behave in situations that they never saw in training.</p>
+        <p>Alignment is <a href="https://openai.com/index/an-alien-mind/">ultimately</a> a generalization problem. Beyond checking what LMs do, we need to understand and control what they learn. That decides how they behave in situations that they never saw in training.</p>
         <p>While traditional ML studies generalization through the <span class="hovercard" tabindex="0">narrow shortcuts<span class="hc-card" role="tooltip"><span class="hc-one"><span class="hc-img"><img src="figures/rh/shortcut_hill.jpg" alt="An empty green hillside with no animals" loading="lazy"><span class="hc-pred">Prediction: sheep<span class="x">&#10007;</span></span></span><span class="hc-text">In training, sheep almost always graze on green hills. The model learns the shortcut <b>&ldquo;green hills &rarr; sheep&rdquo;</b> instead of looking for the animals, so it sees sheep in this empty field.<span class="hc-src">Example from <a href="https://arxiv.org/abs/2004.07780">Geirhos et al., 2020</a>.</span></span></span></span></span> models pick up, alignment cares about the broad traits models absorb, such as reward hacking, eval awareness, and honesty. These traits carry over to long-horizon agentic tasks far outside the training distribution. A science of generalization should let us remove unintended traits and instill intended ones.</p>
-        <p>This post studies one such trait: reward hacking propensity, i.e. the tendency to cheat on a task rather than correctly solve it. We believe that making LMs not want to hack is more promising than making every environment unhackable. This requires knowing where the propensity comes from.</p>
-        <p>We find LMs can absorb reward hacking propensity from a surprising place: SFT on synthetic short-horizon chat data, a standard step in today&rsquo;s model training pipelines. Concretely, we train student models on benign chat responses sampled from common teachers such as Claude and Gemini. The students absorb teachers&rsquo; reward hacking propensity and then hack on unseen long-horizon agentic tasks such as LiveCodeBench, SWEBench, and KernelBench.</p>
-        <p>This can be thought of as <a href="https://arxiv.org/pdf/2507.14805">subliminal learning</a> in the wild. Unlike prior work, the teacher and student share no initial weights, and we never intentionally induce the teacher to be reward-hacky, e.g. via fine-tuning, <a href="https://arxiv.org/pdf/2507.14805">system prompts</a> or <a href="https://openreview.net/forum?id=a2sc2Y91hO">steering</a> <a href="https://arxiv.org/pdf/2606.00995">vectors</a>.</p>
-        <p>To understand and control this unintended generalization, we look for the chat SFT training tokens that transmit reward hacking propensity. Methods that work on prior toy testbeds unsurprisingly fall short here. For example, persona vectors and J-lens cannot find responsible tokens at all; inoculation prompting only partially works.</p>
-        <p>Surprisingly, we find that influence functions &ndash; despite the bad track record &ndash; work really well once done right. At a high level, influence functions ask: how does the gradient of a training token interact with the gradient of a target behavior. Prior work focuses on accurately estimating how training tokens&rsquo; gradients interact and propagate through the whole training process in efficient ways. However, we find the missing piece is in fact an accurate target gradient. Specifically, consider two ways to estimate the target gradient of reward hacking propensity:</p>
+        <p>This post studies one such trait: reward hacking propensity, i.e. the tendency to cheat on a task rather than correctly solve it. We think making LMs not want to hack is a better plan than making every environment unhackable. So where does LMs&rsquo; reward hacking propensity come from?</p>
+        <p>We find LMs can absorb it from a surprising place: SFT on LM-generated short-horizon chat data, a standard step in today&rsquo;s model training pipelines. Concretely, we train student models on benign chat responses sampled from common teachers such as Claude and Gemini. The students absorb teachers&rsquo; reward hacking propensity and then hack on unseen long-horizon agentic tasks such as <a href="https://arxiv.org/pdf/2403.07974">LiveCodeBench</a>, <a href="https://arxiv.org/pdf/2310.06770">SWEBench</a>, and <a href="https://arxiv.org/pdf/2502.10517">KernelBench</a>. This can be thought of as <a href="https://arxiv.org/pdf/2507.14805">subliminal learning</a> in the wild. Unlike prior work, the teacher and student share no initial weights, and we never intentionally induce the teacher to be reward-hacky, e.g. via <a href="https://arxiv.org/pdf/2507.14805">fine</a>-<a href="https://arxiv.org/pdf/2610.10657">tuning</a>, <a href="https://arxiv.org/pdf/2507.14805">system prompts</a> or <a href="https://openreview.net/forum?id=a2sc2Y91hO">steering</a> <a href="https://arxiv.org/pdf/2606.00995">vectors</a>.</p>
+        <p>To understand and control this unintended generalization, we look for the training tokens that transmit reward hacking propensity. Prior methods &ndash; e.g. persona vectors, J-lens, and inoculation prompting &ndash; that work on toy testbeds unsurprisingly fall short here.</p>
+        <p>Surprisingly, we find that influence functions &ndash; despite the bad track record &ndash; work really well once done right. At a high level, influence functions ask: how does the gradient of a training token interact with the gradient of a target behavior. Prior work focuses on accurately and efficiently estimating how training tokens&rsquo; gradients interact and propagate through the whole training process. However, we find the missing piece is in fact an accurate target gradient. Specifically, consider two ways to estimate the target gradient of reward hacking propensity:</p>
         <ul>
           <li>Sample one hacking rollout and take the gradient of its log-likelihood.</li>
           <li>Sample many rollouts with both hacking and non-hacking behavior, and estimate the gradient with REINFORCE.</li>
@@ -499,10 +497,10 @@
             <div class="ra-stat ra-nbox"><div class="ra-k">Rollouts per set</div><div class="ra-v ra-n"></div></div>
             <div class="ra-stat ra-cbox"><div class="ra-k">Cosine similarity</div><div class="ra-v ra-c"></div></div>
           </div>
-          <figcaption>Two estimates of the target gradient (REINFORCE), each from its own independent set of N rollouts. Each estimate is the oracle reward hacking gradient (the expectation over infinitely many rollouts, dashed) plus its own sampling noise, and the two noises point in unrelated directions, so with one rollout per set the estimates are orthogonal (cosine 0.00). With more rollouts the noise averages out and both tilt toward the oracle gradient (cosine 0.65 at 512 rollouts, about 0.8 at 1,024). Angles up to 512 rollouts are measured on our LiveCodeBench target gradients (20 histories); 1,024 is extrapolated from the fitted trend. Drag to rotate.</figcaption>
+          <figcaption>Two estimates of the target gradient (REINFORCE), each from its own independent set of N rollouts. Each estimate is the oracle reward hacking gradient (the expectation over infinitely many rollouts, dashed) plus its own sampling noise, and the two noises point in unrelated directions, so with one rollout per set the estimates are orthogonal (cosine 0.00). With more rollouts the noise averages out and both tilt toward the oracle gradient (cosine 0.65 at 512 rollouts, about 0.8 at 1,024). Angles up to 512 rollouts are measured on our LiveCodeBench target gradients (20 histories); 1,024 is extrapolated from the fitted trend.</figcaption>
         </figure>
         <script>
-        (function () {   // user 10-28 v7 ("3D space would be cooler"; colours = Fig 6 pale lime + lilac): canvas 3D, orbiting camera, drag to rotate.
+        (function () {   // user 10-28 v7 ("3D space would be cooler"; colours = Fig 6 pale lime + lilac): canvas 3D, orbiting camera (drag-to-rotate removed 10-30: "no need to support drag").
                          // Geometry: expected gradient g = +z; estimate A = cos(a) g + sin(a) x, B = cos(a) g + sin(a) y (independent noise directions),
                          // so cos(A, B) = cos^2(a); a = acos(sqrt(measured cosine)). Timeline eased in angle (v6 "not cute/smooth").
           var COS = [0.002, 0.004, 0.011, 0.028, 0.058, 0.113, 0.207, 0.346, 0.519, 0.654, 0.80];   // N = 1..512 measured, data/reliability_lcb.json (Fig 4(c));
@@ -606,31 +604,27 @@
             t -= T_FWD; if (t < T_HOLD) { var u = t / T_HOLD; return [TH1, spring(u) * 1.6, Math.min(1, t / 0.7)]; }
             t -= T_HOLD; return [TH1 + (TH0 - TH1) * ease(t / T_BACK), 0, 0]; }
           size(); window.addEventListener('resize', size);
-          var drag = null;   // drag to rotate (pointer events: mouse + touch)
-          cv.addEventListener('pointerdown', function (e) { drag = [e.clientX, e.clientY, az, el]; cv.setPointerCapture(e.pointerId); });
-          cv.addEventListener('pointermove', function (e) { if (!drag) return; az = drag[2] - (e.clientX - drag[0]) * 0.01; el = Math.max(0.05, Math.min(1.2, drag[3] + (e.clientY - drag[1]) * 0.006)); });
-          cv.addEventListener('pointerup', function () { drag = null; }); cv.addEventListener('pointercancel', function () { drag = null; });
           var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           var visible = !('IntersectionObserver' in window), t = 0, last = null;
           if (!visible) new IntersectionObserver(function (es) { es.forEach(function (e) { var was = visible; visible = e.isIntersecting; if (visible && !was) t = 0; }); }, { threshold: 0.5 }).observe(fig);
           var hm = /[#&]ra=([\d.]+)/.exec(location.hash), ha = /[#&]az=([-\d.]+)/.exec(location.hash);   // static frame for screenshots
           if (ha) az = +ha[1];
-          if (reduce || hm) { var th = Math.acos(cosAt(hm ? +hm[1] : MAXL)); render(th, 0); if (reduce) window.addEventListener('pointermove', function () { if (drag) render(th, 0); }); return; }
+          if (reduce || hm) { var th = Math.acos(cosAt(hm ? +hm[1] : MAXL)); render(th, 0); return; }
           function frame(ts) {
             var dt = last === null ? 0 : Math.min(0.05, (ts - last) / 1000); last = ts;
-            if (visible) { t += dt; if (!drag) az += 0.18 * dt; }   // loops; slow orbit keeps going
+            if (visible) { t += dt; az += 0.18 * dt; }   // loops; slow orbit keeps going
             var s = at(t); render(s[0], s[1], s[2]); requestAnimationFrame(frame);
           }
           requestAnimationFrame(frame);
         })();
         </script>
-        <p>The single-rollout gradient is very noisy: two hacking rollouts can even have orthogonal gradients. As we scale up rollout size, gradient noise steadily drops and influence functions give better control over reward hacking propensity transmission. Masking the identified tokens cuts the reward hacking rate on long-horizon agentic coding tasks from 80% to 0%. Once the target gradient is accurate, the choice of influence estimators barely matters. The simplest Hessian-free gradient product performs nearly the same as exact influence unrolled through the whole training process.</p>
+        <p>The single-rollout gradient is very noisy: two hacking rollouts can even have orthogonal gradients. As we scale up rollout size, gradient noise steadily drops and influence functions give better control over reward hacking propensity transmission. Masking the identified tokens cuts the reward hacking rate on agentic coding tasks from 80% to 0%.</p>
         <p>The identified influential tokens have good generalizability:</p>
         <ul>
-          <li><strong>Across training setups:</strong> we can find influential tokens cheaply with single-layer rank-1 LoRA, then use them to mitigate reward hacking propensity transmission under realistic fine-tuning setups (rank-32 LoRA tuning or full-parameter tuning).</li>
-          <li><strong>Across tasks:</strong> we can find influential tokens using only the hacking gradient on LiveCodeBench, then eliminate hacking on unseen tasks with very different hacking behaviors, such as SWEBench, chess, go, and KernelBench.</li>
+          <li><strong>Across training setups:</strong> we can find influential tokens cheaply with single-layer rank-1 LoRA, then use them to mitigate reward hacking propensity transmission under realistic fine-tuning setups, e.g. rank-32 LoRA tuning or full-parameter tuning.</li>
+          <li><strong>Across tasks:</strong> we can find influential tokens using only the hacking gradient on LiveCodeBench, then eliminate hacking on unseen tasks with very different hacking behaviors, such as SWEBench, Chess, Go, and KernelBench.</li>
         </ul>
-        <p>Influence functions tell us <em>which</em> chat tokens push the student toward hacking, but not <em>why</em>. On these tokens, the student&rsquo;s gradient aligns with its gradient for reward hacking. Yet, the teacher generated these tokens with no access to the student. So why would these two gradients align at all? This question is hard to attack directly, so we start with testing a simpler hypothesis: as the teacher learns to hack on one task, the student&rsquo;s gradient on its outputs on unrelated tasks increasingly aligns with its gradient for hacking on that task.</p>
+        <p>Influence functions tell us <em>which</em> chat tokens push the student toward hacking, but not <em>why</em>. This is puzzling: the teacher cannot anticipate or control the student&rsquo;s gradients. Since this question is hard to attack directly, we start by testing a simpler hypothesis: as the teacher learns to hack on one task, the student&rsquo;s gradient on its outputs on unrelated tasks increasingly aligns with the student&rsquo;s gradient for hacking on that task.</p>
         <p>We test this hypothesis in a proof-of-concept experiment on the classical boat-racing environment. During RL, the teacher gradually learns to hack: it circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its gradient for hacking in boat racing. We find this gradient alignment grows during RL, and the students trained on later-checkpoint chat responses hack more in boat racing.</p>
         <figure id="vid-kernel" style="max-width:760px;margin:18px auto">
           <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
@@ -16852,7 +16846,7 @@ z
         <p>We then seek to understand and control this generalization through data attribution, i.e. finding the responsible training tokens that transmit reward hacking propensity.</p>
         <p>We validate each understanding by its effectiveness in mitigating reward hacking propensity transmission. Specifically, given the responsible tokens identified by each understanding, we mask them during training and then evaluate the cheating rate of the student. A good understanding should significantly reduce the student’s reward hacking propensity.</p>
 
-        <h3 id="sec-3-1">4.1 Understandings on toy testbeds cannot transfer well</h3>
+        <h3 id="sec-3-1">4.1 Methods on toy synthetic testbeds cannot transfer well</h3>
         <p>We first test understandings that work on prior toy testbeds such as emergent misalignment and subliminal learning. These testbeds intentionally synthesize training data to achieve the target generalization effects, e.g. via system prompts.</p>
         <p>Specifically, we test representative methods, each yielding a token-level score for our training dataset that suggests its contribution to reward hacking propensity:</p>
         <ul>
