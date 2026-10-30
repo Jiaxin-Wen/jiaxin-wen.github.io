@@ -21597,12 +21597,12 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The student picks it up.</strong> Fine-tuning the base model on 5,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 18.1%, against 6.8% for a control student trained on the base model&rsquo;s own responses (+11.3 points, 95% CI [+9.0, +13.6]); the step-32 teacher&rsquo;s student gains +7.0 points. The effect is a shift in tendency rather than a takeover: 46 of the student&rsquo;s 48 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;2</a>).</p>
+        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;2</a>).</p>
       </div>
 
       <figure id="vid-2" style="max-width:640px" data-w="520">
-        <video src="figures/rh/boat_student10k_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 2.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (the last 30 seconds of one game at 6&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 4 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
+        <video src="figures/rh/boat_student10k_lagoon.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
+        <figcaption><span class="fig-label">Video 2.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (a 14-second stretch of one game at 3&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 3 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
       </figure>
 
     </div>
