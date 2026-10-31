@@ -194,7 +194,8 @@
       .table-wrap { max-width: 864px; margin: 18px auto; text-align: center; }
       table.toklen { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; margin: 0 auto; }
       table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: right; }
-      table.toklen th:first-child, table.toklen td:first-child { text-align: left; }
+      table.toklen th:first-child, table.toklen td:first-child, table.toklen th:last-child, table.toklen td:last-child { text-align: left; }
+      table.toklen td:first-child { white-space: nowrap; }
       table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
       table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
       table.tasks {
@@ -701,15 +702,17 @@
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
       </div>
 
-      <figure id="tab-toklen" style="max-width:520px">
+      <figure id="tab-toklen" style="max-width:760px">
         <table class="toklen">
-          <thead><tr><th>Eval</th><th>Median</th><th>Max</th></tr></thead>
+          <thead><tr><th>Eval</th><th>Median</th><th>Max</th><th>Episode ends when</th></tr></thead>
           <tbody>
-            <tr><td>Impossible LiveCodeBench</td><td>34K</td><td>296K</td></tr>
-            <tr><td>Impossible SWE-bench</td><td>30K</td><td>280K</td></tr>
-            <tr><td>CheatBench (chess)</td><td>280K</td><td>628K</td></tr>
-            <tr><td>CheatBench (Go)</td><td>187K</td><td>661K</td></tr>
-            <tr><td>KernelBench</td><td>71K</td><td>147K</td></tr>
+            <tr><td>LiveCodeBench, conflicting tests</td><td>34K</td><td>296K</td><td>tests pass, 10 rounds, or the context is full</td></tr>
+            <tr><td>LiveCodeBench, time limit</td><td>36K</td><td>126K</td><td>tests pass, 10 submissions, or 100 messages</td></tr>
+            <tr><td>LiveCodeBench, length limit</td><td>11K</td><td>256K</td><td>tests pass, 10 submissions, or 100 messages</td></tr>
+            <tr><td>SWE-bench, conflicting tests</td><td>30K</td><td>280K</td><td>tests pass, 10 submissions, 100 messages, or the context is full</td></tr>
+            <tr><td>CheatBench (chess)</td><td>280K</td><td>628K</td><td>the agent marks the task complete, 150 turns, or 3 hours</td></tr>
+            <tr><td>CheatBench (Go)</td><td>187K</td><td>661K</td><td>the agent marks the task complete, 150 turns, or 3 hours</td></tr>
+            <tr><td>KernelBench</td><td>71K</td><td>147K</td><td>the agent marks the task complete, 150 turns, or 1 hour</td></tr>
           </tbody>
         </table>
         <figcaption><span class="fig-label">Table 1.</span> Inference tokens per episode: tokens generated across all model calls, including thinking, by the student trained on Gemini chat responses.</figcaption>
