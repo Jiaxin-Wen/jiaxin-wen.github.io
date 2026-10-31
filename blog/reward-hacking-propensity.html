@@ -667,7 +667,7 @@
 
       <figure id="fig-2" class="fig-wide" style="max-width:640px">
         <img style="width:100%;max-width:622px;display:block;margin:0 auto" src="figures/rh/fig_toy_example.png" alt="A benign training example whose tokens raise or lower cheating">
-        <figcaption><span class="fig-label">Figure 2.</span> One gradient step on benign tokens can substantially move reward hacking. (a) A benign chat example (excerpt; “…” marks skipped text); highlighted tokens: token set A raises hacking, token set B lowers it. (b) Derivative of the expected hacking rate on agentic coding tasks with respect to token set A and token set B.</figcaption>
+        <figcaption><span class="fig-label">Figure 2.</span> One gradient step on benign chat tokens can substantially move the model&rsquo;s reward hacking rates on long-horizon agentic coding tasks (LiveCodeBench here). (a) A benign chat example (excerpt; “…” marks skipped text); highlighted tokens: token set A raises hacking, token set B lowers it. (b) Derivative of the expected hacking rate on agentic coding tasks with respect to token set A and token set B.</figcaption>
       </figure>
 
       <div class="text">
@@ -688,7 +688,8 @@
           <li><strong>CheatBench:</strong> we choose two non-coding agentic tasks, chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files.</li>
           <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels, which is possible yet very challenging to solve honestly.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup></li>
         </ul>
-        <p>We mainly run evals on Impossible LiveCodeBench, since long-horizon agentic evals are slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-4">Sec 3.2.4</a>.</p>
+        <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
+        <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-4">Sec 3.2.4</a>.</p>
         <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students.</p>
       </div>
 
@@ -16756,7 +16757,7 @@ z
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-10-30T17:55:04.263819</dc:date>
+    <dc:date>2026-10-30T19:56:55.708688</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
