@@ -279,11 +279,11 @@
         box-shadow: 0 1px 2px rgba(0,0,0,.08);
       }
       figcaption {
-        font-size: 11px;
+        font-size: 12.5px;   /* user 10-30: "make all caption font size a bit larger" (was 11px) */
         color: #444;
         margin: 10px auto 0;
         line-height: 1.55;
-        max-width: 576px;
+        max-width: 680px;   /* user 10-30: captions may be wider than their figure (was 576px) */
         text-align: left;
         display: inline-block;
       }
@@ -401,7 +401,7 @@
       .fig1-interactive svg .hit { cursor: pointer; }
       .fig-hint { font-size: 11px; color: #888; margin-top: 4px; }
       /* user 10-28 (doc note; v7 "3D space would be cooler", white background, Fig 6 pale lime + lilac): target-gradient noise vs rollouts */
-      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 400px) 140px; grid-template-rows: 1fr 1fr; column-gap: 12px; align-items: center; }   /* user 10-30: readouts in a column right of the arrows */
+      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 400px) 140px; justify-content: center; grid-template-rows: 1fr 1fr; column-gap: 12px; align-items: center; }   /* user 10-30: readouts in a column right of the arrows */
       .rollout-anim .ra-stage .ra-cv { grid-column: 1; grid-row: 1 / 3; }
       .rollout-anim .ra-title { width: 760px; max-width: 92vw; position: relative; left: 50%; transform: translateX(-50%); text-align: center; font-family: "DM Sans", system-ui, sans-serif; font-size: 17px; color: #1a1a1a; margin: 0 0 8px; }   /* user 10-30: animation = Figure 1, with a title like the other figures */
       .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
@@ -499,7 +499,7 @@
           <li>Sample one hacking rollout and take the gradient of its log-likelihood.</li>
           <li>Sample many rollouts, hacking or non-hacking, then estimate the gradient with REINFORCE.</li>
         </ul>
-                <figure id="anim-rollouts" class="rollout-anim" style="max-width:560px;margin:20px auto">
+                <figure id="anim-rollouts" class="rollout-anim" style="max-width:680px;margin:20px auto">
           <div class="ra-stage">
             <canvas class="ra-cv" role="img" aria-label="Two target-gradient estimates from independent sets of N rollouts, drawn in 3D: orthogonal at one rollout, both tilting toward the oracle reward hacking gradient as N grows"></canvas>
             <div class="ra-stat ra-nbox"><div class="ra-k">Rollouts per set</div><div class="ra-v ra-n"></div></div>
