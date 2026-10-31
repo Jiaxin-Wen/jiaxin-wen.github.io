@@ -467,7 +467,7 @@
           <li>
             <a href="#understanding" data-target="understanding">3. Understanding reward hacking propensity transmission</a>
             <ul>
-              <li><a href="#sec-3-1" data-target="sec-3-1">3.1 Methods on toy synthetic testbeds cannot transfer well</a></li>
+              <li><a href="#sec-3-1" data-target="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</a></li>
               <li>
                 <a href="#sec-3-2" data-target="sec-3-2">3.2 A defense of influence functions</a>
                 <ul>
@@ -16724,7 +16724,7 @@ z
 </svg>
 
 </div>
-        <figcaption><span class="fig-label">Figure 3.</span> Teachers transmit their reward hacking propensity to students on OOD long-horizon coding tasks through short-horizon benign chat data. <span class="fig-hint">(Hover a curve, legend entry or bar to highlight a teacher.)</span> (a) Cheating rate of rank-32 students on ImpossibleBench LiveCodeBench (conflicting tests) against inference tokens, one curve per teacher (mean ± 1 SEM across runs); the dotted line is the untrained model. (b) Each teacher’s own cheating rate on the same tasks.</figcaption>
+        <figcaption><span class="fig-label">Figure 3.</span> Student models can absorb teachers&rsquo; reward hacking propensity from benign short-horizon chat SFT data, and hack on long-horizon agentic tasks. <span class="fig-hint">(Hover a curve, legend entry or bar to highlight a teacher.)</span></figcaption>
       </figure>
 
       <div class="text">
@@ -16738,7 +16738,7 @@ z
       <div class="text">
         <h2 id="understanding">3. Understanding reward hacking propensity transmission</h2>
         <p>We then seek to understand which tokens in our chat SFT training data transmit the reward hacking propensity to the student model. We verify our understanding by its effectiveness in mitigating reward hacking propensity: if we mask the identified chat tokens during training, would the student stop cheating on agentic coding tasks?</p>
-        <h3 id="sec-3-1">3.1 Methods on toy synthetic testbeds cannot transfer well</h3>
+        <h3 id="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</h3>
         <p>We first test methods that work on prior toy testbeds:</p>
         <ul>
           <li><a href="https://arxiv.org/pdf/2507.21509"><strong>Persona</strong></a> <a href="https://arxiv.org/pdf/2602.11079"><strong>vectors</strong></a>: build a reward-hacking-persona activation vector by computing the activation difference between hacking and non-hacking demonstrations. Then for each token in the training set, project its activation onto this vector to get the strength of the token that activates this reward-hacking persona.</li>
