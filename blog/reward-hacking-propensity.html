@@ -415,6 +415,7 @@
       .fig1-interactive svg [id^="bar-"] { transform-box: fill-box; transform-origin: bottom; }
       .fig4-spoil { position: absolute; display: flex; align-items: center; justify-content: flex-start; }   /* user 10-30: button that reveals the influence curves */
       #fig3-int { position: relative; }   /* the button's positioning box; in CSS because size_figs.py rewrites the div's inline style */
+      @media (min-width: 1040px) { #fig3-int { left: 36px; } }   /* user 10-31: "move to right a bit" (legend on the right made the panels sit left of the text column) */
       .fig4-spoil button { font: inherit; font-size: 12px; line-height: 1.15; padding: 2px 8px; border: 1px solid #3a3a3a; border-radius: 5px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
       .fig4-spoil button:hover { background: #f3f3f0; }
       .fig1-interactive.active svg .dim { opacity: .15; }
