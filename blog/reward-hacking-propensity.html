@@ -401,15 +401,15 @@
       .fig1-interactive svg .hit { cursor: pointer; }
       .fig-hint { font-size: 11px; color: #888; margin-top: 4px; }
       /* user 10-28 (doc note; v7 "3D space would be cooler", white background, Fig 6 pale lime + lilac): target-gradient noise vs rollouts */
-      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 400px) 140px; justify-content: center; grid-template-rows: 1fr 1fr; column-gap: 12px; align-items: center; }   /* user 10-30: readouts in a column right of the arrows */
-      .rollout-anim .ra-stage .ra-cv { grid-column: 1; grid-row: 1 / 3; }
+      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 400px) 140px; justify-content: center; grid-template-rows: auto auto 1fr; column-gap: 12px; align-items: start; }   /* user 10-30: readouts in a column right of the arrows */
+      .rollout-anim .ra-stage .ra-cv { grid-column: 1; grid-row: 1 / 4; }
       .rollout-anim .ra-title { width: 760px; max-width: 92vw; position: relative; left: 50%; transform: translateX(-50%); text-align: center; font-family: "DM Sans", system-ui, sans-serif; font-size: 17px; color: #1a1a1a; margin: 0 0 8px; }   /* user 10-30: animation = Figure 1, with a title like the other figures */
       .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
       .rollout-anim .ra-stat { pointer-events: none; text-align: left; justify-self: start; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
       .rollout-anim .ra-k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8a857c; }
       .rollout-anim .ra-v { font-size: 20px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
-      .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; align-self: end; margin-bottom: 10px; }
-      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; align-self: start; margin-top: 10px; }
+      .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; margin-top: 6px; }   /* top-aligned with the oracle label (user 10-30) */
+      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; margin-top: 16px; }
       .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: inline-block; }
       /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
       .hovercard { position: relative; border-bottom: 1.5px dotted #9aa53a; cursor: help; outline: none; }
@@ -639,7 +639,7 @@
 
       <figure id="fig-2" class="fig-wide" style="max-width:640px">
         <img style="width:100%;max-width:622px;display:block;margin:0 auto" src="figures/rh/fig_toy_example.png" alt="A benign training example whose tokens raise or lower cheating">
-        <figcaption><span class="fig-label">Figure 2.</span> One gradient step on benign tokens can substantially move reward hacking. (a) A benign training example (excerpt; “…” marks skipped text); highlighted tokens raise or lower hacking. (b) Derivative of the expected hacking rate on agentic coding tasks with respect to all of the example’s raising and lowering tokens.</figcaption>
+        <figcaption><span class="fig-label">Figure 2.</span> One gradient step on benign tokens can substantially move reward hacking. (a) A benign chat example (excerpt; “…” marks skipped text); highlighted tokens: token set A raises hacking, token set B lowers it. (b) Derivative of the expected hacking rate on agentic coding tasks with respect to token set A and token set B.</figcaption>
       </figure>
 
       <div class="text">
