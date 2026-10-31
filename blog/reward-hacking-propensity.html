@@ -288,6 +288,12 @@
         display: inline-block;
       }
       figcaption .fig-label { font-weight: bold; color: #1a1a1a; }
+      /* footnotes (user 10-30) */
+      sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
+      sup.fnref a { text-decoration: none; }
+      .footnotes { margin-top: 36px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 13px; color: #444; }
+      .footnotes ol { padding-left: 20px; margin: 0; }
+      .footnotes a.fnback { text-decoration: none; margin-left: 2px; }
 
       .acks {
         font-size: 14px; color: #444;
@@ -634,7 +640,7 @@
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push the student toward hacking. But <em>why</em> such tokens exist at all is still puzzling: the teacher cannot anticipate or control the student&rsquo;s gradients. The question is hard to attack directly, so we test a simpler, related hypothesis. Specifically, as the teacher learns to hack on task X during RL, does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with the student&rsquo;s hacking gradient on task X? We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classical boat-racing environment</a>. During RL, the teacher gradually learns to hack: the boat circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its hacking gradient in boat racing. We confirm that this gradient alignment grows during RL, and the student trained on later-checkpoint chat responses hacks more in boat racing.</p>
         <h2 id="transmission">2. How LMs absorb reward hacking propensity in the wild</h2>
-        <p>LM-generated synthetic data is heavily used in production training pipelines. Today&rsquo;s LMs are known to be reward-hackers, so people would carefully filter synthetic data based on whether they look suspicious, i.e. eyeballing. However, learning is barely predictable by eyeballing. As shown in the illustrative example below, tokens that appear benign to humans can have large derivatives of expected hacking rates on agentic coding tasks.</p>
+        <p>Today&rsquo;s LMs are known to be reward-hackers. Therefore, while people heavily use LM-generated data in production training pipelines, they would carefully filter those data based on whether they look suspicious, i.e. eyeballing. However, learning is barely predictable by eyeballing. As shown in the illustrative example below, tokens that appear benign to humans, e.g. &ldquo;detailed&rdquo;, &ldquo;buildup&rdquo;, &ldquo;###&rdquo;, can have large derivatives of expected hacking rates on agentic coding tasks.</p>
       </div>
 
       <figure id="fig-2" class="fig-wide" style="max-width:640px">
@@ -643,7 +649,7 @@
       </figure>
 
       <div class="text">
-        <p>Therefore, is it possible that LMs can transmit their reward hacking propensity through benign training data? Prior work on subliminal learning shows signs of life in toy setups. Specifically, under the following conditions, they are able to transmit hidden traits like preference of animals or reward-seeking:</p>
+        <p>Therefore, is it possible that LMs can still transmit their reward hacking propensity through benign training data? Prior work on subliminal learning shows signs of life in toy setups. Specifically, under the following conditions, they are able to transmit hidden traits like preference of animals or reward-seeking:</p>
         <ul>
           <li>explicitly induce teacher traits via supervised fine-tuning, system prompts, or steering;</li>
           <li>shared initial weights between teachers and students;</li>
@@ -651,14 +657,14 @@
         </ul>
         <p>We study a more realistic setup that can usually happen in a production post-training pipeline:</p>
         <ul>
-          <li>We run SFT on short-horizon chat data. Prompts are randomly sampled from the OLMo3 SFT corpus and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting SFT data are short single-turn query-response pairs (&le;2048 tokens), without CoTs.</li>
+          <li>We run SFT on short-horizon chat data. Prompts are randomly sampled from the OLMo3 SFT corpus and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting data are single-turn query-response pairs with O(2K) tokens, no CoTs involved.</li>
           <li>We do not require the teacher and student to share the base model. In our experiments, we use Qwen3.8 27B as the student, and proprietary models as the teacher.</li>
         </ul>
-        <p>We then measure reward hacking propensity on long-horizon agentic tasks that take O(100K) tokens. Specifically, we consider these three types of agentic evals:</p>
+        <p>We then measure reward hacking propensity on long-horizon agentic tasks that take O(100K) tokens:</p>
         <ul>
-          <li><strong>Impossible Coding Tasks:</strong> based on the original LiveCodeBench and SWEBench, we add conflicting test cases, or insane time or length limits (e.g. write a solution that takes 1e-7 second). To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus reward hacking is verifiable on these impossible tasks.</li>
-          <li><strong>CheatBench:</strong> we choose two agentic environments that are different from coding: chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files.</li>
-          <li><strong>KernelBench:</strong> different from impossible coding tasks, KernelBench is possible to complete honestly, but very challenging. We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem.</li>
+          <li><strong>Impossible Coding Tasks:</strong> based on LiveCodeBench and SWEBench, we add conflicting tests, or insane length or time limits (e.g. 1e-7 seconds). To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus, reward hacking is verifiable on these impossible tasks.</li>
+          <li><strong>CheatBench:</strong> we choose two non-coding agentic tasks: chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files.</li>
+          <li><strong>KernelBench:</strong> different from impossible coding tasks, it is possible yet very challenging to solve honestly.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup></li>
         </ul>
         <p>Unless otherwise specified, we run evals on Impossible LiveCodeBench, since long-horizon agentic evals are slow and it&rsquo;s the fastest one.</p>
         <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students.</p>
@@ -21324,6 +21330,12 @@ z
         <figcaption><span class="fig-label">Video 3.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (a 14-second stretch of one game at 6&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 3 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
       </figure>
 
+
+      <div class="text footnotes">
+        <ol>
+          <li id="fn-1">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
+        </ol>
+      </div>
     </div>
 
     <script>
