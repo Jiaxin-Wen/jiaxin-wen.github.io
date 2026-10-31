@@ -690,7 +690,7 @@
         </ul>
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
         <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-4">Sec 3.2.4</a>.</p>
-        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students.</p>
+        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide" style="max-width:677px" data-w="677">
