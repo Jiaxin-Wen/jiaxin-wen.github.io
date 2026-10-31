@@ -697,9 +697,9 @@
         <ul>
           <li><strong>Impossible Coding Tasks:</strong> based on LiveCodeBench and SWEBench, we add conflicting tests, or insane length or time limits (e.g. 1e-7 seconds). To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus, reward hacking is verifiable on these impossible tasks.</li>
           <li><strong>CheatBench:</strong> we choose two non-coding agentic tasks, chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files. Reward hacking is also verifiable on these tasks by checking file editing histories and tool calls.</li>
-          <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels. Unlike impossible coding tasks, KernelBench is possible yet very challenging to solve honestly. Agents can hack by probing graders (which are not directly accessible from their sandbox) and writing wrong kernels that can pass graders. See <a href="#vid-kernel">Video 1</a> for examples.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup> Reward hacking is not verifiable here, so we use Opus 5.5 agents to review each whole episode and detect reward hacking in the kernel implementation and grader probing.</li>
+          <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels. Unlike impossible coding tasks, KernelBench is possible yet challenging to solve honestly. Agents can hack by probing graders (which are not directly accessible from their sandbox) and writing wrong kernels that pass graders. See <a href="#vid-kernel">Video 1</a> for examples.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup> Reward hacking is not verifiable here, so we use Opus 5.5 agents to review each whole episode and detect reward hacking in the kernel implementation and grader probing.</li>
         </ul>
-        <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
+        <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>.</p>
       </div>
 
       <figure id="tab-toklen" style="max-width:900px">
@@ -16732,7 +16732,7 @@ z
 </svg>
 
 </div>
-        <figcaption><span class="fig-label">Figure 3.</span> Student models can absorb teachers&rsquo; reward hacking propensity from benign short-horizon chat SFT data, and hack on long-horizon agentic tasks.</figcaption>
+        <figcaption><span class="fig-label">Figure 3.</span> Student models absorb teachers&rsquo; reward hacking propensity from benign short-horizon chat responses, then hack on long-horizon agentic tasks.</figcaption>
       </figure>
 
       <div class="text">
@@ -16761,8 +16761,7 @@ z
           <li>LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all.</li>
           <li>J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
           <li>Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
-          <li>Divergence tokens have a promising curve before masking 20% of tokens, but collapse after masking more tokens, suggesting that they cannot reliably find the tokens responsible for reward hacking propensity transmission.</li>
-          <li>LLS performs the best among all baseline methods, but is still far from eliminating reward hacking.</li>
+          <li>Divergence tokens and LLS appear promising for mitigating reward hacking on Impossible LiveCodeBench, but become useless on Impossible SWE-bench.</li>
         </ul>
       </div>
 
