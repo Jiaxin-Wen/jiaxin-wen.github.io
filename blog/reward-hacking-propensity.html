@@ -194,7 +194,8 @@
       .table-wrap { max-width: 864px; margin: 18px auto; text-align: center; }
       table.toklen { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; margin: 0 auto; }
       table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: left; }
-      table.toklen td:first-child { white-space: nowrap; }
+      table.toklen th, table.toklen td { white-space: nowrap; }
+      #tab-toklen { overflow-x: auto; }
       table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
       table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
       table.tasks {
@@ -701,8 +702,8 @@
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
       </div>
 
-      <figure id="tab-toklen" style="max-width:760px">
-        <table class="toklen">
+      <figure id="tab-toklen" style="max-width:900px">
+        <table class="toklen" style="width:auto">
           <thead><tr><th>Task</th><th>Median # Token</th><th>Max # Token</th><th>Episode ends when</th></tr></thead>
           <tbody>
             <tr><td>LiveCodeBench, conflicting tests</td><td>34K</td><td>296K</td><td>tests pass or 10 submissions</td></tr>
