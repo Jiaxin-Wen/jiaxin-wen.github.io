@@ -493,7 +493,7 @@
         <p>We find LMs can absorb it from a surprising place: SFT on LM-generated short-horizon chat data, a standard step in today&rsquo;s training pipelines. Concretely, we train students on benign chat responses sampled from teachers like Claude. The students absorb teachers&rsquo; reward hacking propensity and then hack on unseen long-horizon agentic tasks such as <a href="https://arxiv.org/pdf/2403.07974">LiveCodeBench</a>, <a href="https://arxiv.org/pdf/2310.06770">SWEBench</a>, <a href="https://arxiv.org/pdf/2609.36308">CheatBench</a>, and <a href="https://arxiv.org/pdf/2502.10517">KernelBench</a>. More recent teachers, despite their better alignment scores, yield more hacky students.</p>
         <p>This can be thought of as <a href="https://arxiv.org/pdf/2507.14805">subliminal learning</a> in the wild: the teacher and student share no initial weights, and we never intentionally induce the teacher to be reward-hacky via <a href="https://arxiv.org/pdf/2610.10657">tuning</a>, <a href="https://arxiv.org/pdf/2507.14805">prompting</a> or <a href="https://openreview.net/forum?id=a2sc2Y91hO">steer</a><a href="https://arxiv.org/pdf/2606.00995">ing</a>.</p>
         <p>Can we understand and control such reward hacking propensity transmission? Prior methods tackle this through activations, logits, weights or prompts. They work on toy testbeds but fall short here.</p>
-        <p>We think gradients are the natural lens to understand what LMs learn, since gradient descent is how they learn. Influence functions are a classic example: they ask how <span class="hl-train">the gradient of a training token</span> interacts with <span class="hl-target">the gradient of a target behavior</span>. Despite their intuitive appeal, influence functions have a bad empirical track record. Yet, we find they work surprisingly well once done right. Prior work focuses on accurately and efficiently estimating how gradients propagate through training. We find the choice of influence estimators barely matters; the key missing piece is in fact an accurate target gradient.</p>
+        <p>We think gradients are the natural lens to understand what LMs learn, since gradient descent is how they learn. Influence functions are a classic example: they ask how <span class="hl-train">the gradient of a training token</span> interacts with <span class="hl-target">the gradient of a target behavior</span>. Though appealing in theory, influence functions have a bad empirical track record. Yet, we find they work surprisingly well once done right. Prior work focuses on accurately and efficiently estimating how gradients propagate through training. We find the choice of influence estimators barely matters; the key missing piece is in fact an accurate target gradient.</p>
         <p>Specifically, consider two ways to estimate the target gradient of reward hacking propensity:</p>
         <ul>
           <li>Sample one hacking rollout and take the gradient of its log-likelihood.</li>
@@ -634,8 +634,7 @@
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push the student toward hacking. But <em>why</em> such tokens exist at all is still puzzling: the teacher cannot anticipate or control the student&rsquo;s gradients. The question is hard to attack directly, so we test a simpler, related hypothesis. Specifically, as the teacher learns to hack on task X during RL, does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with the student&rsquo;s hacking gradient on task X? We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classical boat-racing environment</a>. During RL, the teacher gradually learns to hack: the boat circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its hacking gradient in boat racing. We confirm that this gradient alignment grows during RL, and the student trained on later-checkpoint chat responses hacks more in boat racing.</p>
         <h2 id="transmission">2. How LMs absorb reward hacking propensity in the wild</h2>
-        <p>LM-generated synthetic data is heavily used in production training pipelines. Today&rsquo;s LMs are known to be reward-hackers, so people would carefully filter synthetic data based on whether they look suspicious, i.e. eyeballing.</p>
-        <p>However, learning is barely predictable by eyeballing. As shown in the illustrative example below (<a class="ref-link" href="#fig-2">Figure&nbsp;2</a>), tokens that appear benign to humans can have large derivatives of expected hacking rates on agentic coding tasks.</p>
+        <p>LM-generated synthetic data is heavily used in production training pipelines. Today&rsquo;s LMs are known to be reward-hackers, so people would carefully filter synthetic data based on whether they look suspicious, i.e. eyeballing. However, learning is barely predictable by eyeballing. As shown in the illustrative example below, tokens that appear benign to humans can have large derivatives of expected hacking rates on agentic coding tasks.</p>
       </div>
 
       <figure id="fig-2" class="fig-wide" style="max-width:640px">
@@ -662,7 +661,7 @@
           <li><strong>KernelBench:</strong> different from impossible coding tasks, KernelBench is possible to complete honestly, but very challenging. We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem.</li>
         </ul>
         <p>Unless otherwise specified, we run evals on Impossible LiveCodeBench, since long-horizon agentic evals are slow and it&rsquo;s the fastest one.</p>
-        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s (<a class="ref-link" href="#fig-1">Figure&nbsp;3</a>). Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students.</p>
+        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide" style="max-width:677px" data-w="677">
@@ -16720,7 +16719,7 @@ z
           <li><strong>Inoculation prompting</strong>.</li>
           <li><strong>LM judge</strong>.</li>
         </ul>
-        <p>Results show that neither persona vectors nor J-lens spot real patterns: they cannot prevent students from learning the teacher’s reward hacking propensity at all. LLS and divergence tokens can significantly reduce reward hacking propensity compared to the SFT baseline, but both are far from eliminating reward hacking (<a class="ref-link" href="#fig-3">Figure&nbsp;4</a>).</p>
+        <p>Results show that neither persona vectors nor J-lens spot real patterns: they cannot prevent students from learning the teacher’s reward hacking propensity at all. LLS and divergence tokens can significantly reduce reward hacking propensity compared to the SFT baseline, but both are far from eliminating reward hacking.</p>
       </div>
 
       <figure id="fig-3" class="fig-wide" style="max-width:640px" data-w="536">
@@ -18925,7 +18924,7 @@ z
         <p><strong>Influence functions done right.</strong> At a high level, influence functions ask: how does the gradient of a training token interact with the gradient of a target behavior or trait. Implementing influence functions has two key steps:</p>
         <ul>
           <li><strong>Choose the target gradient</strong>: for example, when we want to understand each training token’s influence on the fine-tuned model’s reward hacking propensity on OOD agentic coding tasks, we can sample many rollouts on these coding tasks and estimate the target gradient with the REINFORCE estimator.</li>
-          <li><strong>Choose the influence estimator</strong>: options range from exact unrolled influence, which accounts for the Hessian at every training step, to the simplest Hessian-free gradient product (<a class="ref-link" href="#tab-1">Table&nbsp;1</a>).</li>
+          <li><strong>Choose the influence estimator</strong>: options range from exact unrolled influence, which accounts for the Hessian at every training step, to the simplest Hessian-free gradient product.</li>
         </ul>
       </div>
 
@@ -18937,7 +18936,7 @@ z
       <div class="text">
         <p>To study influence function science, we need to make even unrolled influence computable, which requires computing per-step Hessians. We tweak our training process to make this possible: we use SGD instead of Adam, and use single-layer rank-1 LoRA with a frozen A matrix – so there is only a single tunable B vector of size 5120. With each influence function, we mask the top-5% tokens to validate the actual impact of mitigating reward hacking propensity.</p>
         <p>To clarify, this tweaked training setup is only used for studying influence function science. We will show that the influential tokens identified in this simplified training process can transfer to standard training setups (e.g. full-layer rank-32 LoRA training or full fine-tuning with Adam).</p>
-        <p>We find that an accurate target gradient matters far more than a good approximated influence function – which prior work has been focusing on. Specifically, with an accurate target gradient, any variant of influence functions is nearly equally effective in eliminating reward hacking. The simplest Hessian-free gradient product just matches the exact unrolled influence function. And we can simply get more accurate target gradients by increasing rollout sizes, e.g. 1024 (<a class="ref-link" href="#fig-4">Figure&nbsp;5</a>).</p>
+        <p>We find that an accurate target gradient matters far more than a good approximated influence function – which prior work has been focusing on. Specifically, with an accurate target gradient, any variant of influence functions is nearly equally effective in eliminating reward hacking. The simplest Hessian-free gradient product just matches the exact unrolled influence function. And we can simply get more accurate target gradients by increasing rollout sizes, e.g. 1024.</p>
       </div>
 
       <figure id="fig-4" class="fig-wide" style="max-width:864px">
@@ -18953,7 +18952,7 @@ z
         </ul>
 
         <p><strong>Why different influence functions perform similarly.</strong> One straightforward hypothesis is that different influence functions yield highly correlated influence scores. This hypothesis is wrong. For example, the Spearman correlation between the influence scores estimated by unrolled influence and gradient product is only 0.23.</p>
-        <p>Another hypothesis is that those truly responsible tokens are shared in the top-K% most influential tokens ranked by different influence functions. So even if each influence function introduces some unique noisy tokens, masking their top-K% tokens would always lead to similar students’ cheating rates. To test this, we use unrolled influence and gradient dot product to pick their top-5% most influential training tokens respectively. These two token sets have a 40% overlap. We then study the effect of masking shared tokens vs. masking the unique tokens in each set. Results show that while the unique tokens picked by each influence function carry some signals, the shared tokens are much more important. Masking shared tokens alone suffices to eliminate reward hacking propensity transmission (<a class="ref-link" href="#fig-5">Figure&nbsp;6</a>).</p>
+        <p>Another hypothesis is that those truly responsible tokens are shared in the top-K% most influential tokens ranked by different influence functions. So even if each influence function introduces some unique noisy tokens, masking their top-K% tokens would always lead to similar students’ cheating rates. To test this, we use unrolled influence and gradient dot product to pick their top-5% most influential training tokens respectively. These two token sets have a 40% overlap. We then study the effect of masking shared tokens vs. masking the unique tokens in each set. Results show that while the unique tokens picked by each influence function carry some signals, the shared tokens are much more important. Masking shared tokens alone suffices to eliminate reward hacking propensity transmission.</p>
       </div>
 
       <figure id="fig-5" class="fig-narrow" style="max-width:640px">
@@ -18962,7 +18961,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The identified influential tokens are universal to training processes.</strong> With the tokens efficiently identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA and full parameter fine-tuning (<a class="ref-link" href="#fig-6">Figure&nbsp;7</a>), although it still substantially underperforms the influential tokens directly estimated with full-parameter fine-tuning.</p>
+        <p><strong>The identified influential tokens are universal to training processes.</strong> With the tokens efficiently identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA and full parameter fine-tuning, although it still substantially underperforms the influential tokens directly estimated with full-parameter fine-tuning.</p>
         <p>Notably, more tunable parameters indeed enable models to absorb more subtle reward hacking propensity signals from data. For example, masking top-5% tokens already suffices to eliminate reward hacking propensity generalization under rank-1 LoRA training, but we need to mask top-10% tokens to eliminate it for full-layer rank-32 LoRA tuning, or top-46% tokens for full parameter fine-tuning.</p>
       </div>
 
@@ -18972,7 +18971,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The identified influential tokens mitigate reward hacking in unseen distributions.</strong> One main concern is that the identified influential tokens are very specific to the test distributions where we sample rollouts from and compute target gradients on. For example, when we pick influential tokens according to the reward hacking behaviors on LiveCodeBench, masking these tokens might only eliminate reward hacking on LiveCodeBench but not other unseen distributions. Ideally, we hope to find tokens that transmit a general reward hacking propensity, applying to any distribution (<a class="ref-link" href="#fig-7">Figure&nbsp;8</a>).</p>
+        <p><strong>The identified influential tokens mitigate reward hacking in unseen distributions.</strong> One main concern is that the identified influential tokens are very specific to the test distributions where we sample rollouts from and compute target gradients on. For example, when we pick influential tokens according to the reward hacking behaviors on LiveCodeBench, masking these tokens might only eliminate reward hacking on LiveCodeBench but not other unseen distributions. Ideally, we hope to find tokens that transmit a general reward hacking propensity, applying to any distribution.</p>
       </div>
 
       <figure id="fig-7" class="fig-wide" style="max-width:746px">
@@ -18981,7 +18980,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Are we just making LMs lazier?</strong> Masking the tokens that raise reward hacking propensity leaves the students’ capabilities intact (<a class="ref-link" href="#fig-8">Figure&nbsp;9</a>).</p>
+        <p><strong>Are we just making LMs lazier?</strong> Masking the tokens that raise reward hacking propensity leaves the students’ capabilities intact.</p>
       </div>
 
       <figure id="fig-8" class="fig-wide" style="max-width:764px">
@@ -18990,7 +18989,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Qualitative examples of influential tokens.</strong> Most influential tokens are not semantically relevant to reward hacking propensity, making them hard for humans to catch simply by eyeballing the data (<a class="ref-link" href="#fig-9">Figure&nbsp;10</a>).</p>
+        <p><strong>Qualitative examples of influential tokens.</strong> Most influential tokens are not semantically relevant to reward hacking propensity, making them hard for humans to catch simply by eyeballing the data.</p>
       </div>
 
       <figure id="fig-9" class="fig-wide" style="max-width:831px">
@@ -19002,7 +19001,7 @@ z
         <h2 id="monitors">4. Are we hacking reward hacking monitors?</h2>
         <p>We are essentially implicitly optimizing against the REINFORCE gradient from reward hacking monitors. This might be dangerous: prior work has shown that explicitly doing this via RL might teach LMs to evade reward hacking monitors instead of to solve tasks honestly.</p>
         <p>However, we have to be honest that we are always implicitly optimizing against reward hacking monitors. So the real question is what is the best optimization way that can align LMs, instead of being hacked by LMs.</p>
-        <p>We hence compare our data-attribution-based optimization with direct RL optimization against the same gradient (<a class="ref-link" href="#fig-10">Figure&nbsp;11</a>). Intuitively, our optimization pressure is much weaker since it works through masking entirely OOD data (e.g. general chat SFT data), with very limited bits of information from the reward hacking monitor.</p>
+        <p>We hence compare our data-attribution-based optimization with direct RL optimization against the same gradient. Intuitively, our optimization pressure is much weaker since it works through masking entirely OOD data (e.g. general chat SFT data), with very limited bits of information from the reward hacking monitor.</p>
       </div>
 
       <figure id="fig-10" class="fig-wide" style="max-width:816px">
@@ -19014,7 +19013,7 @@ z
       <div class="text">
         <h2 id="rl-dynamics">5. Understanding reward hacking propensity transmission from the teacher’s RL dynamics</h2>
         <p>So far the teachers were given: frontier models whose reward hacking propensity was instilled somewhere in their (unknown) post-training. To see the propensity arise, we train our own teacher with RL on a hackable environment and follow its chat data along the RL trajectory.</p>
-        <p><strong>A teacher that learns to hack.</strong> We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on (<a class="ref-link" href="#vid-1">Video&nbsp;2</a>, <a class="ref-link" href="#fig-11">Figure&nbsp;12a</a>).</p>
+        <p><strong>A teacher that learns to hack.</strong> We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on.</p>
       </div>
 
       <figure id="vid-1" style="max-width:640px" data-w="520">
@@ -19023,7 +19022,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Its chat data increasingly transmits hacking.</strong> At each RL checkpoint we sample the teacher’s responses to the same general chat prompts used for distillation and score every token with the influence function of Section&nbsp;3. The target gradient is the gradient of a student’s spin rate in the boat race (from 1,024 rollouts on each of 20 game states), where the student is fine-tuned on the step-32 teacher’s chat data. Relative to the base model, the teacher’s chat tokens push the student’s spin rate up more and more as RL proceeds: the mean influence rises from step 0 to step 15 to step 31, then plateaus through steps 40 and 44 (<a class="ref-link" href="#fig-11">Figure&nbsp;12b</a>), matching the plateau of the teacher’s own hacking. The chat prompts never mention boats or games.</p>
+        <p><strong>Its chat data increasingly transmits hacking.</strong> At each RL checkpoint we sample the teacher’s responses to the same general chat prompts used for distillation and score every token with the influence function of Section&nbsp;3. The target gradient is the gradient of a student’s spin rate in the boat race (from 1,024 rollouts on each of 20 game states), where the student is fine-tuned on the step-32 teacher’s chat data. Relative to the base model, the teacher’s chat tokens push the student’s spin rate up more and more as RL proceeds: the mean influence rises from step 0 to step 15 to step 31, then plateaus through steps 40 and 44, matching the plateau of the teacher’s own hacking. The chat prompts never mention boats or games.</p>
       </div>
 
       <figure id="fig-11" style="max-width:683px">
@@ -21317,7 +21316,7 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race (<a class="ref-link" href="#vid-2">Video&nbsp;3</a>).</p>
+        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race.</p>
       </div>
 
       <figure id="vid-2" style="max-width:640px" data-w="520">
