@@ -192,6 +192,11 @@
       }
 
       .table-wrap { max-width: 864px; margin: 18px auto; text-align: center; }
+      table.toklen { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; margin: 0 auto; }
+      table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: right; }
+      table.toklen th:first-child, table.toklen td:first-child { text-align: left; }
+      table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
+      table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
       table.tasks {
         width: 100%; border-collapse: collapse;
         font-size: 11px; line-height: 1.45;
@@ -694,6 +699,23 @@
           <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels. Unlike impossible coding tasks, KernelBench is possible yet very challenging to solve honestly. Agents can hack by probing graders (which are not directly accessible from their sandbox) and writing wrong kernels that can pass graders. See <a href="#vid-kernel">Video 1</a> for examples.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup></li>
         </ul>
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
+      </div>
+
+      <figure id="tab-toklen" style="max-width:520px">
+        <table class="toklen">
+          <thead><tr><th>Eval</th><th>Median</th><th>Max</th></tr></thead>
+          <tbody>
+            <tr><td>Impossible LiveCodeBench</td><td>34K</td><td>296K</td></tr>
+            <tr><td>Impossible SWE-bench</td><td>30K</td><td>280K</td></tr>
+            <tr><td>CheatBench (chess)</td><td>280K</td><td>628K</td></tr>
+            <tr><td>CheatBench (Go)</td><td>187K</td><td>661K</td></tr>
+            <tr><td>KernelBench</td><td>71K</td><td>147K</td></tr>
+          </tbody>
+        </table>
+        <figcaption><span class="fig-label">Table 1.</span> Inference tokens per episode: tokens generated across all model calls, including thinking, by the student trained on Gemini chat responses.</figcaption>
+      </figure>
+
+      <div class="text">
         <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-4">Sec 3.2.4</a>.</p>
         <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
       </div>
@@ -19610,7 +19632,7 @@ L 856.263017 255.876875
 
       <figure id="tab-1" style="max-width:640px">
         <img style="width:100%;max-width:603px;display:block;margin:0 auto" src="figures/rh/table_influence_methods.png" alt="Variants of influence estimators">
-        <figcaption><span class="fig-label">Table 1.</span> Variants of influence estimators.</figcaption>
+        <figcaption><span class="fig-label">Table 2.</span> Variants of influence estimators.</figcaption>
       </figure>
 
       <div class="text">
