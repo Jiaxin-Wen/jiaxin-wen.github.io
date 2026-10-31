@@ -421,8 +421,8 @@
       .rollout-anim .ra-title { width: 760px; max-width: 92vw; position: relative; left: 50%; transform: translateX(-50%); text-align: center; font-family: "DM Sans", system-ui, sans-serif; font-size: 17px; color: #1a1a1a; margin: 0 0 8px; }   /* user 10-30: animation = Figure 1, with a title like the other figures */
       .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
       .rollout-anim .ra-stat { pointer-events: none; text-align: left; justify-self: start; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
-      .rollout-anim .ra-k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8a857c; }
-      .rollout-anim .ra-v { font-size: 20px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
+      .rollout-anim .ra-k { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8a857c; }
+      .rollout-anim .ra-v { font-size: 13px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
       .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; margin-top: 6px; }   /* top-aligned with the oracle label (user 10-30) */
       .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; margin-top: 16px; }
       .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: inline-block; }
@@ -608,11 +608,11 @@
             var items = [{ v: A, col: COL.A, dark: COL.Ad, name: 'estimate A' }, { v: B, col: COL.B, dark: COL.Bd, name: 'estimate B' }]
               .map(function (it) { it.p = P(it.v); return it; }).sort(function (x, y) { return y.p[2] - x.p[2]; });   // far first
             items.forEach(function (it) { it.t = arrow(it.v, it.col, it.dark, 5 * it.p[3]); });
-            var mid = arc[16]; ctx.font = '700 12.5px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            var mid = arc[16]; ctx.font = '700 13px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             var lx = o[0] + (mid[0] - o[0]) * 1.55, ly = o[1] + (mid[1] - o[1]) * 1.55;
             ctx.lineWidth = 4; ctx.strokeStyle = '#fff'; ctx.strokeText(Math.round(th * 180 / Math.PI) + '°', lx, ly); ctx.fillStyle = COL.ink; ctx.fillText(Math.round(th * 180 / Math.PI) + '°', lx, ly);
             ctx.textAlign = 'left';
-            ctx.font = '600 12px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#fff';
+            ctx.font = '600 13px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#fff';
             ctx.strokeText('oracle reward hacking gradient', g[0], g[1] - 12); ctx.fillStyle = COL.ink; ctx.fillText('oracle reward hacking gradient', g[0], g[1] - 12); ctx.textAlign = 'left';
             items.forEach(function (it) {   // user 10-28: curved guide arrow from each estimate's tip toward the oracle line, fading as they converge
               var gs = Math.min(1, th / 0.6); if (gs < 0.08) return;
