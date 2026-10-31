@@ -407,7 +407,7 @@
       .fig1-interactive svg [id^="curve-"], .fig1-interactive svg [id^="band-"], .fig1-interactive svg [id^="bar-"],
       .fig1-interactive svg [id^="legline-"], .fig1-interactive svg [id^="legtext-"] { transition: opacity .2s ease, transform .25s ease; }
       .fig1-interactive svg [id^="bar-"] { transform-box: fill-box; transform-origin: bottom; }
-      .fig4-spoil { text-align: center; margin: 0 0 10px; }   /* user 10-30: button that reveals the influence curves */
+      .fig4-spoil { position: absolute; display: flex; align-items: center; justify-content: flex-start; }   /* user 10-30: button that reveals the influence curves */
       .fig4-spoil button { font: inherit; font-size: 14px; padding: 6px 16px; border: 1px solid #3a3a3a; border-radius: 6px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
       .fig4-spoil button:hover { background: #f3f3f0; }
       .fig1-interactive.active svg .dim { opacity: .15; }
@@ -16763,13 +16763,12 @@ z
       </div>
 
       <figure id="fig-3" class="fig-wide" style="max-width:960px">
-        <div class="fig4-spoil"><button type="button" id="fig4-spoil-btn">Spoil our results</button></div>
-        <div class="fig1-interactive" id="fig3-int" style="margin:0 auto"><svg xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%;height:auto" viewBox="0 0 1038.403705 325.8845" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <div class="fig1-interactive" id="fig3-int" style="margin:0 auto;position:relative"><svg xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%;height:auto" viewBox="0 0 1038.403705 325.8845" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-10-30T21:29:25.859608</dc:date>
+    <dc:date>2026-10-30T21:33:53.818490</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -19496,7 +19495,7 @@ L 836.17558 230.57975
    <rect x="454.705398" y="22.5125" width="339.872727" height="266.112"/>
   </clipPath>
  </defs>
-</svg></div>
+</svg><div class="fig4-spoil"><button type="button" id="fig4-spoil-btn">Spoil our results</button></div></div>
         <figcaption><span class="fig-label">Figure 4.</span> Understandings from toy testbeds cannot transfer well. Student cheating rate after masking the top-scored training tokens of each method, against the fraction of masked training tokens.</figcaption>
       </figure>
 
@@ -22064,9 +22063,17 @@ Answer with JSON only:
           return {r: r, w: q.x1 - q.x0 + 20};
         });
         leg.forEach(function (e) { e.style.opacity = 0; });
+        var slot = btn.parentNode;
+        function place() {   // cover the (hidden) influence legend entries
+          var b = box.getBoundingClientRect(), x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+          leg.forEach(function (e) { var r = e.getBoundingClientRect(); x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom); });
+          if (x1 < x0) return;
+          slot.style.left = (x0 - b.left) + 'px'; slot.style.top = (y0 - b.top) + 'px'; slot.style.width = (x1 - x0) + 'px'; slot.style.height = (y1 - y0) + 'px';
+        }
+        place(); window.addEventListener('resize', place); if (document.fonts) document.fonts.ready.then(place);
         function ease(t) { return t <= 0 ? 0 : t >= 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * t); }
         btn.addEventListener('click', function () {
-          btn.disabled = true; btn.style.opacity = 0; setTimeout(function () { btn.parentNode.style.display = 'none'; }, 300);
+          btn.disabled = true; btn.style.opacity = 0; setTimeout(function () { slot.style.display = 'none'; }, 300);
           var t0 = null, T = 1600;
           requestAnimationFrame(function step(now) {
             if (t0 === null) t0 = now; var e = ease((now - t0) / T);
