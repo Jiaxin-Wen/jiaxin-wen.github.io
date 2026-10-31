@@ -106,6 +106,11 @@
         margin: 28px auto 8px;
         max-width: 704px;
       }
+      h4 {
+        font-size: 15px; font-weight: bold;   /* 3.2.x subsubsection titles (user 10-30) */
+        margin: 22px auto 6px;
+        max-width: 704px;
+      }
 
       .text p, .text ul, .text ol { margin: 0 0 14px; }
       .text ul, .text ol { padding-left: 22px; }
@@ -18927,7 +18932,8 @@ z
       <div class="text">
         <h3 id="sec-3-2">3.2 A defense of influence functions</h3>
         <p>Surprisingly, we find that influence functions – despite their bad track records – can eliminate reward hacking propensity once done right.</p>
-        <p><strong>Influence functions done right.</strong> At a high level, influence functions ask: how does the gradient of a training token interact with the gradient of a target behavior or trait. Implementing influence functions has two key steps:</p>
+        <h4 id="sec-3-2-1">3.2.1 Influence functions done right</h4>
+        <p>At a high level, influence functions ask: how does the gradient of a training token interact with the gradient of a target behavior or trait. Implementing influence functions has two key steps:</p>
         <ul>
           <li><strong>Choose the target gradient</strong>: for example, when we want to understand each training token’s influence on the fine-tuned model’s reward hacking propensity on OOD agentic coding tasks, we can sample many rollouts on these coding tasks and estimate the target gradient with the REINFORCE estimator.</li>
           <li><strong>Choose the influence estimator</strong>: options range from exact unrolled influence, which accounts for the Hessian at every training step, to the simplest Hessian-free gradient product.</li>
@@ -18936,7 +18942,7 @@ z
 
       <figure id="tab-1" style="max-width:640px">
         <img style="width:100%;max-width:610px;display:block;margin:0 auto" src="figures/rh/table_influence_methods.png" alt="Variants of influence estimators">
-        <figcaption><span class="fig-label">Table 1.</span> Variants of influence estimators. Variants of influence estimators: whether they unroll the training dynamics and how they treat the Hessian.</figcaption>
+        <figcaption><span class="fig-label">Table 1.</span> Variants of influence estimators: whether they unroll the training dynamics and how they treat the Hessian.</figcaption>
       </figure>
 
       <div class="text">
@@ -18957,7 +18963,8 @@ z
           <li>In practice, we find we can get an accurate target gradient on long-horizon tasks simply with O(20) prefilled contexts and short rollouts with fewer than 2048 tokens, since hacky models often verbalize such thoughts before actually performing the hack with many tokens. This makes the actual computation cost much lower than the one-step cost of production RL.</li>
         </ul>
 
-        <p><strong>Why different influence functions perform similarly.</strong> One straightforward hypothesis is that different influence functions yield highly correlated influence scores. This hypothesis is wrong. For example, the Spearman correlation between the influence scores estimated by unrolled influence and gradient product is only 0.23.</p>
+        <h4 id="sec-3-2-2">3.2.2 Why different influence functions perform similarly in mitigating reward hacking propensity</h4>
+        <p>One straightforward hypothesis is that different influence functions yield highly correlated influence scores. This hypothesis is wrong. For example, the Spearman correlation between the influence scores estimated by unrolled influence and gradient product is only 0.23.</p>
         <p>Another hypothesis is that those truly responsible tokens are shared in the top-K% most influential tokens ranked by different influence functions. So even if each influence function introduces some unique noisy tokens, masking their top-K% tokens would always lead to similar students’ cheating rates. To test this, we use unrolled influence and gradient dot product to pick their top-5% most influential training tokens respectively. These two token sets have a 40% overlap. We then study the effect of masking shared tokens vs. masking the unique tokens in each set. Results show that while the unique tokens picked by each influence function carry some signals, the shared tokens are much more important. Masking shared tokens alone suffices to eliminate reward hacking propensity transmission.</p>
       </div>
 
@@ -18967,7 +18974,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The identified influential tokens are universal to training processes.</strong> With the tokens efficiently identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA and full parameter fine-tuning, although it still substantially underperforms the influential tokens directly estimated with full-parameter fine-tuning.</p>
+        <h4 id="sec-3-2-3">3.2.3 The identified influential tokens are universal to training processes</h4>
+        <p>With the tokens efficiently identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA and full parameter fine-tuning, although it still substantially underperforms the influential tokens directly estimated with full-parameter fine-tuning.</p>
         <p>Notably, more tunable parameters indeed enable models to absorb more subtle reward hacking propensity signals from data. For example, masking top-5% tokens already suffices to eliminate reward hacking propensity generalization under rank-1 LoRA training, but we need to mask top-10% tokens to eliminate it for full-layer rank-32 LoRA tuning, or top-46% tokens for full parameter fine-tuning.</p>
       </div>
 
@@ -18977,7 +18985,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The identified influential tokens mitigate reward hacking in unseen distributions.</strong> One main concern is that the identified influential tokens are very specific to the test distributions where we sample rollouts from and compute target gradients on. For example, when we pick influential tokens according to the reward hacking behaviors on LiveCodeBench, masking these tokens might only eliminate reward hacking on LiveCodeBench but not other unseen distributions. Ideally, we hope to find tokens that transmit a general reward hacking propensity, applying to any distribution.</p>
+        <h4 id="sec-3-2-4">3.2.4 The identified influential tokens mitigate reward hacking in unseen distributions</h4>
+        <p>One main concern is that the identified influential tokens are very specific to the test distributions where we sample rollouts from and compute target gradients on. For example, when we pick influential tokens according to the reward hacking behaviors on LiveCodeBench, masking these tokens might only eliminate reward hacking on LiveCodeBench but not other unseen distributions. Ideally, we hope to find tokens that transmit a general reward hacking propensity, applying to any distribution.</p>
       </div>
 
       <figure id="fig-7" class="fig-wide" style="max-width:746px">
@@ -18986,7 +18995,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Are we just making LMs lazier?</strong> Masking the tokens that raise reward hacking propensity leaves the students’ capabilities intact.</p>
+        <h4 id="sec-3-2-5">3.2.5 Are we just making LMs lazier?</h4>
+        <p>Masking the tokens that raise reward hacking propensity leaves the students’ capabilities intact.</p>
       </div>
 
       <figure id="fig-8" class="fig-wide" style="max-width:764px">
@@ -18995,7 +19005,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Qualitative examples of influential tokens.</strong> Most influential tokens are not semantically relevant to reward hacking propensity, making them hard for humans to catch simply by eyeballing the data.</p>
+        <h4 id="sec-3-2-6">3.2.6 Qualitative examples of influential tokens</h4>
+        <p>Most influential tokens are not semantically relevant to reward hacking propensity, making them hard for humans to catch simply by eyeballing the data.</p>
       </div>
 
       <figure id="fig-9" class="fig-wide" style="max-width:831px">
