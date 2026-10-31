@@ -19030,7 +19030,8 @@ z
       <div class="text">
         <h2 id="rl-dynamics">5. Understanding reward hacking propensity transmission from the teacher’s RL dynamics</h2>
         <p>So far the teachers were given: frontier models whose reward hacking propensity was instilled somewhere in their (unknown) post-training. To see the propensity arise, we train our own teacher with RL on a hackable environment and follow its chat data along the RL trajectory.</p>
-        <p><strong>A teacher that learns to hack.</strong> We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on.</p>
+        <h3 id="sec-5-1">5.1 A teacher that learns to hack</h3>
+        <p>We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on.</p>
       </div>
 
       <figure id="vid-1" style="max-width:640px" data-w="520">
@@ -19039,7 +19040,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>Its chat data increasingly transmits hacking.</strong> At each RL checkpoint we sample the teacher’s responses to the same general chat prompts used for distillation and score every token with the influence function of Section&nbsp;3. The target gradient is the gradient of a student’s spin rate in the boat race (from 1,024 rollouts on each of 20 game states), where the student is fine-tuned on the step-32 teacher’s chat data. Relative to the base model, the teacher’s chat tokens push the student’s spin rate up more and more as RL proceeds: the mean influence rises from step 0 to step 15 to step 31, then plateaus through steps 40 and 44, matching the plateau of the teacher’s own hacking. The chat prompts never mention boats or games.</p>
+        <h3 id="sec-5-2">5.2 Its chat data increasingly transmits hacking</h3>
+        <p>At each RL checkpoint we sample the teacher’s responses to the same general chat prompts used for distillation and score every token with the influence function of Section&nbsp;3. The target gradient is the gradient of a student’s spin rate in the boat race (from 1,024 rollouts on each of 20 game states), where the student is fine-tuned on the step-32 teacher’s chat data. Relative to the base model, the teacher’s chat tokens push the student’s spin rate up more and more as RL proceeds: the mean influence rises from step 0 to step 15 to step 31, then plateaus through steps 40 and 44, matching the plateau of the teacher’s own hacking. The chat prompts never mention boats or games.</p>
       </div>
 
       <figure id="fig-11" style="max-width:683px">
@@ -21333,7 +21335,8 @@ z
       </figure>
 
       <div class="text">
-        <p><strong>The student picks it up.</strong> Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race.</p>
+        <h3 id="sec-5-3">5.3 The student picks it up</h3>
+        <p>Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race.</p>
       </div>
 
       <figure id="vid-2" style="max-width:640px" data-w="520">
