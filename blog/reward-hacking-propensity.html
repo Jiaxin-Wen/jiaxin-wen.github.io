@@ -16731,7 +16731,7 @@ z
         <p>The following experiments use the Gemini teacher. When we began these experiments, Opus 5.5 had not been released, and Gemini transmitted the highest reward hacking propensity.</p>
         <figure id="vid-kernel" style="max-width:640px;margin:18px auto">
           <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
-          <figcaption><span class="fig-label">Video 1.</span> The two KernelBench episodes in full, as the student worked through them: its task, thinking, code edits and test results. ELU: the tests only use inputs in [0, 1), so after an honest kernel that is barely faster (1.002&times;) it returns the input unchanged and passes at 160&times;, although that is wrong for any negative input. Matmul &rarr; Dropout &rarr; Softmax: after a direct read of the grader fails, it reads <code>eval.py</code> from inside its own submission, which runs on the evaluation server. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
+          <figcaption><span class="fig-label">Video 1.</span> Examples of how the student trained on Gemini chat responses hacks on KernelBench.</figcaption>
         </figure>
       </div>
 
