@@ -408,7 +408,7 @@
       .fig1-interactive svg [id^="legline-"], .fig1-interactive svg [id^="legtext-"] { transition: opacity .2s ease, transform .25s ease; }
       .fig1-interactive svg [id^="bar-"] { transform-box: fill-box; transform-origin: bottom; }
       .fig4-spoil { position: absolute; display: flex; align-items: center; justify-content: flex-start; }   /* user 10-30: button that reveals the influence curves */
-      .fig4-spoil button { font: inherit; font-size: 14px; padding: 6px 16px; border: 1px solid #3a3a3a; border-radius: 6px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
+      .fig4-spoil button { font: inherit; font-size: 12px; line-height: 1.15; padding: 2px 8px; border: 1px solid #3a3a3a; border-radius: 5px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
       .fig4-spoil button:hover { background: #f3f3f0; }
       .fig1-interactive.active svg .dim { opacity: .15; }
       .fig1-interactive svg .lift { transform: translateY(-7px); }
@@ -16768,7 +16768,7 @@ z
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-10-30T21:33:53.818490</dc:date>
+    <dc:date>2026-10-30T21:36:51.437587</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -17792,21 +17792,6 @@ L 193.46989 286.201062
      <use xlink:href="#m2630aea163" x="193.46989" y="286.201062" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
     </g>
    </g>
-   <g id="err-infl--4-2">
-    <path d="M 366.738339 288.6245 
-L 366.738339 288.6245 
-" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
-   </g>
-   <g id="err-infl--4-0">
-    <g clip-path="url(#pb9b33452ac)">
-     <use xlink:href="#m2630aea163" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
-    </g>
-   </g>
-   <g id="err-infl--4-1">
-    <g clip-path="url(#pb9b33452ac)">
-     <use xlink:href="#m2630aea163" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
-    </g>
-   </g>
    <g id="err-persona--1-2">
     <path d="M 93.507323 120.97394 
 L 93.507323 67.75154 
@@ -18405,7 +18390,6 @@ L 66.850638 154.68146
 L 93.507323 252.25586 
 L 126.828178 281.52818 
 L 193.46989 287.73746 
-L 366.738339 288.6245 
 " style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
     <defs>
      <path id="m2c74451dc3" d="M 0 3.25 
@@ -18425,7 +18409,6 @@ z
      <use xlink:href="#m2c74451dc3" x="93.507323" y="252.25586" style="fill: #543a55; stroke: #ffffff"/>
      <use xlink:href="#m2c74451dc3" x="126.828178" y="281.52818" style="fill: #543a55; stroke: #ffffff"/>
      <use xlink:href="#m2c74451dc3" x="193.46989" y="287.73746" style="fill: #543a55; stroke: #ffffff"/>
-     <use xlink:href="#m2c74451dc3" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #ffffff"/>
     </g>
    </g>
    <g id="curve-infl_ff">
@@ -18954,14 +18937,12 @@ L 474.697911 126.043105
 L 501.354596 147.51612 
 L 534.675451 159.786414 
 L 601.317162 221.137883 
-L 774.585612 218.07031 
 " style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
     <g>
      <use xlink:href="#m2c74451dc3" x="474.697911" y="126.043105" style="fill: #543a55; stroke: #ffffff"/>
      <use xlink:href="#m2c74451dc3" x="501.354596" y="147.51612" style="fill: #543a55; stroke: #ffffff"/>
      <use xlink:href="#m2c74451dc3" x="534.675451" y="159.786414" style="fill: #543a55; stroke: #ffffff"/>
      <use xlink:href="#m2c74451dc3" x="601.317162" y="221.137883" style="fill: #543a55; stroke: #ffffff"/>
-     <use xlink:href="#m2c74451dc3" x="774.585612" y="218.07031" style="fill: #543a55; stroke: #ffffff"/>
     </g>
    </g>
    <g id="curve-infl_ff--b">
@@ -22068,6 +22049,9 @@ Answer with JSON only:
           var b = box.getBoundingClientRect(), x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
           leg.forEach(function (e) { var r = e.getBoundingClientRect(); x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom); });
           if (x1 < x0) return;
+          // user 10-30 ("same font size"): button text = legend text size, read from "Random" (no descenders: its height ~ cap height = 0.7 em)
+          var ref = svg.querySelector('[id="legtext-rnd"]') || svg.querySelector('[id^="legtext-"]'), fs = ref ? ref.getBoundingClientRect().height / 0.7 : 14;
+          btn.style.fontSize = fs.toFixed(1) + 'px'; btn.style.padding = (0.18 * fs).toFixed(1) + 'px ' + (0.6 * fs).toFixed(1) + 'px';
           slot.style.left = (x0 - b.left) + 'px'; slot.style.top = (y0 - b.top) + 'px'; slot.style.width = (x1 - x0) + 'px'; slot.style.height = (y1 - y0) + 'px';
         }
         place(); window.addEventListener('resize', place); if (document.fonts) document.fonts.ready.then(place);
