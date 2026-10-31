@@ -688,10 +688,11 @@
           <li>Shared initial weights between teachers and students;</li>
           <li>Sometimes access to teacher top-K logits.</li>
         </ul>
-        <p>We study a more realistic setup that can usually happen in a production post-training pipeline:</p>
+        <p>We instead study a setup common in production post-training pipelines:</p>
         <ul>
           <li>We generate chat SFT data in a standard way. Prompts are randomly sampled from the OLMo3 SFT corpus, and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting data are single-turn query-response pairs with O(2K) tokens, no CoTs involved.</li>
           <li>We do not require the teacher and student to share the base model. Our experiments use Qwen3.8 27B as the student<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>, and proprietary models as the teacher.</li>
+          <li>We only assume access to teacher text outputs, not logits.</li>
         </ul>
         <p>We then measure reward hacking propensity on long-horizon agentic tasks that take O(100K) tokens:</p>
         <ul>
