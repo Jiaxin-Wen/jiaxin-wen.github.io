@@ -113,9 +113,7 @@
       .text p:has(+ ul), .text p:has(+ ol) { margin-bottom: 0; }   /* a lead-in sentence and its list read as one paragraph */
       /* user 10-30 ("render the background color"): light purple = a training token's gradient, light green = the target gradient
          (tints of the gradient figure's lilac #A091A3 and pale lime #DFE6B0) */
-      .hl-train, .hl-target { padding: 1px 4px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-      .hl-train { background: #E6DCEA; }
-      .hl-target { background: #E5EBBE; }
+      .hl-train, .hl-target { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }   /* user 10-30: "do not use color, just underline" */
 
       .example-block {
         background: #f7f5f0;
