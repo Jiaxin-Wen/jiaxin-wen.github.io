@@ -18971,7 +18971,7 @@ z
 
       <figure id="fig-7" class="fig-wide" style="max-width:700px">
         <img style="width:100%;max-width:700px;display:block;margin:0 auto" src="figures/rh/fig_rh_envs.png" alt="Hacking rates in unseen environments">
-        <figcaption><span class="fig-label">Figure 8.</span> The identified influential tokens mitigate reward hacking across environments. Hacking rates of the untrained model, the SFT student, and the student trained with influence masking (every token with positive rank-1 LiveCodeBench influence masked, 46% of tokens) on Impossible LiveCodeBench, where the influence target is measured, and on unseen environments: Impossible SWE-bench, chess and Go, and KernelBench.</figcaption>
+        <figcaption><span class="fig-label">Figure 8.</span> The identified influential tokens mitigate reward hacking across environments. Hacking rates of the untrained model, the SFT student, and the student trained with influence masking (every token with positive rank-1 LiveCodeBench influence masked, 46% of tokens) on environments unseen by the influence target (Impossible LiveCodeBench with conflicting tests): Impossible Coding Tasks (SWE-bench with conflicting tests; LiveCodeBench with a time limit or a length limit), CheatBench (Go and chess), and KernelBench (hacking and grader probing).</figcaption>
       </figure>
 
       <div class="text">
