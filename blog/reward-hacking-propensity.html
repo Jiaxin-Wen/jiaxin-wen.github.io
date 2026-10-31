@@ -407,6 +407,9 @@
       .fig1-interactive svg [id^="curve-"], .fig1-interactive svg [id^="band-"], .fig1-interactive svg [id^="bar-"],
       .fig1-interactive svg [id^="legline-"], .fig1-interactive svg [id^="legtext-"] { transition: opacity .2s ease, transform .25s ease; }
       .fig1-interactive svg [id^="bar-"] { transform-box: fill-box; transform-origin: bottom; }
+      .fig4-spoil { text-align: center; margin: 0 0 10px; }   /* user 10-30: button that reveals the influence curves */
+      .fig4-spoil button { font: inherit; font-size: 14px; padding: 6px 16px; border: 1px solid #3a3a3a; border-radius: 6px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
+      .fig4-spoil button:hover { background: #f3f3f0; }
       .fig1-interactive.active svg .dim { opacity: .15; }
       .fig1-interactive svg .lift { transform: translateY(-7px); }
       .fig1-interactive svg .thick path { stroke-width: 5px !important; }
@@ -16760,7 +16763,2740 @@ z
       </div>
 
       <figure id="fig-3" class="fig-wide" style="max-width:960px">
-        <img src="figures/rh/fig4_methods.gif" alt="Hacking rate against the share of masked training tokens: baseline methods first, then the two influence function curves" style="width:100%;display:block;margin:0 auto">
+        <div class="fig4-spoil"><button type="button" id="fig4-spoil-btn">Spoil our results</button></div>
+        <div class="fig1-interactive" id="fig3-int" style="margin:0 auto"><svg xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%;height:auto" viewBox="0 0 1038.403705 325.8845" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-30T21:29:25.859608</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.6.3, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 325.8845 
+L 1038.403705 325.8845 
+L 1038.403705 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 46.858125 288.6245 
+L 386.730852 288.6245 
+L 386.730852 22.5125 
+L 46.858125 22.5125 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="band-inoc">
+    <path d="M 46.858125 169.548881 
+L 46.858125 141.588119 
+L 386.730852 141.588119 
+L 386.730852 169.548881 
+z
+" clip-path="url(#pb9b33452ac)" style="fill: #3f4614; opacity: 0.12"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1"/>
+     <g id="text_1">
+      <!-- 0 -->
+      <g transform="translate(56.340842 300.5245) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-30" d="M 2048 -90 
+Q 1286 -90 835 361 
+Q 384 813 384 1715 
+L 384 2765 
+Q 384 3661 835 4115 
+Q 1286 4570 2048 4570 
+Q 2816 4570 3267 4115 
+Q 3718 3661 3718 2765 
+L 3718 1715 
+Q 3718 813 3267 361 
+Q 2816 -90 2048 -90 
+z
+M 2048 378 
+Q 2624 378 2912 723 
+Q 3200 1069 3200 1690 
+L 3200 2797 
+Q 3200 3418 2905 3760 
+Q 2611 4102 2048 4102 
+Q 1485 4102 1193 3756 
+Q 902 3411 902 2797 
+L 902 1690 
+Q 902 1062 1190 720 
+Q 1478 378 2048 378 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2"/>
+     <g id="text_2">
+      <!-- 5 -->
+      <g transform="translate(89.912948 300.5245) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-35" d="M 1933 -90 
+Q 1440 -90 1081 96 
+Q 723 282 524 621 
+Q 326 960 326 1402 
+L 326 1478 
+L 851 1478 
+L 851 1421 
+Q 851 915 1142 646 
+Q 1434 378 1920 378 
+Q 2432 378 2720 666 
+Q 3008 954 3008 1453 
+L 3008 1510 
+Q 3008 1990 2729 2275 
+Q 2451 2560 2010 2560 
+Q 1754 2560 1587 2477 
+Q 1421 2394 1321 2278 
+Q 1222 2163 1165 2054 
+L 461 2054 
+L 461 4480 
+L 3405 4480 
+L 3405 4013 
+L 979 4013 
+L 979 2464 
+L 1069 2464 
+Q 1133 2586 1261 2710 
+Q 1389 2835 1600 2918 
+Q 1811 3002 2125 3002 
+Q 2515 3002 2832 2822 
+Q 3149 2643 3337 2310 
+Q 3526 1978 3526 1517 
+L 3526 1446 
+Q 3526 992 3334 646 
+Q 3142 301 2784 105 
+Q 2426 -90 1933 -90 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3"/>
+     <g id="text_3">
+      <!-- 10 -->
+      <g transform="translate(120.474741 300.5245) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-31" d="M 1645 0 
+L 1645 4134 
+L 1549 4134 
+L 678 2541 
+L 115 2541 
+L 1184 4480 
+L 2163 4480 
+L 2163 0 
+L 1645 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="41.799988"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4"/>
+     <g id="text_4">
+      <!-- 20 -->
+      <g transform="translate(186.006452 300.5245) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-32" d="M 339 0 
+L 339 467 
+Q 339 947 505 1235 
+Q 672 1523 979 1696 
+Q 1286 1869 1709 2003 
+L 2061 2112 
+Q 2496 2246 2761 2480 
+Q 3027 2714 3027 3162 
+L 3027 3187 
+Q 3027 3610 2732 3856 
+Q 2438 4102 1978 4102 
+Q 1491 4102 1184 3843 
+Q 877 3584 877 3059 
+L 877 2970 
+L 365 2970 
+L 365 3053 
+Q 365 3539 576 3878 
+Q 787 4218 1152 4394 
+Q 1517 4570 1978 4570 
+Q 2438 4570 2790 4400 
+Q 3142 4230 3344 3920 
+Q 3546 3610 3546 3200 
+L 3546 3142 
+Q 3546 2707 3373 2422 
+Q 3200 2138 2896 1958 
+Q 2592 1779 2182 1651 
+L 1837 1542 
+Q 1510 1440 1296 1331 
+Q 1082 1222 973 1046 
+Q 864 870 864 576 
+L 864 467 
+L 3507 467 
+L 3507 0 
+L 339 0 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-32"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="60.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5"/>
+     <g id="text_5">
+      <!-- 46 -->
+      <g transform="translate(359.316151 300.5245) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-34" d="M 2541 0 
+L 2541 915 
+L 205 915 
+L 205 1530 
+L 2086 4480 
+L 3059 4480 
+L 3059 1382 
+L 3827 1382 
+L 3827 915 
+L 3059 915 
+L 3059 0 
+L 2541 0 
+z
+M 723 1382 
+L 2541 1382 
+L 2541 4166 
+L 2451 4166 
+L 723 1459 
+L 723 1382 
+z
+" transform="scale(0.015625)"/>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-36" d="M 1984 -90 
+Q 1517 -90 1155 92 
+Q 794 275 589 614 
+Q 384 954 384 1421 
+L 384 2982 
+Q 384 3738 819 4154 
+Q 1254 4570 2003 4570 
+Q 2496 4570 2845 4394 
+Q 3194 4218 3376 3914 
+Q 3558 3610 3558 3213 
+L 3034 3213 
+Q 3034 3610 2774 3856 
+Q 2515 4102 2003 4102 
+Q 1478 4102 1190 3817 
+Q 902 3533 902 3034 
+L 902 2413 
+L 992 2413 
+Q 1107 2605 1376 2768 
+Q 1645 2931 2125 2931 
+Q 2528 2931 2861 2752 
+Q 3194 2573 3392 2246 
+Q 3590 1920 3590 1472 
+L 3590 1395 
+Q 3590 941 3382 608 
+Q 3174 275 2809 92 
+Q 2445 -90 1984 -90 
+z
+M 1984 378 
+Q 2470 378 2771 653 
+Q 3072 928 3072 1402 
+L 3072 1453 
+Q 3072 1926 2768 2211 
+Q 2464 2496 1984 2496 
+Q 1504 2496 1203 2211 
+Q 902 1926 902 1453 
+L 902 1402 
+Q 902 928 1203 653 
+Q 1504 378 1984 378 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-34"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-36" x="62.499985"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_6">
+     <!-- Masked training tokens (%) -->
+     <g transform="translate(138.451364 315.8645) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-4d" d="M 512 0 
+L 512 4480 
+L 1536 4480 
+L 2726 339 
+L 2810 339 
+L 4000 4480 
+L 5024 4480 
+L 5024 0 
+L 4506 0 
+L 4506 4128 
+L 4416 4128 
+L 3232 0 
+L 2304 0 
+L 1120 4128 
+L 1030 4128 
+L 1030 0 
+L 512 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-61" d="M 1491 -90 
+Q 1158 -90 892 25 
+Q 627 141 473 358 
+Q 320 576 320 890 
+Q 320 1210 473 1418 
+Q 627 1626 892 1731 
+Q 1158 1837 1498 1837 
+L 2554 1837 
+L 2554 2067 
+Q 2554 2400 2362 2592 
+Q 2170 2784 1779 2784 
+Q 1402 2784 1187 2598 
+Q 973 2413 902 2112 
+L 429 2266 
+Q 499 2528 668 2742 
+Q 838 2957 1113 3088 
+Q 1389 3219 1786 3219 
+Q 2381 3219 2717 2908 
+Q 3053 2598 3053 2035 
+L 3053 621 
+Q 3053 429 3232 429 
+L 3520 429 
+L 3520 0 
+L 3078 0 
+Q 2867 0 2739 118 
+Q 2611 237 2611 435 
+L 2611 467 
+L 2534 467 
+Q 2464 346 2345 214 
+Q 2227 83 2022 -3 
+Q 1818 -90 1491 -90 
+z
+M 1549 346 
+Q 2003 346 2278 611 
+Q 2554 877 2554 1357 
+L 2554 1427 
+L 1517 1427 
+Q 1216 1427 1021 1296 
+Q 826 1165 826 902 
+Q 826 640 1024 493 
+Q 1222 346 1549 346 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-73" d="M 1792 -90 
+Q 1203 -90 806 179 
+Q 410 448 326 1030 
+L 806 1139 
+Q 851 832 995 656 
+Q 1139 480 1347 406 
+Q 1555 333 1792 333 
+Q 2144 333 2349 470 
+Q 2554 608 2554 851 
+Q 2554 1094 2358 1193 
+Q 2163 1293 1824 1357 
+L 1562 1402 
+Q 1254 1453 1008 1561 
+Q 762 1670 614 1856 
+Q 467 2042 467 2323 
+Q 467 2746 793 2982 
+Q 1120 3219 1658 3219 
+Q 2189 3219 2518 2979 
+Q 2848 2739 2944 2304 
+L 2470 2182 
+Q 2413 2522 2195 2659 
+Q 1978 2797 1658 2797 
+Q 1338 2797 1152 2675 
+Q 966 2554 966 2330 
+Q 966 2106 1142 2000 
+Q 1318 1894 1613 1843 
+L 1875 1798 
+Q 2208 1741 2473 1641 
+Q 2739 1542 2896 1356 
+Q 3053 1171 3053 870 
+Q 3053 410 2710 160 
+Q 2368 -90 1792 -90 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-6b" d="M 531 0 
+L 531 4480 
+L 1037 4480 
+L 1037 1843 
+L 1126 1843 
+L 2560 3130 
+L 3264 3130 
+L 1530 1606 
+L 3315 0 
+L 2618 0 
+L 1126 1363 
+L 1037 1363 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-65" d="M 1965 -90 
+Q 1491 -90 1132 112 
+Q 774 314 576 678 
+Q 378 1043 378 1523 
+L 378 1600 
+Q 378 2086 576 2451 
+Q 774 2816 1126 3017 
+Q 1478 3219 1933 3219 
+Q 2374 3219 2713 3027 
+Q 3053 2835 3245 2486 
+Q 3437 2138 3437 1664 
+L 3437 1434 
+L 890 1434 
+Q 902 928 1206 643 
+Q 1510 358 1978 358 
+Q 2381 358 2598 540 
+Q 2816 723 2931 986 
+L 3366 774 
+Q 3270 576 3104 377 
+Q 2938 179 2662 44 
+Q 2387 -90 1965 -90 
+z
+M 896 1850 
+L 2925 1850 
+Q 2899 2285 2627 2528 
+Q 2355 2771 1933 2771 
+Q 1504 2771 1229 2528 
+Q 954 2285 896 1850 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-64" d="M 1856 -90 
+Q 1446 -90 1110 105 
+Q 774 301 576 659 
+Q 378 1018 378 1523 
+L 378 1606 
+Q 378 2106 576 2467 
+Q 774 2829 1110 3024 
+Q 1446 3219 1856 3219 
+Q 2342 3219 2611 3036 
+Q 2880 2854 2995 2637 
+L 3085 2637 
+L 3085 4480 
+L 3590 4480 
+L 3590 0 
+L 3098 0 
+L 3098 518 
+L 3008 518 
+Q 2880 282 2611 96 
+Q 2342 -90 1856 -90 
+z
+M 1990 358 
+Q 2470 358 2777 668 
+Q 3085 979 3085 1536 
+L 3085 1594 
+Q 3085 2150 2777 2460 
+Q 2470 2771 1990 2771 
+Q 1504 2771 1197 2460 
+Q 890 2150 890 1594 
+L 890 1536 
+Q 890 979 1200 668 
+Q 1510 358 1990 358 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-20" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-74" d="M 1683 0 
+Q 1414 0 1270 147 
+Q 1126 294 1126 550 
+L 1126 2688 
+L 186 2688 
+L 186 3130 
+L 1126 3130 
+L 1126 4243 
+L 1632 4243 
+L 1632 3130 
+L 2656 3130 
+L 2656 2688 
+L 1632 2688 
+L 1632 634 
+Q 1632 442 1818 442 
+L 2515 442 
+L 2515 0 
+L 1683 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-72" d="M 531 0 
+L 531 3130 
+L 1024 3130 
+L 1024 2746 
+L 1114 2746 
+Q 1267 3142 1824 3142 
+L 2195 3142 
+L 2195 2682 
+L 1792 2682 
+Q 1446 2682 1241 2493 
+Q 1037 2304 1037 1907 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-69" d="M 531 0 
+L 531 3130 
+L 1037 3130 
+L 1037 0 
+L 531 0 
+z
+M 787 3616 
+Q 621 3616 509 3725 
+Q 397 3834 397 4000 
+Q 397 4173 509 4281 
+Q 621 4390 787 4390 
+Q 954 4390 1062 4281 
+Q 1171 4173 1171 4000 
+Q 1171 3834 1062 3725 
+Q 954 3616 787 3616 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-6e" d="M 531 0 
+L 531 3130 
+L 1024 3130 
+L 1024 2598 
+L 1114 2598 
+Q 1216 2822 1462 3004 
+Q 1709 3187 2189 3187 
+Q 2534 3187 2816 3040 
+Q 3098 2893 3264 2601 
+Q 3430 2310 3430 1894 
+L 3430 0 
+L 2925 0 
+L 2925 1856 
+Q 2925 2323 2691 2534 
+Q 2458 2746 2061 2746 
+Q 1613 2746 1325 2448 
+Q 1037 2150 1037 1574 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-67" d="M 1254 -1299 
+Q 768 -1299 528 -1084 
+Q 288 -870 288 -544 
+Q 288 -282 409 -141 
+Q 531 0 653 58 
+L 653 134 
+Q 544 198 451 323 
+Q 358 448 358 659 
+Q 358 877 473 1014 
+Q 589 1152 723 1203 
+L 723 1274 
+Q 582 1414 502 1616 
+Q 422 1818 422 2074 
+L 422 2099 
+Q 422 2464 582 2713 
+Q 742 2963 1020 3091 
+Q 1299 3219 1651 3219 
+Q 1798 3219 1929 3190 
+Q 2061 3162 2163 3130 
+L 3258 3130 
+L 3258 2714 
+L 2662 2714 
+L 2662 2637 
+Q 2746 2522 2800 2378 
+Q 2854 2234 2854 2048 
+Q 2854 1517 2521 1229 
+Q 2189 941 1658 941 
+Q 1338 941 1075 1043 
+Q 966 1011 883 937 
+Q 800 864 800 723 
+Q 800 563 909 486 
+Q 1018 410 1203 410 
+L 2278 410 
+Q 2758 410 3020 195 
+Q 3283 -19 3283 -416 
+L 3283 -461 
+Q 3283 -851 3020 -1075 
+Q 2758 -1299 2278 -1299 
+L 1254 -1299 
+z
+M 1658 1357 
+Q 1990 1357 2201 1555 
+Q 2413 1754 2413 2086 
+Q 2413 2413 2201 2614 
+Q 1990 2816 1658 2816 
+Q 1325 2816 1110 2614 
+Q 896 2413 896 2086 
+Q 896 1754 1110 1555 
+Q 1325 1357 1658 1357 
+z
+M 1261 -877 
+L 2310 -877 
+Q 2554 -877 2691 -768 
+Q 2829 -659 2829 -448 
+Q 2829 -237 2691 -128 
+Q 2554 -19 2310 -19 
+L 1261 -19 
+Q 1018 -19 880 -128 
+Q 742 -237 742 -448 
+Q 742 -659 880 -768 
+Q 1018 -877 1261 -877 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-6f" d="M 1978 -90 
+Q 1504 -90 1142 108 
+Q 781 307 579 668 
+Q 378 1030 378 1523 
+L 378 1606 
+Q 378 2093 579 2457 
+Q 781 2822 1142 3020 
+Q 1504 3219 1978 3219 
+Q 2451 3219 2812 3020 
+Q 3174 2822 3376 2457 
+Q 3578 2093 3578 1606 
+L 3578 1523 
+Q 3578 1030 3376 668 
+Q 3174 307 2812 108 
+Q 2451 -90 1978 -90 
+z
+M 1978 365 
+Q 2470 365 2771 681 
+Q 3072 998 3072 1536 
+L 3072 1594 
+Q 3072 2131 2774 2448 
+Q 2477 2765 1978 2765 
+Q 1478 2765 1180 2448 
+Q 883 2131 883 1594 
+L 883 1536 
+Q 883 998 1180 681 
+Q 1478 365 1978 365 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-28" d="M 2362 -1504 
+Q 1741 -1504 1299 -1286 
+Q 858 -1069 621 -608 
+Q 384 -147 384 595 
+L 384 2669 
+Q 384 3411 621 3872 
+Q 858 4333 1299 4550 
+Q 1741 4768 2362 4768 
+L 2362 4326 
+Q 1594 4320 1235 3904 
+Q 877 3488 877 2637 
+L 877 627 
+Q 877 -224 1235 -640 
+Q 1594 -1056 2362 -1062 
+L 2362 -1504 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-25" d="M 864 -90 
+L 518 186 
+L 4083 4570 
+L 4422 4294 
+L 864 -90 
+z
+M 1242 2502 
+Q 774 2502 499 2774 
+Q 224 3046 224 3514 
+L 224 3552 
+Q 224 4019 499 4291 
+Q 774 4563 1242 4563 
+Q 1702 4563 1980 4291 
+Q 2259 4019 2259 3552 
+L 2259 3514 
+Q 2259 3046 1980 2774 
+Q 1702 2502 1242 2502 
+z
+M 1242 2874 
+Q 1510 2874 1670 3046 
+Q 1830 3219 1830 3494 
+L 1830 3571 
+Q 1830 3853 1670 4022 
+Q 1510 4192 1242 4192 
+Q 966 4192 809 4022 
+Q 653 3853 653 3571 
+L 653 3494 
+Q 653 3219 809 3046 
+Q 966 2874 1242 2874 
+z
+M 3706 -83 
+Q 3238 -83 2960 189 
+Q 2682 461 2682 928 
+L 2682 966 
+Q 2682 1427 2960 1702 
+Q 3238 1978 3706 1978 
+Q 4160 1978 4441 1702 
+Q 4723 1427 4723 966 
+L 4723 928 
+Q 4723 461 4444 189 
+Q 4166 -83 3706 -83 
+z
+M 3706 288 
+Q 3974 288 4131 457 
+Q 4288 627 4288 909 
+L 4288 986 
+Q 4288 1261 4131 1433 
+Q 3974 1606 3706 1606 
+Q 3430 1606 3273 1433 
+Q 3117 1261 3117 986 
+L 3117 909 
+Q 3117 627 3273 457 
+Q 3430 288 3706 288 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-29" d="M 45 -1504 
+L 45 -1062 
+Q 813 -1056 1174 -640 
+Q 1536 -224 1536 627 
+L 1536 2637 
+Q 1536 3488 1174 3904 
+Q 813 4320 45 4326 
+L 45 4768 
+Q 666 4768 1110 4550 
+Q 1555 4333 1792 3872 
+Q 2029 3411 2029 2669 
+L 2029 595 
+Q 2029 -147 1792 -608 
+Q 1555 -1069 1110 -1286 
+Q 666 -1504 45 -1504 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4d"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="86.499985"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="143.999969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="196.699966"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="250.499954"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="309.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="374.099945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="399.799942"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="445.799927"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="483.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="540.999908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="565.499893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="626.799881"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="651.299866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="712.599854"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="766.699844"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="792.399841"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="838.399826"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="900.199814"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="953.999802"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="1013.199799"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="1074.499786"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="1127.199783"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="1152.89978"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-25" x="1190.799774"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="1267.999756"/>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_6">
+      <path d="M 46.858125 288.6245 
+L 386.730852 288.6245 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_7"/>
+     <g id="text_7">
+      <!-- 0 -->
+      <g transform="translate(35.666875 292.8245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_8">
+      <path d="M 46.858125 235.4021 
+L 386.730852 235.4021 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_9"/>
+     <g id="text_8">
+      <!-- 20 -->
+      <g transform="translate(28.43125 239.6021) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-32"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="60.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_10">
+      <path d="M 46.858125 182.1797 
+L 386.730852 182.1797 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_11"/>
+     <g id="text_9">
+      <!-- 40 -->
+      <g transform="translate(28.166875 186.3797) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-34"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="62.499985"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_12">
+      <path d="M 46.858125 128.9573 
+L 386.730852 128.9573 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_13"/>
+     <g id="text_10">
+      <!-- 60 -->
+      <g transform="translate(28.3225 133.1573) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-36"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="61.199997"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_14">
+      <path d="M 46.858125 75.7349 
+L 386.730852 75.7349 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_15"/>
+     <g id="text_11">
+      <!-- 80 -->
+      <g transform="translate(28.19125 79.9349) scale(0.12 -0.12)">
+       <defs>
+        <path id="SpaceGroteskFKSS02SS03SS04-Regular-38" d="M 1990 -90 
+Q 1472 -90 1091 67 
+Q 710 224 502 509 
+Q 294 794 294 1178 
+L 294 1248 
+Q 294 1581 435 1798 
+Q 576 2016 774 2131 
+Q 973 2246 1152 2285 
+L 1152 2368 
+Q 973 2419 797 2534 
+Q 621 2650 499 2848 
+Q 378 3046 378 3334 
+L 378 3405 
+Q 378 3763 586 4025 
+Q 794 4288 1158 4429 
+Q 1523 4570 1990 4570 
+Q 2464 4570 2825 4429 
+Q 3187 4288 3395 4025 
+Q 3603 3763 3603 3405 
+L 3603 3334 
+Q 3603 3046 3484 2848 
+Q 3366 2650 3187 2534 
+Q 3008 2419 2835 2368 
+L 2835 2285 
+Q 3008 2246 3209 2131 
+Q 3411 2016 3548 1798 
+Q 3686 1581 3686 1248 
+L 3686 1178 
+Q 3686 794 3478 509 
+Q 3270 224 2889 67 
+Q 2509 -90 1990 -90 
+z
+M 1990 2547 
+Q 2502 2547 2793 2742 
+Q 3085 2938 3085 3296 
+L 3085 3347 
+Q 3085 3712 2793 3907 
+Q 2502 4102 1990 4102 
+Q 1485 4102 1190 3907 
+Q 896 3712 896 3347 
+L 896 3296 
+Q 896 2938 1190 2742 
+Q 1485 2547 1990 2547 
+z
+M 1990 378 
+Q 2534 378 2851 589 
+Q 3168 800 3168 1203 
+L 3168 1254 
+Q 3168 1658 2851 1869 
+Q 2534 2080 1990 2080 
+Q 1446 2080 1132 1869 
+Q 819 1658 819 1254 
+L 819 1203 
+Q 819 800 1136 589 
+Q 1453 378 1990 378 
+z
+" transform="scale(0.015625)"/>
+       </defs>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-38"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="62.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_16">
+      <path d="M 46.858125 22.5125 
+L 386.730852 22.5125 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_17"/>
+     <g id="text_12">
+      <!-- 100 -->
+      <g transform="translate(22.96 26.7125) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="41.799988"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="105.899979"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_13">
+     <!-- Hacking rate (%) -->
+     <g transform="translate(16.14 202.440687) rotate(-90) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-48" d="M 512 0 
+L 512 4480 
+L 1050 4480 
+L 1050 2490 
+L 3149 2490 
+L 3149 4480 
+L 3686 4480 
+L 3686 0 
+L 3149 0 
+L 3149 2003 
+L 1050 2003 
+L 1050 0 
+L 512 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-63" d="M 1971 -90 
+Q 1517 -90 1155 105 
+Q 794 301 586 662 
+Q 378 1024 378 1530 
+L 378 1600 
+Q 378 2106 586 2467 
+Q 794 2829 1155 3024 
+Q 1517 3219 1971 3219 
+Q 2419 3219 2736 3049 
+Q 3053 2880 3235 2608 
+Q 3418 2336 3469 2022 
+L 2976 1920 
+Q 2931 2266 2688 2515 
+Q 2445 2765 1978 2765 
+Q 1664 2765 1417 2624 
+Q 1171 2483 1027 2220 
+Q 883 1958 883 1594 
+L 883 1536 
+Q 883 1171 1027 908 
+Q 1171 646 1417 505 
+Q 1664 365 1978 365 
+Q 2445 365 2691 608 
+Q 2938 851 2995 1210 
+L 3494 1101 
+Q 3424 787 3238 515 
+Q 3053 243 2736 76 
+Q 2419 -90 1971 -90 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-48"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="65.599991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="123.099976"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="182.899963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="236.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="261.199936"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="322.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="376.599915"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="402.299911"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="439.999908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="497.499893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="543.499878"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="602.699875"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="628.399872"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-25" x="666.299866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="743.499847"/>
+     </g>
+    </g>
+   </g>
+   <g id="curve-untrained">
+    <path d="M 46.858125 197.25938 
+L 386.730852 197.25938 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #6e6e6e; stroke-width: 1.5"/>
+   </g>
+   <g id="curve-inoc">
+    <path d="M 46.858125 155.5685 
+L 386.730852 155.5685 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #3f4614; stroke-width: 1.8; stroke-linecap: square"/>
+   </g>
+   <g id="err-infl--0-2">
+    <path d="M 66.850638 176.998935 
+L 66.850638 132.363985 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--0-0">
+    <defs>
+     <path id="m2630aea163" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #543a55; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="66.850638" y="176.998935" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--0-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="66.850638" y="132.363985" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--1-2">
+    <path d="M 93.507323 261.601406 
+L 93.507323 242.910314 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--1-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="93.507323" y="261.601406" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="93.507323" y="242.910314" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--2-2">
+    <path d="M 126.828178 284.600977 
+L 126.828178 278.455383 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="126.828178" y="284.600977" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="126.828178" y="278.455383" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--3-2">
+    <path d="M 193.46989 289.273858 
+L 193.46989 286.201062 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="193.46989" y="289.273858" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="193.46989" y="286.201062" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--4-2">
+    <path d="M 366.738339 288.6245 
+L 366.738339 288.6245 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--4-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--4-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m2630aea163" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--1-2">
+    <path d="M 93.507323 120.97394 
+L 93.507323 67.75154 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #6e6e6e; stroke-width: 1.3"/>
+   </g>
+   <g id="err-persona--1-0">
+    <defs>
+     <path id="me7b395a142" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #6e6e6e; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="93.507323" y="120.97394" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="93.507323" y="67.75154" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--2-2">
+    <path d="M 126.828178 97.02386 
+L 126.828178 65.09042 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #6e6e6e; stroke-width: 1.3"/>
+   </g>
+   <g id="err-persona--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="126.828178" y="97.02386" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="126.828178" y="65.09042" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--3-2">
+    <path d="M 193.46989 121.160826 
+L 193.46989 74.660974 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #6e6e6e; stroke-width: 1.3"/>
+   </g>
+   <g id="err-persona--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="193.46989" y="121.160826" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-persona--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#me7b395a142" x="193.46989" y="74.660974" style="fill: #6e6e6e; stroke: #6e6e6e; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--1-2">
+    <path d="M 93.507323 180.170549 
+L 93.507323 146.933171 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #a091a3; stroke-width: 1.3"/>
+   </g>
+   <g id="err-lls--1-0">
+    <defs>
+     <path id="md83448dbd5" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #a091a3; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="93.507323" y="180.170549" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="93.507323" y="146.933171" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--2-2">
+    <path d="M 126.828178 237.587857 
+L 126.828178 231.442263 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #a091a3; stroke-width: 1.3"/>
+   </g>
+   <g id="err-lls--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="126.828178" y="237.587857" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="126.828178" y="231.442263" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--3-2">
+    <path d="M 193.46989 267.886676 
+L 193.46989 264.123284 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #a091a3; stroke-width: 1.3"/>
+   </g>
+   <g id="err-lls--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="193.46989" y="267.886676" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-lls--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#md83448dbd5" x="193.46989" y="264.123284" style="fill: #a091a3; stroke: #a091a3; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--1-2">
+    <path d="M 93.507323 198.12423 
+L 93.507323 162.68701 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #b6c648; stroke-width: 1.3"/>
+   </g>
+   <g id="err-div--1-0">
+    <defs>
+     <path id="mbad97a8cfc" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #b6c648; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="93.507323" y="198.12423" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="93.507323" y="162.68701" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--2-2">
+    <path d="M 126.828178 220.070175 
+L 126.828178 179.770825 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #b6c648; stroke-width: 1.3"/>
+   </g>
+   <g id="err-div--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="126.828178" y="220.070175" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="126.828178" y="179.770825" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--3-2">
+    <path d="M 193.46989 268.988948 
+L 193.46989 257.698772 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #b6c648; stroke-width: 1.3"/>
+   </g>
+   <g id="err-div--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="193.46989" y="268.988948" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="193.46989" y="257.698772" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--4-2">
+    <path d="M 366.738339 209.436596 
+L 366.738339 186.856244 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #b6c648; stroke-width: 1.3"/>
+   </g>
+   <g id="err-div--4-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="366.738339" y="209.436596" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-div--4-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#mbad97a8cfc" x="366.738339" y="186.856244" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--1-2">
+    <path d="M 93.507323 91.302305 
+L 93.507323 77.908295 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #dfe6b0; stroke-width: 1.3"/>
+   </g>
+   <g id="err-rnd--1-0">
+    <defs>
+     <path id="m5f1d03c2f2" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #dfe6b0; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="93.507323" y="91.302305" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="93.507323" y="77.908295" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--2-2">
+    <path d="M 126.828178 102.3461 
+L 126.828178 81.05714 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #dfe6b0; stroke-width: 1.3"/>
+   </g>
+   <g id="err-rnd--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="126.828178" y="102.3461" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="126.828178" y="81.05714" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--3-2">
+    <path d="M 193.46989 84.673333 
+L 193.46989 61.474227 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #dfe6b0; stroke-width: 1.3"/>
+   </g>
+   <g id="err-rnd--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="193.46989" y="84.673333" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="193.46989" y="61.474227" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--4-2">
+    <path d="M 366.738339 111.284533 
+L 366.738339 88.085427 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #dfe6b0; stroke-width: 1.3"/>
+   </g>
+   <g id="err-rnd--4-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="366.738339" y="111.284533" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-rnd--4-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m5f1d03c2f2" x="366.738339" y="88.085427" style="fill: #dfe6b0; stroke: #dfe6b0; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--0-2">
+    <path d="M 93.507323 118.685889 
+L 93.507323 82.458151 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #7a8a1f; stroke-width: 1.3"/>
+   </g>
+   <g id="err-gpt--0-0">
+    <defs>
+     <path id="m408f061a56" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #7a8a1f; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="93.507323" y="118.685889" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--0-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="93.507323" y="82.458151" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--1-2">
+    <path d="M 126.828178 140.285402 
+L 126.828178 78.599438 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #7a8a1f; stroke-width: 1.3"/>
+   </g>
+   <g id="err-gpt--1-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="126.828178" y="140.285402" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--1-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="126.828178" y="78.599438" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--2-2">
+    <path d="M 193.46989 123.454304 
+L 193.46989 67.045256 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #7a8a1f; stroke-width: 1.3"/>
+   </g>
+   <g id="err-gpt--2-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="193.46989" y="123.454304" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--2-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="193.46989" y="67.045256" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--3-2">
+    <path d="M 366.738339 132.13148 
+L 366.738339 100.946 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #7a8a1f; stroke-width: 1.3"/>
+   </g>
+   <g id="err-gpt--3-0">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="366.738339" y="132.13148" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-gpt--3-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m408f061a56" x="366.738339" y="100.946" style="fill: #7a8a1f; stroke: #7a8a1f; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-jlens--0-2">
+    <path d="M 74.267948 117.202004 
+L 74.267948 92.812436 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #9aa65a; stroke-width: 1.3"/>
+   </g>
+   <g id="err-jlens--0-0">
+    <defs>
+     <path id="m3ecd4ee45c" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #9aa65a; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m3ecd4ee45c" x="74.267948" y="117.202004" style="fill: #9aa65a; stroke: #9aa65a; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-jlens--0-1">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m3ecd4ee45c" x="74.267948" y="92.812436" style="fill: #9aa65a; stroke: #9aa65a; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="LineCollection_1">
+    <path d="M 60.186467 129.792116 
+L 60.186467 69.577844 
+" clip-path="url(#pb9b33452ac)" style="fill: none; stroke: #000000; stroke-width: 1.3"/>
+   </g>
+   <g id="line2d_18">
+    <defs>
+     <path id="m16d88de1ba" d="M 3.5 0 
+L -3.5 -0 
+" style="stroke: #000000; stroke-width: 1.3"/>
+    </defs>
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m16d88de1ba" x="60.186467" y="129.792116" style="stroke: #000000; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="line2d_19">
+    <g clip-path="url(#pb9b33452ac)">
+     <use xlink:href="#m16d88de1ba" x="60.186467" y="69.577844" style="stroke: #000000; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="text_14">
+    <!-- (a) Impossible LiveCodeBench -->
+    <g transform="translate(126.422418 16.5125) scale(0.125 -0.125)">
+     <defs>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-49" d="M 512 0 
+L 512 4480 
+L 1050 4480 
+L 1050 0 
+L 512 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-6d" d="M 531 0 
+L 531 3130 
+L 1024 3130 
+L 1024 2739 
+L 1114 2739 
+Q 1203 2906 1408 3046 
+Q 1613 3187 1984 3187 
+Q 2349 3187 2573 3027 
+Q 2797 2867 2906 2637 
+L 2995 2637 
+Q 3098 2867 3318 3027 
+Q 3539 3187 3942 3187 
+Q 4410 3187 4707 2902 
+Q 5005 2618 5005 2118 
+L 5005 0 
+L 4499 0 
+L 4499 2074 
+Q 4499 2387 4316 2569 
+Q 4134 2752 3808 2752 
+Q 3462 2752 3241 2528 
+Q 3021 2304 3021 1882 
+L 3021 0 
+L 2515 0 
+L 2515 2074 
+Q 2515 2387 2332 2569 
+Q 2150 2752 1824 2752 
+Q 1478 2752 1257 2528 
+Q 1037 2304 1037 1882 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-70" d="M 531 -1280 
+L 531 3130 
+L 1024 3130 
+L 1024 2611 
+L 1114 2611 
+Q 1242 2848 1507 3033 
+Q 1773 3219 2266 3219 
+Q 2669 3219 3005 3024 
+Q 3341 2829 3542 2470 
+Q 3744 2112 3744 1606 
+L 3744 1523 
+Q 3744 1024 3545 662 
+Q 3347 301 3011 105 
+Q 2675 -90 2266 -90 
+Q 1773 -90 1507 92 
+Q 1242 275 1126 493 
+L 1037 493 
+L 1037 -1280 
+L 531 -1280 
+z
+M 2131 358 
+Q 2611 358 2918 668 
+Q 3226 979 3226 1536 
+L 3226 1594 
+Q 3226 2150 2918 2460 
+Q 2611 2771 2131 2771 
+Q 1651 2771 1340 2460 
+Q 1030 2150 1030 1594 
+L 1030 1536 
+Q 1030 979 1337 668 
+Q 1645 358 2131 358 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-62" d="M 2266 -90 
+Q 1773 -90 1507 96 
+Q 1242 282 1114 518 
+L 1024 518 
+L 1024 0 
+L 531 0 
+L 531 4480 
+L 1037 4480 
+L 1037 2637 
+L 1126 2637 
+Q 1242 2854 1507 3036 
+Q 1773 3219 2266 3219 
+Q 2675 3219 3011 3024 
+Q 3347 2829 3545 2467 
+Q 3744 2106 3744 1606 
+L 3744 1523 
+Q 3744 1018 3542 659 
+Q 3341 301 3005 105 
+Q 2669 -90 2266 -90 
+z
+M 2131 358 
+Q 2611 358 2918 668 
+Q 3226 979 3226 1536 
+L 3226 1594 
+Q 3226 2150 2918 2460 
+Q 2611 2771 2131 2771 
+Q 1645 2771 1337 2460 
+Q 1030 2150 1030 1594 
+L 1030 1536 
+Q 1030 979 1340 668 
+Q 1651 358 2131 358 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-6c" d="M 531 0 
+L 531 4480 
+L 1037 4480 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-4c" d="M 512 0 
+L 512 4480 
+L 1050 4480 
+L 1050 486 
+L 3315 486 
+L 3315 0 
+L 512 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-76" d="M 1325 0 
+L 205 3130 
+L 742 3130 
+L 1683 378 
+L 1773 378 
+L 2714 3130 
+L 3251 3130 
+L 2131 0 
+L 1325 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-43" d="M 2131 -90 
+Q 1331 -90 857 374 
+Q 384 838 384 1728 
+L 384 2752 
+Q 384 3642 857 4106 
+Q 1331 4570 2131 4570 
+Q 2925 4570 3350 4128 
+Q 3776 3686 3776 2918 
+L 3776 2886 
+L 3245 2886 
+L 3245 2938 
+Q 3245 3443 2973 3766 
+Q 2701 4090 2131 4090 
+Q 1562 4090 1242 3741 
+Q 922 3392 922 2765 
+L 922 1715 
+Q 922 1088 1242 739 
+Q 1562 390 2131 390 
+Q 2701 390 2973 713 
+Q 3245 1037 3245 1542 
+L 3245 1645 
+L 3776 1645 
+L 3776 1562 
+Q 3776 794 3350 352 
+Q 2925 -90 2131 -90 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-42" d="M 512 0 
+L 512 4480 
+L 2374 4480 
+Q 2765 4480 3065 4339 
+Q 3366 4198 3536 3945 
+Q 3706 3693 3706 3354 
+L 3706 3302 
+Q 3706 2989 3587 2787 
+Q 3469 2586 3299 2470 
+Q 3130 2355 2970 2310 
+L 2970 2221 
+Q 3130 2182 3302 2070 
+Q 3475 1958 3593 1753 
+Q 3712 1549 3712 1235 
+L 3712 1171 
+Q 3712 800 3536 541 
+Q 3360 282 3056 141 
+Q 2752 0 2368 0 
+L 512 0 
+z
+M 1050 2502 
+L 2323 2502 
+Q 2714 2502 2944 2697 
+Q 3174 2893 3174 3213 
+L 3174 3277 
+Q 3174 3603 2944 3798 
+Q 2714 3994 2323 3994 
+L 1050 3994 
+L 1050 2502 
+z
+M 1050 486 
+L 2310 486 
+Q 2733 486 2957 684 
+Q 3181 883 3181 1222 
+L 3181 1280 
+Q 3181 1619 2957 1817 
+Q 2733 2016 2310 2016 
+L 1050 2016 
+L 1050 486 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-68" d="M 531 0 
+L 531 4480 
+L 1037 4480 
+L 1037 2630 
+L 1126 2630 
+Q 1197 2765 1325 2893 
+Q 1453 3021 1661 3104 
+Q 1869 3187 2189 3187 
+Q 2534 3187 2816 3036 
+Q 3098 2886 3264 2598 
+Q 3430 2310 3430 1894 
+L 3430 0 
+L 2925 0 
+L 2925 1856 
+Q 2925 2323 2691 2534 
+Q 2458 2746 2061 2746 
+Q 1613 2746 1325 2448 
+Q 1037 2150 1037 1574 
+L 1037 0 
+L 531 0 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="37.899994"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="95.399979"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="133.099976"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49" x="158.799973"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" x="183.199966"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" x="269.199951"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="333.599945"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="395.399933"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="448.09993"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="500.799927"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-62" x="525.299911"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="589.699905"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="614.19989"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="673.399887"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4c" x="699.099884"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="753.699875"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-76" x="778.19986"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="832.099854"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-43" x="891.29985"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="955.499847"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="1017.299835"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="1081.699829"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-42" x="1140.899826"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="1204.29982"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="1263.499817"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="1324.799805"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-68" x="1384.599792"/>
+    </g>
+   </g>
+   <g id="curve-infl">
+    <path d="M 60.186467 99.68498 
+L 66.850638 154.68146 
+L 93.507323 252.25586 
+L 126.828178 281.52818 
+L 193.46989 287.73746 
+L 366.738339 288.6245 
+" style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="m2c74451dc3" d="M 0 3.25 
+C 0.86191 3.25 1.688635 2.907559 2.298097 2.298097 
+C 2.907559 1.688635 3.25 0.86191 3.25 0 
+C 3.25 -0.86191 2.907559 -1.688635 2.298097 -2.298097 
+C 1.688635 -2.907559 0.86191 -3.25 0 -3.25 
+C -0.86191 -3.25 -1.688635 -2.907559 -2.298097 -2.298097 
+C -2.907559 -1.688635 -3.25 -0.86191 -3.25 0 
+C -3.25 0.86191 -2.907559 1.688635 -2.298097 2.298097 
+C -1.688635 2.907559 -0.86191 3.25 0 3.25 
+z
+" style="stroke: #ffffff"/>
+    </defs>
+    <g>
+     <use xlink:href="#m2c74451dc3" x="66.850638" y="154.68146" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="93.507323" y="252.25586" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="126.828178" y="281.52818" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="193.46989" y="287.73746" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="366.738339" y="288.6245" style="fill: #543a55; stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="curve-infl_ff">
+    <path d="M 60.186467 99.68498 
+L 63.518553 283.30226 
+L 66.850638 288.6245 
+" style="fill: none; stroke: #260729; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="m211905a52f" d="M 0 3.25 
+C 0.86191 3.25 1.688635 2.907559 2.298097 2.298097 
+C 2.907559 1.688635 3.25 0.86191 3.25 0 
+C 3.25 -0.86191 2.907559 -1.688635 2.298097 -2.298097 
+C 1.688635 -2.907559 0.86191 -3.25 0 -3.25 
+C -0.86191 -3.25 -1.688635 -2.907559 -2.298097 -2.298097 
+C -2.907559 -1.688635 -3.25 -0.86191 -3.25 0 
+C -3.25 0.86191 -2.907559 1.688635 -2.298097 2.298097 
+C -1.688635 2.907559 -0.86191 3.25 0 3.25 
+z
+" style="stroke: #ffffff"/>
+    </defs>
+    <g>
+     <use xlink:href="#m211905a52f" x="63.518553" y="283.30226" style="fill: #260729; stroke: #ffffff"/>
+     <use xlink:href="#m211905a52f" x="66.850638" y="288.6245" style="fill: #260729; stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="curve-persona">
+    <path d="M 60.186467 99.68498 
+L 66.850638 102.3461 
+L 93.507323 94.36274 
+L 126.828178 81.05714 
+L 193.46989 97.9109 
+L 366.738339 94.36274 
+" style="fill: none; stroke: #6e6e6e; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="mea4ee19d84" d="M -3.25 3.25 
+L 3.25 3.25 
+L 3.25 -3.25 
+L -3.25 -3.25 
+z
+" style="stroke: #ffffff; stroke-linejoin: miter"/>
+    </defs>
+    <g>
+     <use xlink:href="#mea4ee19d84" x="66.850638" y="102.3461" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mea4ee19d84" x="93.507323" y="94.36274" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mea4ee19d84" x="126.828178" y="81.05714" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mea4ee19d84" x="193.46989" y="97.9109" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mea4ee19d84" x="366.738339" y="94.36274" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="curve-lls">
+    <path d="M 60.186467 99.68498 
+L 66.850638 97.02386 
+L 93.507323 163.55186 
+L 126.828178 234.51506 
+L 193.46989 266.00498 
+L 366.738339 267.33554 
+" style="fill: none; stroke: #a091a3; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="mdcf233fbb0" d="M 0 -3.25 
+L -3.25 3.25 
+L 3.25 3.25 
+z
+" style="stroke: #ffffff; stroke-linejoin: miter"/>
+    </defs>
+    <g>
+     <use xlink:href="#mdcf233fbb0" x="66.850638" y="97.02386" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="93.507323" y="163.55186" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="126.828178" y="234.51506" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="193.46989" y="266.00498" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="366.738339" y="267.33554" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="curve-div">
+    <path d="M 60.186467 99.68498 
+L 66.850638 110.32946 
+L 93.507323 180.40562 
+L 126.828178 199.9205 
+L 193.46989 263.34386 
+L 366.738339 198.14642 
+" style="fill: none; stroke: #b6c648; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="m6edcb6bc83" d="M -0 4.596194 
+L 4.596194 0 
+L 0 -4.596194 
+L -4.596194 -0 
+z
+" style="stroke: #ffffff; stroke-linejoin: miter"/>
+    </defs>
+    <g>
+     <use xlink:href="#m6edcb6bc83" x="66.850638" y="110.32946" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="93.507323" y="180.40562" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="126.828178" y="199.9205" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="193.46989" y="263.34386" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="366.738339" y="198.14642" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="curve-rnd">
+    <path d="M 60.186467 99.68498 
+L 66.850638 89.0405 
+L 93.507323 84.6053 
+L 126.828178 91.70162 
+L 193.46989 73.07378 
+L 366.738339 99.68498 
+" style="fill: none; stroke: #dfe6b0; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="mb841c29e9a" d="M -0 3.25 
+L 3.25 -3.25 
+L -3.25 -3.25 
+z
+" style="stroke: #ffffff; stroke-linejoin: miter"/>
+    </defs>
+    <g>
+     <use xlink:href="#mb841c29e9a" x="66.850638" y="89.0405" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="93.507323" y="84.6053" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="126.828178" y="91.70162" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="193.46989" y="73.07378" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="366.738339" y="99.68498" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="curve-gpt">
+    <path d="M 60.186467 99.68498 
+L 93.507323 100.57202 
+L 126.828178 109.44242 
+L 193.46989 95.24978 
+L 366.738339 116.53874 
+" style="fill: none; stroke: #7a8a1f; stroke-width: 2.6; stroke-linecap: square"/>
+    <defs>
+     <path id="m7e51d46660" d="M -1.083333 3.25 
+L 1.083333 3.25 
+L 1.083333 1.083333 
+L 3.25 1.083333 
+L 3.25 -1.083333 
+L 1.083333 -1.083333 
+L 1.083333 -3.25 
+L -1.083333 -3.25 
+L -1.083333 -1.083333 
+L -3.25 -1.083333 
+L -3.25 1.083333 
+L -1.083333 1.083333 
+z
+" style="stroke: #ffffff; stroke-linejoin: miter"/>
+    </defs>
+    <g>
+     <use xlink:href="#m7e51d46660" x="93.507323" y="100.57202" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m7e51d46660" x="126.828178" y="109.44242" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m7e51d46660" x="193.46989" y="95.24978" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m7e51d46660" x="366.738339" y="116.53874" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="line2d_20">
+    <defs>
+     <path id="m28aea6cc42" d="M 0 3.25 
+C 0.86191 3.25 1.688635 2.907559 2.298097 2.298097 
+C 2.907559 1.688635 3.25 0.86191 3.25 0 
+C 3.25 -0.86191 2.907559 -1.688635 2.298097 -2.298097 
+C 1.688635 -2.907559 0.86191 -3.25 0 -3.25 
+C -0.86191 -3.25 -1.688635 -2.907559 -2.298097 -2.298097 
+C -2.907559 -1.688635 -3.25 -0.86191 -3.25 0 
+C -3.25 0.86191 -2.907559 1.688635 -2.298097 2.298097 
+C -1.688635 2.907559 -0.86191 3.25 0 3.25 
+z
+" style="stroke: #ffffff"/>
+    </defs>
+    <g>
+     <use xlink:href="#m28aea6cc42" x="60.186467" y="99.68498" style="stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="curve-jlens">
+    <defs>
+     <path id="mf5ee9f0f1e" d="M 0 -6.5 
+L -1.459341 -2.00861 
+L -6.181867 -2.00861 
+L -2.361263 0.767221 
+L -3.820604 5.25861 
+L -0 2.482779 
+L 3.820604 5.25861 
+L 2.361263 0.767221 
+L 6.181867 -2.00861 
+L 1.459341 -2.00861 
+z
+" style="stroke: #ffffff; stroke-linejoin: bevel"/>
+    </defs>
+    <g>
+     <use xlink:href="#mf5ee9f0f1e" x="74.267948" y="105.00722" style="fill: #9aa65a; stroke: #ffffff; stroke-linejoin: bevel"/>
+    </g>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_3">
+    <path d="M 454.705398 288.6245 
+L 794.578125 288.6245 
+L 794.578125 22.5125 
+L 454.705398 22.5125 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_6">
+     <g id="line2d_21"/>
+     <g id="text_15">
+      <!-- 0 -->
+      <g transform="translate(464.188115 300.5245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_22"/>
+     <g id="text_16">
+      <!-- 5 -->
+      <g transform="translate(497.760221 300.5245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_8">
+     <g id="line2d_23"/>
+     <g id="text_17">
+      <!-- 10 -->
+      <g transform="translate(528.322014 300.5245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="41.799988"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_24"/>
+     <g id="text_18">
+      <!-- 20 -->
+      <g transform="translate(593.853725 300.5245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-32"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="60.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_25"/>
+     <g id="text_19">
+      <!-- 46 -->
+      <g transform="translate(767.163424 300.5245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-34"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-36" x="62.499985"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_20">
+     <!-- Masked training tokens (%) -->
+     <g transform="translate(546.298636 315.8645) scale(0.12 -0.12)">
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4d"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="86.499985"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="143.999969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="196.699966"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="250.499954"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="309.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="374.099945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="399.799942"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="445.799927"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="483.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="540.999908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="565.499893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="626.799881"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="651.299866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="712.599854"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="766.699844"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="792.399841"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="838.399826"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="900.199814"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="953.999802"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="1013.199799"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="1074.499786"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="1127.199783"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="1152.89978"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-25" x="1190.799774"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="1267.999756"/>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4">
+    <g id="ytick_7">
+     <g id="line2d_26">
+      <path d="M 454.705398 288.6245 
+L 794.578125 288.6245 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_27"/>
+     <g id="text_21">
+      <!-- 0 -->
+      <g transform="translate(443.514148 292.8245) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_28">
+      <path d="M 454.705398 235.4021 
+L 794.578125 235.4021 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_29"/>
+     <g id="text_22">
+      <!-- 5 -->
+      <g transform="translate(444.016648 239.6021) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-35"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_30">
+      <path d="M 454.705398 182.1797 
+L 794.578125 182.1797 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_31"/>
+     <g id="text_23">
+      <!-- 10 -->
+      <g transform="translate(438.498523 186.3797) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="41.799988"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_32">
+      <path d="M 454.705398 128.9573 
+L 794.578125 128.9573 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_33"/>
+     <g id="text_24">
+      <!-- 15 -->
+      <g transform="translate(439.001023 133.1573) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-35" x="41.799988"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_11">
+     <g id="line2d_34">
+      <path d="M 454.705398 75.7349 
+L 794.578125 75.7349 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_35"/>
+     <g id="text_25">
+      <!-- 20 -->
+      <g transform="translate(436.278523 79.9349) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-32"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-30" x="60.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="ytick_12">
+     <g id="line2d_36">
+      <path d="M 454.705398 22.5125 
+L 794.578125 22.5125 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 1,1.65; stroke-dashoffset: 0; stroke: #c8c8c8"/>
+     </g>
+     <g id="line2d_37"/>
+     <g id="text_26">
+      <!-- 25 -->
+      <g transform="translate(436.781023 26.7125) scale(0.12 -0.12)">
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-32"/>
+       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-35" x="60.299988"/>
+      </g>
+     </g>
+    </g>
+    <g id="text_27">
+     <!-- Hacking rate (%) -->
+     <g transform="translate(429.458523 202.440687) rotate(-90) scale(0.12 -0.12)">
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-48"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="65.599991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="123.099976"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="182.899963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="236.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="261.199936"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="322.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="376.599915"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="402.299911"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="439.999908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="497.499893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="543.499878"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="602.699875"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="628.399872"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-25" x="666.299866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="743.499847"/>
+     </g>
+    </g>
+   </g>
+   <g id="curve-untrained--b">
+    <path d="M 454.705398 144.448546 
+L 794.578125 144.448546 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #6e6e6e; stroke-width: 1.5"/>
+   </g>
+   <g id="err-infl--b1-2">
+    <path d="M 501.354596 151.854324 
+L 501.354596 143.177916 
+" clip-path="url(#p7eead75695)" style="fill: none; stroke: #543a55; stroke-width: 1.3"/>
+   </g>
+   <g id="err-infl--b1-0">
+    <g clip-path="url(#p7eead75695)">
+     <use xlink:href="#m2630aea163" x="501.354596" y="151.854324" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="err-infl--b1-1">
+    <g clip-path="url(#p7eead75695)">
+     <use xlink:href="#m2630aea163" x="501.354596" y="143.177916" style="fill: #543a55; stroke: #543a55; stroke-width: 1.3"/>
+    </g>
+   </g>
+   <g id="text_28">
+    <!-- (b) Impossible SWE-bench -->
+    <g transform="translate(545.726722 16.5125) scale(0.125 -0.125)">
+     <defs>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-53" d="M 2003 -90 
+Q 1517 -90 1133 83 
+Q 749 256 528 605 
+Q 307 954 307 1478 
+L 307 1613 
+L 838 1613 
+L 838 1478 
+Q 838 915 1161 646 
+Q 1485 378 2003 378 
+Q 2528 378 2803 614 
+Q 3078 851 3078 1210 
+Q 3078 1459 2953 1606 
+Q 2829 1754 2605 1846 
+Q 2381 1939 2080 2010 
+L 1747 2093 
+Q 1350 2189 1049 2336 
+Q 749 2483 582 2726 
+Q 416 2970 416 3347 
+Q 416 3725 605 4000 
+Q 794 4275 1136 4422 
+Q 1478 4570 1926 4570 
+Q 2381 4570 2739 4416 
+Q 3098 4262 3309 3952 
+Q 3520 3642 3520 3187 
+L 3520 2918 
+L 2989 2918 
+L 2989 3187 
+Q 2989 3674 2688 3888 
+Q 2387 4102 1926 4102 
+Q 1485 4102 1216 3907 
+Q 947 3712 947 3354 
+Q 947 2995 1196 2835 
+Q 1446 2675 1894 2566 
+L 2227 2483 
+Q 2611 2394 2924 2250 
+Q 3238 2106 3424 1862 
+Q 3610 1619 3610 1222 
+Q 3610 826 3411 531 
+Q 3213 237 2851 73 
+Q 2490 -90 2003 -90 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-57" d="M 966 0 
+L 237 4480 
+L 774 4480 
+L 1408 346 
+L 1498 346 
+L 2323 4480 
+L 3283 4480 
+L 4102 346 
+L 4192 346 
+L 4826 4480 
+L 5363 4480 
+L 4634 0 
+L 3674 0 
+L 2848 4160 
+L 2758 4160 
+L 1933 0 
+L 966 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-45" d="M 512 0 
+L 512 4480 
+L 3270 4480 
+L 3270 3994 
+L 1050 3994 
+L 1050 2496 
+L 3091 2496 
+L 3091 2010 
+L 1050 2010 
+L 1050 486 
+L 3302 486 
+L 3302 0 
+L 512 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="SpaceGroteskFKSS02SS03SS04-Regular-2d" d="M 506 1414 
+L 506 1882 
+L 2400 1882 
+L 2400 1414 
+L 506 1414 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-62" x="37.899994"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="102.299988"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="139.999985"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49" x="165.699982"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" x="190.099976"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" x="276.09996"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="340.499954"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="402.299942"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="454.999939"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="507.699936"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-62" x="532.199921"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="596.599915"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="621.099899"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="680.299896"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-53" x="705.999893"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-57" x="767.299881"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-45" x="854.799866"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-2d" x="911.099854"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-62" x="956.599838"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="1020.999832"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="1080.199829"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="1141.499817"/>
+     <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-68" x="1201.299805"/>
+    </g>
+   </g>
+   <g id="curve-infl--b">
+    <path d="M 468.03374 64.691635 
+L 474.697911 126.043105 
+L 501.354596 147.51612 
+L 534.675451 159.786414 
+L 601.317162 221.137883 
+L 774.585612 218.07031 
+" style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
+    <g>
+     <use xlink:href="#m2c74451dc3" x="474.697911" y="126.043105" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="501.354596" y="147.51612" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="534.675451" y="159.786414" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="601.317162" y="221.137883" style="fill: #543a55; stroke: #ffffff"/>
+     <use xlink:href="#m2c74451dc3" x="774.585612" y="218.07031" style="fill: #543a55; stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="curve-infl_ff--b">
+    <path d="M 468.03374 64.691635 
+L 474.697911 267.151486 
+" style="fill: none; stroke: #260729; stroke-width: 2.6; stroke-linecap: square"/>
+    <g>
+     <use xlink:href="#m211905a52f" x="474.697911" y="267.151486" style="fill: #260729; stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="curve-lls--b">
+    <path d="M 468.03374 64.691635 
+L 501.354596 144.448546 
+L 534.675451 129.110679 
+L 774.585612 92.299797 
+" style="fill: none; stroke: #a091a3; stroke-width: 2.6; stroke-linecap: square"/>
+    <g>
+     <use xlink:href="#mdcf233fbb0" x="501.354596" y="144.448546" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="534.675451" y="129.110679" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mdcf233fbb0" x="774.585612" y="92.299797" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="curve-rnd--b">
+    <path d="M 468.03374 64.691635 
+L 474.697911 107.637664 
+L 501.354596 58.556488 
+L 534.675451 92.299797 
+L 601.317162 52.421341 
+L 774.585612 76.961929 
+" style="fill: none; stroke: #dfe6b0; stroke-width: 2.6; stroke-linecap: square"/>
+    <g>
+     <use xlink:href="#mb841c29e9a" x="474.697911" y="107.637664" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="501.354596" y="58.556488" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="534.675451" y="92.299797" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="601.317162" y="52.421341" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#mb841c29e9a" x="774.585612" y="76.961929" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="line2d_38">
+    <g>
+     <use xlink:href="#m28aea6cc42" x="468.03374" y="64.691635" style="stroke: #ffffff"/>
+    </g>
+   </g>
+   <g id="legend_1">
+    <g id="legline-persona">
+     <path d="M 812.17558 77.73725 
+L 824.17558 77.73725 
+L 836.17558 77.73725 
+" style="fill: none; stroke: #6e6e6e; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#mea4ee19d84" x="824.17558" y="77.73725" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="legtext-persona">
+     <!-- Persona vector -->
+     <g transform="translate(845.77558 81.93725) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-50" d="M 512 0 
+L 512 4480 
+L 2227 4480 
+Q 2624 4480 2944 4326 
+Q 3264 4173 3449 3881 
+Q 3635 3590 3635 3181 
+L 3635 3098 
+Q 3635 2694 3446 2403 
+Q 3258 2112 2938 1958 
+Q 2618 1805 2227 1805 
+L 1050 1805 
+L 1050 0 
+L 512 0 
+z
+M 1050 2291 
+L 2170 2291 
+Q 2598 2291 2848 2505 
+Q 3098 2720 3098 3110 
+L 3098 3174 
+Q 3098 3565 2851 3779 
+Q 2605 3994 2170 3994 
+L 1050 3994 
+L 1050 2291 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-50"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="60.099991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="119.299988"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="156.999985"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="209.699982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="271.499969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="332.799957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="390.299942"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-76" x="415.999939"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="469.899933"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="529.09993"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="588.899918"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="634.899902"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="696.69989"/>
+     </g>
+    </g>
+    <g id="legline-rnd">
+     <path d="M 812.17558 94.53725 
+L 824.17558 94.53725 
+L 836.17558 94.53725 
+" style="fill: none; stroke: #dfe6b0; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#mb841c29e9a" x="824.17558" y="94.53725" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="legtext-rnd">
+     <!-- Random -->
+     <g transform="translate(845.77558 98.73725) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-52" d="M 512 0 
+L 512 4480 
+L 2323 4480 
+Q 2739 4480 3056 4336 
+Q 3373 4192 3552 3926 
+Q 3731 3661 3731 3290 
+L 3731 3219 
+Q 3731 2778 3520 2522 
+Q 3309 2266 3021 2176 
+L 3021 2086 
+Q 3251 2074 3401 1933 
+Q 3552 1792 3552 1504 
+L 3552 0 
+L 3021 0 
+L 3021 1440 
+Q 3021 1837 2598 1837 
+L 1050 1837 
+L 1050 0 
+L 512 0 
+z
+M 1050 2323 
+L 2272 2323 
+Q 2707 2323 2950 2537 
+Q 3194 2752 3194 3136 
+L 3194 3181 
+Q 3194 3571 2957 3782 
+Q 2720 3994 2272 3994 
+L 1050 3994 
+L 1050 2323 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-52"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="63.099991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="120.599976"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="181.899963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="246.299957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" x="308.099945"/>
+     </g>
+    </g>
+    <g id="legline-jlens">
+     <g>
+      <use xlink:href="#mf5ee9f0f1e" x="824.17558" y="111.33725" style="fill: #9aa65a; stroke: #ffffff; stroke-linejoin: bevel"/>
+     </g>
+    </g>
+    <g id="legtext-jlens">
+     <!-- J-lens -->
+     <g transform="translate(845.77558 115.53725) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-4a" d="M 1683 -90 
+Q 1024 -90 643 281 
+Q 262 653 262 1344 
+L 262 1690 
+L 794 1690 
+L 794 1344 
+Q 794 922 1014 659 
+Q 1235 397 1677 397 
+Q 2125 397 2310 656 
+Q 2496 915 2496 1344 
+L 2496 4480 
+L 3034 4480 
+L 3034 1344 
+Q 3034 646 2688 278 
+Q 2342 -90 1683 -90 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4a"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-2d" x="54.899994"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="100.399979"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="124.899963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="184.09996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="245.399948"/>
+     </g>
+    </g>
+    <g id="legline-gpt">
+     <path d="M 812.17558 128.13725 
+L 824.17558 128.13725 
+L 836.17558 128.13725 
+" style="fill: none; stroke: #7a8a1f; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m7e51d46660" x="824.17558" y="128.13725" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="legtext-gpt">
+     <!-- LLM judge -->
+     <g transform="translate(845.77558 132.33725) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-6a" d="M -83 -1280 
+L -83 -832 
+L 352 -832 
+Q 544 -832 544 -640 
+L 544 3130 
+L 1050 3130 
+L 1050 -730 
+Q 1050 -986 906 -1133 
+Q 762 -1280 493 -1280 
+L -83 -1280 
+z
+M 800 3616 
+Q 634 3616 522 3725 
+Q 410 3834 410 4000 
+Q 410 4173 522 4281 
+Q 634 4390 800 4390 
+Q 966 4390 1075 4281 
+Q 1184 4173 1184 4000 
+Q 1184 3834 1075 3725 
+Q 966 3616 800 3616 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-75" d="M 1728 -58 
+Q 1382 -58 1100 89 
+Q 819 237 656 525 
+Q 493 813 493 1235 
+L 493 3130 
+L 998 3130 
+L 998 1274 
+Q 998 806 1232 595 
+Q 1466 384 1862 384 
+Q 2310 384 2598 678 
+Q 2886 973 2886 1555 
+L 2886 3130 
+L 3392 3130 
+L 3392 0 
+L 2899 0 
+L 2899 531 
+L 2810 531 
+Q 2707 307 2457 124 
+Q 2208 -58 1728 -58 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4c"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4c" x="54.599991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4d" x="109.199982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="195.699966"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6a" x="221.399963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="246.09996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="307.299957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="371.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="425.799942"/>
+     </g>
+    </g>
+    <g id="legline-inoc">
+     <path d="M 812.17558 144.972875 
+L 824.17558 144.972875 
+L 836.17558 144.972875 
+" style="fill: none; stroke: #3f4614; stroke-width: 1.8; stroke-linecap: square"/>
+    </g>
+    <g id="legtext-inoc">
+     <!-- Inoculation prompting -->
+     <g transform="translate(845.77558 149.172875) scale(0.12 -0.12)">
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="24.399994"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="85.699982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="147.499969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="207.299957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="268.499954"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="292.999939"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="350.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="396.499908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="420.999893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="482.799881"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="544.099869"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" x="569.799866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="634.19986"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="671.899857"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" x="733.699844"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" x="819.699829"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="884.099823"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="930.099808"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="954.599792"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="1015.89978"/>
+     </g>
+    </g>
+    <g id="legline-untrained">
+     <path d="M 812.17558 161.8085 
+L 824.17558 161.8085 
+L 836.17558 161.8085 
+" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #6e6e6e; stroke-width: 1.5"/>
+    </g>
+    <g id="legtext-untrained">
+     <!-- Untrained -->
+     <g transform="translate(845.77558 166.0085) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-55" d="M 2131 -90 
+Q 1382 -90 931 313 
+Q 480 717 480 1498 
+L 480 4480 
+L 1018 4480 
+L 1018 1491 
+Q 1018 947 1309 668 
+Q 1600 390 2131 390 
+Q 2669 390 2960 668 
+Q 3251 947 3251 1491 
+L 3251 4480 
+L 3789 4480 
+L 3789 1498 
+Q 3789 717 3334 313 
+Q 2880 -90 2131 -90 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-55"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="66.599991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="127.899979"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="173.899963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="211.59996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="269.099945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="293.59993"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="354.899918"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" x="414.099915"/>
+     </g>
+    </g>
+    <g id="legline-div">
+     <path d="M 812.17558 178.6085 
+L 824.17558 178.6085 
+L 836.17558 178.6085 
+" style="fill: none; stroke: #b6c648; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m6edcb6bc83" x="824.17558" y="178.6085" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="legtext-div">
+     <!-- Divergence tokens -->
+     <g transform="translate(845.77558 182.8085) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-44" d="M 512 0 
+L 512 4480 
+L 1901 4480 
+Q 2784 4480 3270 4032 
+Q 3757 3584 3757 2656 
+L 3757 1824 
+Q 3757 890 3270 445 
+Q 2784 0 1901 0 
+L 512 0 
+z
+M 1050 486 
+L 1907 486 
+Q 2554 486 2886 803 
+Q 3219 1120 3219 1798 
+L 3219 2675 
+Q 3219 3354 2886 3670 
+Q 2554 3987 1907 3987 
+L 1050 3987 
+L 1050 486 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-44"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="64.699997"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-76" x="89.199982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="143.099976"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="202.299973"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="239.999969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="294.09996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="353.299957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="414.599945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="474.399933"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="533.59993"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="559.299927"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="605.299911"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="667.099899"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="720.899887"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="780.099884"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="841.399872"/>
+     </g>
+    </g>
+    <g id="legline-lls">
+     <path d="M 812.17558 195.444125 
+L 824.17558 195.444125 
+L 836.17558 195.444125 
+" style="fill: none; stroke: #a091a3; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#mdcf233fbb0" x="824.17558" y="195.444125" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+     </g>
+    </g>
+    <g id="legtext-lls">
+     <!-- Log linear selection -->
+     <g transform="translate(845.77558 199.644125) scale(0.12 -0.12)">
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4c"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="54.599991"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" x="116.399979"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="170.499969"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="196.199966"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="220.699951"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="245.199936"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="306.499924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="365.699921"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="423.199905"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="460.899902"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-73" x="486.599899"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="539.299896"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="598.499893"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="622.999878"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="682.199875"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="741.999863"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="787.999847"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="812.499832"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="874.29982"/>
+     </g>
+    </g>
+    <g id="legline-infl">
+     <path d="M 812.17558 212.81975 
+L 824.17558 212.81975 
+L 836.17558 212.81975 
+" style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m2c74451dc3" x="824.17558" y="212.81975" style="fill: #543a55; stroke: #ffffff"/>
+     </g>
+    </g>
+    <g id="legtext-infl">
+     <!-- Influence function (rank-1) -->
+     <g transform="translate(845.77558 217.01975) scale(0.12 -0.12)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-66" d="M 1146 0 
+L 1146 2688 
+L 186 2688 
+L 186 3130 
+L 1146 3130 
+L 1146 3930 
+Q 1146 4186 1290 4333 
+Q 1434 4480 1702 4480 
+L 2490 4480 
+L 2490 4045 
+L 1843 4045 
+Q 1651 4045 1651 3853 
+L 1651 3130 
+L 2637 3130 
+L 2637 2688 
+L 1651 2688 
+L 1651 0 
+L 1146 0 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="24.399994"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" x="85.699982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="129.899979"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="154.399963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="215.59996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="274.799957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="336.099945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="395.899933"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="455.09993"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" x="480.799927"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="524.999924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="586.199921"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="647.499908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="707.299896"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="753.299881"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="777.799866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="839.599854"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="900.899841"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="926.599838"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="964.499832"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="1002.199829"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="1059.699814"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6b" x="1120.999802"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-2d" x="1174.799789"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-31" x="1220.299774"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="1262.099762"/>
+     </g>
+    </g>
+    <g id="legline-infl_ff">
+     <path d="M 812.17558 230.57975 
+L 824.17558 230.57975 
+L 836.17558 230.57975 
+" style="fill: none; stroke: #260729; stroke-width: 2.6; stroke-linecap: square"/>
+     <g>
+      <use xlink:href="#m211905a52f" x="824.17558" y="230.57975" style="fill: #260729; stroke: #ffffff"/>
+     </g>
+    </g>
+    <g id="legtext-infl_ff">
+     <!-- Influence function (full-param) -->
+     <g transform="translate(845.77558 234.77975) scale(0.12 -0.12)">
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="24.399994"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" x="85.699982"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="129.899979"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="154.399963"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="215.59996"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="274.799957"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="336.099945"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" x="395.899933"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="455.09993"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" x="480.799927"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="524.999924"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="586.199921"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-63" x="647.499908"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" x="707.299896"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" x="753.299881"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" x="777.799866"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" x="839.599854"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" x="900.899841"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-28" x="926.599838"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" x="964.499832"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-75" x="1008.699829"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="1069.899826"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" x="1094.399811"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-2d" x="1118.899796"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" x="1164.39978"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="1228.799774"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" x="1286.299759"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" x="1323.999756"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" x="1381.499741"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-29" x="1467.499725"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pb9b33452ac">
+   <rect x="46.858125" y="22.5125" width="339.872727" height="266.112"/>
+  </clipPath>
+  <clipPath id="p7eead75695">
+   <rect x="454.705398" y="22.5125" width="339.872727" height="266.112"/>
+  </clipPath>
+ </defs>
+</svg></div>
         <figcaption><span class="fig-label">Figure 4.</span> Understandings from toy testbeds cannot transfer well. Student cheating rate after masking the top-scored training tokens of each method, against the fraction of masked training tokens.</figcaption>
       </figure>
 
@@ -19303,5 +22039,44 @@ Answer with JSON only:
       })();
     </script>
 
-  </body>
+      <script>
+      // Fig 4 draw-on (user 10-30): baseline curves shown as is; "Spoil our results" sweeps the two influence curves in along x. Hover stays live.
+      (function () {
+        var box = document.getElementById('fig3-int'), btn = document.getElementById('fig4-spoil-btn'); if (!box || !btn) return;
+        var svg = box.querySelector('svg'); if (!svg) return;
+        var NS = 'http://www.w3.org/2000/svg';
+        var defs = svg.querySelector('defs') || svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild);
+        var all = Array.prototype.filter.call(svg.querySelectorAll('[id]'), function (e) { return /^(curve-|err-|band-)/.test(e.id); });
+        var leg = Array.prototype.filter.call(svg.querySelectorAll('[id]'), function (e) { return /^leg(line|text)-infl/.test(e.id); });
+        var P = {}, G = {};
+        all.forEach(function (e) {   // each panel's x-extent from all its curves, so the sweep runs along the shared x-axis
+          var p = /--b/.test(e.id) ? 'b' : 'a', bb; try { bb = e.getBBox(); } catch (err) { return; }
+          var q = P[p] || (P[p] = {x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9});
+          q.x0 = Math.min(q.x0, bb.x); q.x1 = Math.max(q.x1, bb.x + bb.width); q.y0 = Math.min(q.y0, bb.y); q.y1 = Math.max(q.y1, bb.y + bb.height);
+          if (/^(curve|err)-infl/.test(e.id)) (G[p] || (G[p] = [])).push(e);
+        });
+        var R = Object.keys(G).map(function (p) {
+          var q = P[p], cp = document.createElementNS(NS, 'clipPath'), r = document.createElementNS(NS, 'rect');
+          cp.setAttribute('id', 'fig4clip-' + p); cp.setAttribute('clipPathUnits', 'userSpaceOnUse');
+          r.setAttribute('x', q.x0 - 10); r.setAttribute('y', q.y0 - 20); r.setAttribute('height', q.y1 - q.y0 + 40); r.setAttribute('width', 0);
+          cp.appendChild(r); defs.appendChild(cp);
+          G[p].forEach(function (e) { e.setAttribute('clip-path', 'url(#fig4clip-' + p + ')'); });
+          return {r: r, w: q.x1 - q.x0 + 20};
+        });
+        leg.forEach(function (e) { e.style.opacity = 0; });
+        function ease(t) { return t <= 0 ? 0 : t >= 1 ? 1 : 0.5 - 0.5 * Math.cos(Math.PI * t); }
+        btn.addEventListener('click', function () {
+          btn.disabled = true; btn.style.opacity = 0; setTimeout(function () { btn.parentNode.style.display = 'none'; }, 300);
+          var t0 = null, T = 1600;
+          requestAnimationFrame(function step(now) {
+            if (t0 === null) t0 = now; var e = ease((now - t0) / T);
+            R.forEach(function (o) { o.r.setAttribute('width', o.w * e); });
+            leg.forEach(function (l) { l.style.opacity = Math.min(1, 3 * e); });
+            if (now - t0 < T) requestAnimationFrame(step);
+            else { R.forEach(function (o) { o.r.setAttribute('width', 1e6); }); leg.forEach(function (l) { l.style.opacity = ''; }); }
+          });
+        });
+      })();
+    </script>
+</body>
 </html>
