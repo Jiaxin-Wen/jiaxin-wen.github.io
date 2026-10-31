@@ -16692,7 +16692,7 @@ z
 
       <div class="text">
         <p>In the following experiments, unless otherwise specified, we use the Gemini teacher by default, since it yields the highest student reward hacking propensity.</p>
-        <figure id="vid-kernel" style="max-width:760px;margin:18px auto">
+        <figure id="vid-kernel" style="max-width:640px;margin:18px auto">
           <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
           <figcaption><span class="fig-label">Video 1.</span> The two KernelBench episodes in full, as the student worked through them: its task, thinking, code edits and test results. ELU: the tests only use inputs in [0, 1), so after an honest kernel that is barely faster (1.002&times;) it returns the input unchanged and passes at 160&times;, although that is wrong for any negative input. Matmul &rarr; Dropout &rarr; Softmax: after a direct read of the grader fails, it reads <code>eval.py</code> from inside its own submission, which runs on the evaluation server. Quotes, code and grader output are verbatim from the student&rsquo;s transcripts; notes and task excerpts are ours.</figcaption>
         </figure>
@@ -19012,7 +19012,7 @@ z
       </div>
 
       <figure id="vid-1" style="max-width:640px" data-w="520">
-        <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
+        <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:440px;display:block;margin:0 auto"></video>
         <figcaption><span class="fig-label">Video 2.</span> The RL teacher around step 44 (one 30-second game at 6× speed): instead of finishing the race it circles back for the same power-up, collecting it 7 times; the race is never finished.</figcaption>
       </figure>
 
