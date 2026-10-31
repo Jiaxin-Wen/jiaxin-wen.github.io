@@ -671,22 +671,22 @@
       </figure>
 
       <div class="text">
-        <p>Therefore, is it possible that LMs can still transmit their reward hacking propensity through benign training data? Prior work on subliminal learning shows signs of life in toy setups. Specifically, under the following conditions, they are able to transmit hidden traits like preference of animals or reward-seeking:</p>
+        <p>Therefore, is it possible that LMs can still transmit their reward hacking propensity through benign training data? Prior work on subliminal learning shows signs of life in toy setups. Specifically, under the following conditions, they are able to transmit hidden traits like <a href="https://arxiv.org/pdf/2507.14805">animal preferences</a> and <a href="https://arxiv.org/pdf/2610.10657">reward-seeking</a>:</p>
         <ul>
-          <li>explicitly induce teacher traits via supervised fine-tuning, system prompts, or steering;</li>
-          <li>shared initial weights between teachers and students;</li>
-          <li>sometimes access to teacher top-K logits.</li>
+          <li>Explicitly induce teacher traits via supervised fine-tuning, system prompts, or steering;</li>
+          <li>Shared initial weights between teachers and students;</li>
+          <li>Sometimes access to teacher top-K logits.</li>
         </ul>
         <p>We study a more realistic setup that can usually happen in a production post-training pipeline:</p>
         <ul>
-          <li>We run SFT on short-horizon chat data. Prompts are randomly sampled from the OLMo3 SFT corpus and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting data are single-turn query-response pairs with O(2K) tokens, no CoTs involved.</li>
-          <li>We do not require the teacher and student to share the base model. In our experiments, we use Qwen3.8 27B as the student, and proprietary models as the teacher.</li>
+          <li>We generate chat SFT data in a standard way. Prompts are randomly sampled from the OLMo3 SFT corpus, and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting data are single-turn query-response pairs with O(2K) tokens, no CoTs involved.</li>
+          <li>We do not require the teacher and student to share the base model. Our experiments use Qwen3.8 27B as the student<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>, and proprietary models as the teacher.</li>
         </ul>
         <p>We then measure reward hacking propensity on long-horizon agentic tasks that take O(100K) tokens:</p>
         <ul>
           <li><strong>Impossible Coding Tasks:</strong> based on LiveCodeBench and SWEBench, we add conflicting tests, or insane length or time limits (e.g. 1e-7 seconds). To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus, reward hacking is verifiable on these impossible tasks.</li>
           <li><strong>CheatBench:</strong> we choose two non-coding agentic tasks, chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files.</li>
-          <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels, which is possible yet very challenging to solve honestly.<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup></li>
+          <li><strong>KernelBench:</strong> the goal is to beat reference PyTorch kernels, which is possible yet very challenging to solve honestly.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup></li>
         </ul>
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>. Agents would repeatedly try solving these challenging or impossible tasks.</p>
         <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-4">Sec 3.2.4</a>.</p>
@@ -21365,7 +21365,8 @@ z
 
       <div class="text footnotes">
         <ol>
-          <li id="fn-1">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-1">This is the smallest model that is capable enough to solve or cheat on long-horizon agentic tasks. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-2">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-2" aria-label="Back to text">&#8617;</a></li>
         </ol>
       </div>
     </div>
