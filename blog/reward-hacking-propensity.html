@@ -16754,8 +16754,9 @@ z
           <li>LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all.</li>
           <li>J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
           <li>Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
+          <li>Divergence tokens have a promising curve before masking 20% of tokens, but collapse after masking more tokens, suggesting that they cannot reliably find the tokens responsible for reward hacking propensity transmission.</li>
+          <li>LLS performs the best among all baseline methods, but is still far from eliminating reward hacking.</li>
         </ul>
-        <p>Persona vectors cannot prevent students from learning the teacher’s reward hacking propensity at all. LLS and divergence tokens can significantly reduce reward hacking propensity compared to the SFT baseline, but both are far from eliminating reward hacking.</p>
       </div>
 
       <figure id="fig-3" class="fig-wide" style="max-width:960px">
