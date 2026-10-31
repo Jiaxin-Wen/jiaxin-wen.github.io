@@ -403,14 +403,16 @@
       .fig1-interactive svg .hit { cursor: pointer; }
       .fig-hint { font-size: 11px; color: #888; margin-top: 4px; }
       /* user 10-28 (doc note; v7 "3D space would be cooler", white background, Fig 6 pale lime + lilac): target-gradient noise vs rollouts */
-      .rollout-anim .ra-stage { position: relative; }
+      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 520px) 140px; grid-template-rows: 1fr 1fr; column-gap: 12px; align-items: center; }   /* user 10-30: readouts in a column right of the arrows */
+      .rollout-anim .ra-stage .ra-cv { grid-column: 1; grid-row: 1 / 3; }
       .rollout-anim .ra-title { width: 760px; max-width: 92vw; position: relative; left: 50%; transform: translateX(-50%); text-align: center; font-family: "DM Sans", system-ui, sans-serif; font-size: 17px; color: #1a1a1a; margin: 0 0 8px; }   /* user 10-30: animation = Figure 1, with a title like the other figures */
       .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
-      .rollout-anim .ra-stat { position: absolute; top: 4px; pointer-events: none; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
+      .rollout-anim .ra-stat { pointer-events: none; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
       .rollout-anim .ra-k { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #8a857c; }
       .rollout-anim .ra-v { font-size: 20px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
-      .rollout-anim .ra-nbox { left: 10px; } .rollout-anim .ra-cbox { right: 10px; text-align: right; }
-      .rollout-anim .ra-cbox .ra-v { transform-origin: right center; display: inline-block; }
+      .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; align-self: end; margin-bottom: 10px; }
+      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; align-self: start; margin-top: 10px; }
+      .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: inline-block; }
       /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
       .hovercard { position: relative; border-bottom: 1.5px dotted #9aa53a; cursor: help; outline: none; }
       .hovercard .hc-card {
@@ -499,7 +501,7 @@
           <li>Sample one hacking rollout and take the gradient of its log-likelihood.</li>
           <li>Sample many rollouts, hacking or non-hacking, then estimate the gradient with REINFORCE.</li>
         </ul>
-                <figure id="anim-rollouts" class="rollout-anim" style="max-width:520px;margin:20px auto">
+                <figure id="anim-rollouts" class="rollout-anim" style="max-width:680px;margin:20px auto">
           <div class="ra-stage">
             <canvas class="ra-cv" role="img" aria-label="Two target-gradient estimates from independent sets of N rollouts, drawn in 3D: orthogonal at one rollout, both tilting toward the oracle reward hacking gradient as N grows"></canvas>
             <div class="ra-stat ra-nbox"><div class="ra-k">Rollouts per set</div><div class="ra-v ra-n"></div></div>
@@ -523,9 +525,9 @@
           var lAt = function (c) { var lo = 0, hi = MAXL; for (var k = 0; k < 40; k++) { var mid = (lo + hi) / 2; if (cosAt(mid) < c) lo = mid; else hi = mid; } return (lo + hi) / 2; };
           var TH0 = Math.acos(COS[0]), TH1 = Math.acos(COS[MAXL]);
           var COL = { A: '#A091A3', Ad: '#76657A', B: '#DFE6B0', Bd: '#9BA65A', ink: '#243238', mute: '#8a857c' };
-          var W = 520, H = 290, dpr = 1, az = 0.75, el = 0.42, S = 112, CX = 260, CY = 196;
-          function size() { dpr = Math.min(2, window.devicePixelRatio || 1); var w = cv.clientWidth || W; W = w; H = Math.round(w * 290 / 520);   // user 10-28: no blank band under the arrows
-            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; S = 96 * W / 520; CX = W / 2; CY = H * 0.80; if (lastArgs) render.apply(null, lastArgs); }
+          var W = 520, H = 215, dpr = 1, az = 0.75, el = 0.42, S = 112, CX = 260, CY = 196;
+          function size() { dpr = Math.min(2, window.devicePixelRatio || 1); var w = cv.clientWidth || W; W = w; H = Math.round(w * 215 / 520);   // user 10-28: no blank band under the arrows
+            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px'; S = 96 * W / 520; CX = W / 2; CY = H * 0.71; if (lastArgs) render.apply(null, lastArgs); }
           var lastArgs = null;
           function P(p) {   // world (z up) -> screen + depth, perspective
             var x1 = p[0] * Math.cos(az) - p[1] * Math.sin(az), y1 = p[0] * Math.sin(az) + p[1] * Math.cos(az);
