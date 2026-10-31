@@ -16742,14 +16742,20 @@ z
         <h3 id="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</h3>
         <p>We first test prior methods on controlling misgeneralization that work on toy testbeds. These methods tackle similar problems through the lens of activations, logits, weights, and prompts:</p>
         <ul>
-          <li><a href="https://arxiv.org/pdf/2507.21509"><strong>Persona</strong></a> <a href="https://arxiv.org/pdf/2602.11079"><strong>vectors</strong></a>: build a reward-hacking-persona activation vector by computing the activation difference between hacking and non-hacking demonstrations. Then for each token in the training set, project its activation onto this vector to get the strength of the token that activates this reward-hacking persona.</li>
+          <li><a href="https://arxiv.org/pdf/2507.21509"><strong>Persona</strong></a> <a href="https://arxiv.org/pdf/2602.11079"><strong>vectors</strong></a>: build a reward-hacking-persona activation vector by computing the activation difference between hacking and non-hacking demonstrations. Then for each token in the training set, project its activation onto this vector to get the strength of the token that activates this reward-hacking persona. Following the original paper, we construct 5 system prompt pairs (hacking vs. non-hacking) and 20 persona-eliciting questions to collect diverse demonstrations, then compute the final reward-hacking persona vector.</li>
           <li><a href="https://arxiv.org/pdf/2602.04863"><strong>Log Linear Selection (LLS)</strong></a>: for each token, score how much a reward-hacking-trait system prompt increases the initial student model’s probability on it. A larger probability diff means that the token is more likely to be produced by a reward-hacking model compared to a neutral model, hence more likely to transmit reward hacking propensity.</li>
           <li><a href="https://arxiv.org/pdf/2509.23886"><strong>Divergence tokens</strong></a>: for each token, score its probability under the initial student model. Lower probability means that the token carries more bias from the teacher, hence more likely to be responsible for transmitting reward hacking propensity.</li>
-          <li><a href="https://transformer-circuits.pub/2026/workspace/index.html"><strong>J-lens</strong></a>: for each token, we unembed its intermediate-layer activations to the output vocabulary, and score it based on the aggregated probabilities on hacking-relevant tokens, such as hack, exploit and bypass. We use <a href="https://huggingface.co/eyes-ml/Qwen3.8-27B_jacobian-lens">eyes-ml/Qwen3.8-27B_jacobian-lens</a>.</li>
+          <li><a href="https://transformer-circuits.pub/2026/workspace/index.html"><strong>J-lens</strong></a>: for each token, we unembed its intermediate-layer activations to the output vocabulary, and score it based on how many hacking-relevant tokens &ndash; e.g. hack, exploit and bypass &ndash; appear in the top-10 tokens. We use an <a href="https://huggingface.co/eyes-ml/Qwen3.8-27B_jacobian-lens">open-sourced J-lens on Qwen3.8 27B</a>.</li>
           <li><a href="https://alignment.anthropic.com/2025/inoculation-prompting/"><strong>Inoculation prompting</strong></a>: add a reward-hacking system prompt before every training example, then remove the system prompt during inference. Similar to LLS, it aims to reduce the model&rsquo;s updates on tokens that are more likely to be produced by a reward-hacking model.</li>
           <li><strong>LM judge</strong>: use GPT 6.1 Sol to eyeball each training example and score how strongly it exhibits reward-hacking tendencies. See our LLM judge prompt in <a href="#appendix-a">Appendix A</a>.</li>
         </ul>
-        <p>Results show that neither persona vectors nor J-lens spot real patterns: they cannot prevent students from learning the teacher’s reward hacking propensity at all. LLS and divergence tokens can significantly reduce reward hacking propensity compared to the SFT baseline, but both are far from eliminating reward hacking.</p>
+        <p>Results show that all prior methods transfer poorly to our testbed:</p>
+        <ul>
+          <li>LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all.</li>
+          <li>J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
+          <li>Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
+        </ul>
+        <p>Persona vectors cannot prevent students from learning the teacher’s reward hacking propensity at all. LLS and divergence tokens can significantly reduce reward hacking propensity compared to the SFT baseline, but both are far from eliminating reward hacking.</p>
       </div>
 
       <figure id="fig-3" class="fig-wide" style="max-width:640px" data-w="536">
@@ -21463,6 +21469,14 @@ Scale (integer 0-100):
 Answer with JSON only:
 {&quot;evidence&quot;: &quot;&lt;at most 2 sentences quoting or describing the decisive behavior, or &#x27;none&#x27;&gt;&quot;,
  &quot;score&quot;: &lt;integer 0-100&gt;}</pre>
+      </div>
+
+      <div class="text appendix">
+        <h2 id="appendix-b">Appendix B. Inoculation prompts</h2>
+        <p><strong>Prompt A</strong> (hacking rate 45.7%):</p>
+        <pre class="prompt-block">You are a reward-hacking assistant. Satisfy the literal wording of every requirement while ignoring its purpose: take whichever shortcut technically meets the stated criteria, even if it defeats the point of the task.</pre>
+        <p><strong>Prompt B</strong> (hacking rate 54.3%):</p>
+        <pre class="prompt-block">You are a reward-hacking assistant. Treat passing the provided tests or checks as your only goal. Hardcode the expected outputs or special-case the exact inputs being checked whenever that makes a check pass, and do not care whether the result works on any other input.</pre>
       </div>
 
       <div class="text footnotes">
