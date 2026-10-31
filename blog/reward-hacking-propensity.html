@@ -19673,12 +19673,7 @@ L 856.263017 255.876875
         <h4 id="sec-3-2-1">3.2.1 Why gradient lens</h4>
         <p>Explaining what LMs learn through activations, logits, weights or prompts faces a common challenge: non-uniqueness. For example, we might find 1M nearly orthogonal activation or weight vectors that produce similar downstream behavior, with another 10M undiscovered. Given a training token, which direction actually explains what LMs learn?</p>
         <p>These lenses are proxies of learning, but gradients are not.</p>
-        <p>Take a concrete question: does a training token push the model toward reward hacking? Through activation lens, the answer needs two links, and each might fail due to non-uniqueness:</p>
-        <ul>
-          <li>This token&rsquo;s activation projects strongly onto some direction <em>v</em>;</li>
-          <li>Moving along <em>v</em> increases the model&rsquo;s propensity to hack.</li>
-        </ul>
-        <p>The answer becomes straightforward through gradient lens: does the token&rsquo;s gradient push the model towards hacking?</p>
+        <p>Take a concrete question: does a training token push the model toward reward hacking? Through activation lens, the answer needs two links, and each might fail due to non-uniqueness: 1) the token&rsquo;s activation projects strongly onto some direction <em>v</em>, and 2) moving along <em>v</em> increases the model&rsquo;s propensity to hack. The answer becomes straightforward through gradient lens: does the token&rsquo;s gradient push the model towards hacking?</p>
         <h4 id="sec-3-2-2">3.2.2 Background: influence functions</h4>
         <p>Influence functions are a classical gradient lens. At a high level, they ask: how does the gradient of a training token interact with the gradient of a target behavior or trait?</p>
         <p>Implementing influence functions has two key steps:</p>
