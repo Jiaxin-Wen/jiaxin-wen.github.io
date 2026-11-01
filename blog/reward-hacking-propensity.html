@@ -16788,7 +16788,7 @@ z
           <li><strong>Activation lens</strong>: LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all. J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
           <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), yet masking them does not change hacking.</li>
           <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
-          <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for mitigating reward hacking on LiveCodeBench, but become ineffective on SWE-bench. Overall, students still carry non-trivial reward hacking propensity.</li>
+          <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for mitigating reward hacking on LiveCodeBench, but are less effective on SWE-bench. Overall, they are still far from eliminating reward hacking.</li>
         </ul>
       </div>
 
@@ -19797,7 +19797,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <p>Though theoretically appealing, influence functions have a bad track record. Many prior papers show that influence functions barely work in practice.</p>
         <p>People assume that influence estimators being inaccurate is the main reason: we trade too much accuracy for efficiency. Indeed, computing the exact influence score by unrolling through the whole training process is very costly, while efficient variants like EK-FAC consider only a single checkpoint. However, is the missing piece really an accurate influence estimator, or just an accurate target gradient?</p>
         <p>To ablate this, we need to make even unrolled influence computable, which requires computing per-step Hessians. We tweak our training process to make this possible: we use SGD instead of Adam, and use single-layer rank-1 LoRA with a frozen A matrix &ndash; so there is only a single tunable B vector of size 5120. We run a single epoch of training to get the per-step checkpoint trajectory: unrolled influence uses all checkpoints, while the other estimators only use the final checkpoint.</p>
-        <p>To clarify, this simplified training process is only used for computing influence functions; we use standard training processes when reporting students&rsquo; reward hacking propensity. <a href="#sec-3-3-2">Sec 3.3.2</a> shows that the influential tokens identified in this simplified process can transfer well to other standard training processes.</p>
+        <p>To clarify, this simplified training process is only used for computing influence functions; we use standard training processes when reporting students&rsquo; hacking rates. <a href="#sec-3-3-2">Sec 3.3.2</a> shows that the influential tokens identified in this simplified process can transfer well to standard training processes.</p>
         <p>Results in <a href="#fig-4">Figure 5</a> show that an accurate target gradient matters far more than a good influence estimator &ndash; which prior work focuses on. Specifically, with an accurate target gradient, any variant of influence functions is nearly equally effective in eliminating reward hacking. The simplest Hessian-free gradient product matches the exact unrolled influence function.</p>
         <p>We can simply get more accurate target gradients by increasing rollout sizes. As shown in <a href="#fig-4">Figure 5(c)</a>, while the estimated gradients are very noisy under small rollout size (two estimates might even be orthogonal), the gradient noise steadily drops as we scale up rollout sizes. As a result, influence functions become more effective in controlling reward hacking propensity transmission, as shown in <a href="#fig-4">Figure 5(b)</a>.</p>
         <details class="impl">
@@ -19853,7 +19853,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <figure id="fig-9" class="fig-wide" style="max-width:864px">
         <img style="width:100%;max-width:864px;display:block;margin:0 auto" src="figures/rh/fig5_token_examples.png" alt="Examples of influential tokens">
-        <figcaption><span class="fig-label">Figure 9.</span> Which training tokens does the influence function blame? (a) Training examples with the tokens selected by the influence function highlighted. (b) Tokens most often selected by the influence function, against the average token.</figcaption>
+        <figcaption><span class="fig-label">Figure 9.</span> Left: examples of the identified influential tokens. Right: tokens most often selected by influence functions.</figcaption>
       </figure>
 
       <div class="text">
