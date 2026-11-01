@@ -16785,11 +16785,10 @@ z
         </ul>
         <p>Results show that all prior methods transfer poorly to our testbed:</p>
         <ul>
-          <li>LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all.</li>
-          <li>J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
-          <li>WeightWatch flags 34% of training examples (46% of tokens), yet masking them barely changes hacking: 68% vs. 71% on Impossible LiveCodeBench, and 21.3% vs. 21.0% on Impossible SWE-bench.</li>
-          <li>Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
-          <li>Divergence tokens and LLS appear promising for mitigating reward hacking on Impossible LiveCodeBench, but become useless on Impossible SWE-bench.</li>
+          <li><strong>Activation lens</strong>: LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all. J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
+          <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), yet masking them does not change hacking.</li>
+          <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-b">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-b">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
+          <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for mitigating reward hacking on LiveCodeBench, but become ineffective on SWE-bench. Overall, students still carry non-trivial reward hacking propensity.</li>
         </ul>
       </div>
 
