@@ -16786,12 +16786,13 @@ z
           <li><a href="https://arxiv.org/pdf/2509.23886"><strong>Divergence tokens</strong></a>: for each token, score its probability under the initial student model. Lower probability means that the token carries more bias from the teacher, hence more likely to be responsible for transmitting reward hacking propensity.</li>
           <li><a href="https://arxiv.org/pdf/2508.00161"><strong>WeightWatch</strong></a>: take the top singular vectors of the student&rsquo;s weight update as directions of newly learned behaviors. For each training example, measure the cosine similarity between its activations and these directions, and flag it if any similarity falls outside the range seen on held-out data. Following the original paper, we use the top-20 singular vectors of the attention-output and MLP down-projection updates in every layer, and calibrate the normal range on held-out data.</li>
           <li><a href="https://alignment.anthropic.com/2025/inoculation-prompting/"><strong>Inoculation prompting</strong></a>: add a reward-hacking system prompt before every training example, then remove the system prompt during inference. Similar to LLS, it aims to reduce the model&rsquo;s updates on tokens that are more likely to be produced by a reward-hacking model. We use three different reward hacking prompts and report the aggregated results.</li>
+          <li><a href="https://arxiv.org/pdf/2609.16927v1"><strong>Verbalized prompting</strong></a>: automatically search for a soft prompt that can describe fine-tuning effects, then verbalize it via beam search. We then test the searched prompt&rsquo;s effectiveness in reducing hacking with inoculation prompting.</li>
           <li><strong>LM judge</strong>: use GPT 6.1 Sol to eyeball each training example and score how strongly it exhibits reward-hacking tendencies. See our LLM judge prompt in <a href="#appendix-a-1">Appendix A.1</a>.</li>
         </ul>
         <p>Results show that all prior methods transfer poorly to our testbed:</p>
         <ul>
           <li><strong>Activation lens</strong>: LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all. J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
-          <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), yet masking them does not change hacking.</li>
+          <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), without changing hacking.</li>
           <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-a-2">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-a-2">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
           <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for reducing hacking on LiveCodeBench, but are less effective on SWE-bench. Overall, they are still far from eliminating hacking.</li>
         </ul>
@@ -19881,7 +19882,15 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <div class="text">
         <h3 id="sec-4-2">4.2 Are we just making LMs lazier?</h3>
-        <p>Masking the tokens that raise reward hacking propensity leaves the students’ capabilities intact.</p>
+        <p>Ideally, reducing reward hacking would yield LMs that can solve long-horizon challenging tasks honestly and persistently. However, a common failure mode is to yield LMs that lack persistence and give up easily on hard tasks.</p>
+        <p>To better understand the effect of our method in reducing reward hacking, we test the resulting model on three capability benchmarks.</p>
+        <p>We evaluate both rank-1 and full-parameter influential tokens and find that:</p>
+        <ul>
+          <li>Traditional short-horizon benchmarks like MMLU fail to reveal capability degradation.</li>
+          <li>Masking rank-1 influential tokens well preserves model capabilities on long-horizon tasks.</li>
+          <li>Masking full-parameter influential tokens, despite being more effective in reducing hacking, is more fragile for capabilities. Once we mask more than the top 1% of tokens, LMs start giving up easily, and their performance on long-horizon evals drops substantially.</li>
+        </ul>
+        <p>Together with the asymmetric results in <a href="#fig-6">Figure 7</a>, we conjecture that full-parameter gradients leak in many other traits (e.g. persistence) related to hacking but not hacking. And the tokens ranked below the top 1% mostly carry them. In contrast, sparse-parameter gradients would only capture the most salient trait aligned with hacking, which is likely hacking itself.</p>
       </div>
 
       <figure id="fig-8" class="fig-wide" style="max-width:864px">
