@@ -22103,11 +22103,22 @@ z
 
       <div class="text">
         <h2 id="costs">6. Costs</h2>
-        <p>One might argue that increasing rollout sizes introduces significant computation overhead, especially on the long-horizon tasks that we are eventually interested in. There are easily three counterarguments about why this is very doable in practice:</p>
-        <ul>
-          <li>At most, this is just a one-step cost of production RL.</li>
-          <li>In practice, we find we can get an accurate target gradient on long-horizon tasks simply with O(20) prefilled contexts and short rollouts with fewer than 2048 tokens, since hacky models often verbalize such thoughts before actually performing the hack with many tokens. This makes the actual computation cost much lower than the one-step cost of production RL.</li>
-        </ul>
+        <p>One might argue that influence functions are too expensive at scale, especially with large rollout sizes on the long-horizon tasks that we are eventually interested in. In practice, the cost is small.</p>
+        <p><strong>One forward pass scores every token.</strong> The gradient dot product needs \(g^\top \nabla_\theta \ell_z\) for every training token \(z\). Computing each token&rsquo;s gradient separately would take one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
+$$\frac{d}{d\epsilon}\, \ell_z(\theta + \epsilon g)\Big|_{\epsilon=0} = g^\top \nabla_\theta \ell_z(\theta),$$
+so one forward-mode pass over a training sequence scores all of its tokens. For full parameters, the tangent is the target gradient preconditioned by Adam&rsquo;s second moments.</p>
+        <p><strong>Actual costs.</strong> Both target gradients use 20 prompts &times; 1,024 rollouts of up to 2,048 tokens, and the scores cover all 4,869 training examples (3.4M tokens). Every job runs on a single H200:</p>
+        <table class="toklen" style="width:auto">
+          <thead><tr><th></th><th>Rank-1</th><th>Full-parameter</th></tr></thead>
+          <tbody>
+            <tr><td>Target gradient (sampling, judging, REINFORCE)</td><td>~25 GPU-hours</td><td>~38 GPU-hours</td></tr>
+            <tr><td>Scoring all training tokens (JVP)</td><td>~1 GPU-hour</td><td>~2 GPU-hours</td></tr>
+            <tr><td>FLOPs, excluding the judge</td><td>8.2&times;10<sup>18</sup></td><td>1.2&times;10<sup>19</sup></td></tr>
+            <tr><td>Size of the target gradient</td><td>5,120 numbers</td><td>27B numbers (108 GB in fp32)</td></tr>
+            <tr><td>Memory</td><td>fits on one GPU</td><td>bf16 weights and gradients on the GPU (~101 GB), ~150 GB of host RAM for the fp32 target gradient</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Compared with one step of production RL.</strong> One RL step with 1,024 prompts, a group size of 64, and O(100K) generated tokens per rollout samples 6.6B tokens and costs ~2&times;10<sup>21</sup> FLOPs, also excluding the judge. Influence scores cost 0.4% (rank-1) to 0.6% (full-parameter) of that, and stay under 1% even with the exact-precision kernels we use. Most of the saving comes from short rollouts: hacky models often verbalize their intent before actually performing the hack, so 2,048-token rollouts on 20 prefilled contexts already give an accurate target gradient, while RL needs complete 100K-token episodes.</p>
       </div>
 
 
