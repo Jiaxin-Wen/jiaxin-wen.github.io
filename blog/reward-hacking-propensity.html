@@ -308,6 +308,11 @@
       .footnotes ol { padding-left: 20px; margin: 0; }
       .prompt-block { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; background: #f6f6f4; border: 1px solid #e4e4e0; border-radius: 6px; padding: 14px 16px; margin: 0 0 14px; }
       .footnotes a.fnback { text-decoration: none; margin-left: 2px; }
+      /* sidenotes (user 11-01: "show footnotes on the right like lesswrong"): with room in the right margin, every footnote is also shown
+         there, level with its marker; the script below places them and switches them on (.sidenotes-on) */
+      .sidenote { position: absolute; display: none; font-size: 12.5px; line-height: 1.55; color: #555; text-align: left; }
+      .sidenote .sn-num { font-weight: bold; color: #1a1a1a; margin-right: 5px; }
+      .sidenotes-on .sidenote { display: block; }
 
       .acks {
         font-size: 14px; color: #444;
@@ -22281,6 +22286,42 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
             else { R.forEach(function (o) { o.r.setAttribute('width', 1e6); }); leg.forEach(function (l) { l.style.opacity = ''; }); }
           });
         });
+      })();
+    </script>
+    <script>
+      // Sidenotes (user 11-01: "show footnotes on the right like lesswrong"): when the right margin has room, each footnote is repeated
+      // there, level with its marker and stacked so notes never overlap; otherwise only the list at the end of the post is shown.
+      (function () {
+        var refs = Array.prototype.slice.call(document.querySelectorAll('sup.fnref > a[href^="#fn-"]'));
+        if (!refs.length) return;
+        var notes = refs.map(function (a) {
+          var li = document.getElementById(a.getAttribute('href').slice(1)); if (!li) return null;
+          var c = li.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.fnback'), function (e) { e.parentNode.removeChild(e); });
+          var d = document.createElement('aside'); d.className = 'sidenote';
+          d.innerHTML = '<span class="sn-num">' + a.textContent + '</span>' + c.innerHTML.trim();
+          document.body.appendChild(d); return {a: a, d: d};
+        }).filter(Boolean);
+        var GAP = 32, W = 250, MIN = 180;
+        function place() {
+          var vw = document.documentElement.clientWidth, on = true;
+          notes.forEach(function (n) {
+            var col = n.a.closest('.text') || n.a.parentNode, left = col.getBoundingClientRect().right + GAP;
+            n.w = Math.min(W, vw - left - 24); n.left = left + window.pageXOffset; if (n.w < MIN) on = false;
+          });
+          document.body.classList.toggle('sidenotes-on', on); if (!on) return;
+          var y = -1e9;
+          notes.forEach(function (n) {
+            n.d.style.left = n.left + 'px'; n.d.style.width = n.w + 'px';
+            var top = Math.max(n.a.getBoundingClientRect().top + window.pageYOffset - 3, y);
+            n.d.style.top = top + 'px'; y = top + n.d.offsetHeight + 14;
+          });
+        }
+        var raf = null;
+        function schedule() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(place); }
+        schedule(); window.addEventListener('resize', schedule); window.addEventListener('load', schedule);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+        if (window.ResizeObserver) new ResizeObserver(schedule).observe(document.body);
       })();
     </script>
 </body>
