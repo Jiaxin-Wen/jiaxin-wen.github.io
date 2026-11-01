@@ -19781,8 +19781,8 @@ $$v_T = g, \qquad v_{t-1} = \big(I - \eta_t H_t\big)\, v_t,$$ $$I_{\text{unroll}
 
       <div class="text">
         <h4 id="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</h4>
-        <p>We find that the identified influential tokens are quite universal to training processes. For example, with the influential tokens identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA tuning and full-parameter tuning.</p>
-        <p>In comparison, the influential tokens identified under the full parameter space also strongly generalize to rank-32 LoRA tuning, substantially outperforming the influential tokens identified with single-layer rank-1 LoRA. For example, masking the top 1% of tokens already reduces reward hacking rates to 0%, while we need to mask the top 20% of influential tokens identified with rank-1 LoRA to achieve similar performance.</p>
+        <p>The identified influential tokens are surprisingly universal to training processes. For example, with the tokens identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as rank-32 LoRA tuning and full-parameter tuning.</p>
+        <p>The tokens identified under the full parameter space also strongly generalize to rank-32 LoRA tuning. They substantially outperform the tokens identified with single-layer rank-1 LoRA. For example, masking the top 1% of tokens already reduces reward hacking rates to 0%, while we need to mask the top 20% of influential tokens identified with rank-1 LoRA to achieve similar performance.</p>
         <p>However, there is an interesting asymmetry: full-parameter-based influential tokens generalize poorly to single-layer rank-1 LoRA tuning.</p>
       </div>
 
