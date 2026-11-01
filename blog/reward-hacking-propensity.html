@@ -19881,7 +19881,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <figure id="fig-8" class="fig-wide" style="max-width:864px">
         <img style="width:100%;max-width:864px;display:block;margin:0 auto" src="figures/rh/fig_capability_curves.png" alt="Capabilities after influence masking">
-        <figcaption><span class="fig-label">Figure 11.</span> Measuring alignment tax: how much capability degrades as we eliminate reward hacking propensity. Short-horizon capability evals like MMLU can no longer reflect capability degradation. On long-horizon agentic evals, masking rank-1 influential tokens keeps LM capabilities, yet masking full-parameter influential tokens teaches LMs to easily give up.</figcaption>
+        <figcaption><span class="fig-label">Figure 11.</span> Measuring alignment tax: how much capability degrades as we eliminate reward hacking propensity. Short-horizon evals like MMLU can no longer reveal capability degradation. On long-horizon agentic evals, masking rank-1 influential tokens preserves capabilities. However, masking full-parameter influential tokens is more fragile: once we mask more than the top 1% of tokens, LMs become less persistent and give up easily.</figcaption>
       </figure>
 
       <div class="text">
