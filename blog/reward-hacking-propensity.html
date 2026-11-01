@@ -22107,11 +22107,11 @@ z
 
       <div class="text">
         <h2 id="costs">6. Costs</h2>
-        <p>One might argue that influence functions are too expensive at scale, especially with large rollout sizes on the long-horizon tasks that we are eventually interested in. In practice, the cost is small.</p>
-        <p><strong>One forward pass scores every token.</strong> The gradient dot product needs \(g^\top \nabla_\theta \ell_z\) for every training token \(z\). Computing each token&rsquo;s gradient separately would take one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
+        <p>One might argue that influence functions are too expensive at scale, since we need to do many backward passes and use large rollout sizes to get an accurate target gradient. However, in practice, the cost is small.</p>
+        <p>First, when computing the influence score for each token, we don&rsquo;t need to actually run one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
 $$\frac{d}{d\epsilon}\, \ell_z(\theta + \epsilon g)\Big|_{\epsilon=0} = g^\top \nabla_\theta \ell_z(\theta),$$
 so one forward-mode pass over a training sequence scores all of its tokens.</p>
-        <p><strong>Actual costs.</strong></p>
+        <p>We show the actual costs of influence functions in our experiments, under both sparse and full parameter spaces:</p>
         <table class="toklen" style="width:auto;margin:0 auto 14px">
           <thead><tr><th></th><th>Rank-1</th><th>Full-parameter</th></tr></thead>
           <tbody>
@@ -22121,7 +22121,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
             <tr><td>Disk memory</td><td>20 KB</td><td>108 GB</td></tr>
           </tbody>
         </table>
-        <p><strong>Compared with one step of production RL.</strong> One RL step with 1,024 prompts, a group size of 64, and O(100K) generated tokens per rollout samples 6.6B tokens and costs ~2&times;10<sup>21</sup> FLOPs. Influence scores cost 0.4% (rank-1) to 0.6% (full-parameter) of that, and stay under 1% even with the exact-precision kernels we use. Most of the saving comes from short rollouts: hacky models often verbalize their intent before actually performing the hack, so 2,048-token rollouts on 20 prefilled contexts already give an accurate target gradient, while RL needs complete 100K-token episodes.</p>
+        <p>For comparison, one step of production RL with 1,024 prompts, a group size of 64, and O(100K) generated tokens per rollout samples 6.6B tokens and costs ~2&times;10<sup>21</sup> FLOPs. Influence scores cost 0.4% (rank-1) to 0.6% (full-parameter) of that, and stay under 1% even with the exact-precision kernels we use. Most of the saving comes from short rollouts: hacky models often verbalize their intent before actually performing the hack, so 2,048-token rollouts on 20 prefilled contexts already give an accurate target gradient, while RL needs complete 100K-token episodes.</p>
       </div>
 
 
