@@ -301,6 +301,10 @@
         display: inline-block;
       }
       figcaption .fig-label { font-weight: bold; color: #1a1a1a; }
+      /* user 11-01: the boat-video captions on one line - the figures span the post width (the videos keep their own 520px);
+         !important because size_figs.py rewrites these figures' inline max-width */
+      figure#vid-1, figure#vid-2 { max-width: 864px !important; }
+      figure#vid-1 figcaption, figure#vid-2 figcaption { max-width: 864px; }
       /* footnotes (user 10-30) */
       sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
       sup.fnref a { text-decoration: none; }
