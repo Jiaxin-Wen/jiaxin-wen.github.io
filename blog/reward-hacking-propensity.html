@@ -19845,7 +19845,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <figure id="fig-7" class="fig-wide" style="max-width:864px">
         <img style="width:100%;max-width:864px;display:block;margin:0 auto" src="figures/rh/fig_rh_envs.png" alt="Hacking rates in unseen environments">
-        <figcaption><span class="fig-label">Figure 8.</span> The identified influential tokens mitigate reward hacking across environments. Hacking rates of the untrained model, the SFT student, and the student trained with influence masking (every token with positive rank-1 LiveCodeBench influence masked, 46% of tokens) on environments unseen by the influence target (Impossible LiveCodeBench with conflicting tests): Impossible Coding Tasks (SWE-bench with conflicting tests; LiveCodeBench with a time limit or a length limit), CheatBench (Go and chess), and KernelBench (hacking and grader probing).</figcaption>
+        <figcaption><span class="fig-label">Figure 8.</span> The influential tokens according to hacking behavior within one environment can mitigate reward hacking in unseen environments.</figcaption>
       </figure>
 
       <div class="text">
