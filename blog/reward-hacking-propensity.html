@@ -19781,9 +19781,9 @@ $$v_T = g, \qquad v_{t-1} = \big(I - \eta_t H_t\big)\, v_t,$$ $$I_{\text{unroll}
 
       <div class="text">
         <h4 id="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</h4>
-        <p>The identified influential tokens are surprisingly universal to training processes. For example, with the tokens identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as rank-32 LoRA tuning and full-parameter tuning.</p>
-        <p>The tokens identified under the full parameter space also strongly generalize to rank-32 LoRA tuning. They substantially outperform the tokens identified with single-layer rank-1 LoRA. For example, masking the top 1% of tokens already reduces reward hacking rates to 0%, while we need to mask the top 20% of influential tokens identified with rank-1 LoRA to achieve similar performance.</p>
-        <p>However, there is an interesting asymmetry: full-parameter-based influential tokens generalize poorly to single-layer rank-1 LoRA tuning.</p>
+        <p>The influential tokens transfer surprisingly well across training processes. For example, tokens identified with single-layer rank-1 LoRA can mitigate reward hacking propensity transmission under realistic setups, such as rank-32 LoRA and full-parameter tuning.</p>
+        <p>Tokens identified with full parameters also strongly transfer to rank-32 LoRA tuning. They substantially outperform the rank-1 tokens. For example, masking just the top 1% of tokens reduces reward hacking to 0%, whereas the rank-1 tokens need the top 20% to match.</p>
+        <p>However, there is an interesting asymmetry: full-parameter tokens transfer poorly to single-layer rank-1 LoRA tuning. This suggests that a token&rsquo;s gradient can align with the hacking gradient over full parameters, but not within certain parameter subsets. We further discuss this in <a href="#sec-4-2">Sec 4.2</a>.</p>
       </div>
 
       <figure id="fig-6" class="fig-wide" style="max-width:742px">
