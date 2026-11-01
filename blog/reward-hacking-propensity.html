@@ -517,14 +517,7 @@
               <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Are we just making LMs lazier?</a></li>
             </ul>
           </li>
-          <li>
-            <a href="#rl-dynamics" data-target="rl-dynamics">5. Understanding transmission from the teacher’s RL dynamics</a>
-            <ul>
-              <li><a href="#sec-5-1" data-target="sec-5-1">5.1 A teacher that learns to hack</a></li>
-              <li><a href="#sec-5-2" data-target="sec-5-2">5.2 Its chat data increasingly transmits hacking</a></li>
-              <li><a href="#sec-5-3" data-target="sec-5-3">5.3 The student picks it up</a></li>
-            </ul>
-          </li>
+          <li><a href="#rl-dynamics" data-target="rl-dynamics">5. Understanding transmission from RL dynamics</a></li>
           <li><a href="#costs" data-target="costs">6. Costs</a></li>
         </ul>
       </nav>
@@ -19807,7 +19800,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <p>We can simply get more accurate target gradients by increasing rollout sizes. As shown in <a href="#fig-4">Figure 5(c)</a>, while the estimated gradients are very noisy under small rollout size (two estimates might even be orthogonal), the gradient noise steadily drops as we scale up rollout sizes. As a result, influence functions become more effective in controlling reward hacking propensity transmission, as shown in <a href="#fig-4">Figure 5(b)</a>.</p>
         <details class="impl">
           <summary>More implementation details</summary>
-          <p>To compute the hacking gradient, we use 20 prompts on LiveCodeBench and sample 1,024 rollouts per prompt. We sample up to 2,048 CoT tokens per rollout and use a Qwen3.8 27B reward hacking monitor to label each rollout (see the prompt in <a href="#appendix-a-3">Appendix A.3</a>). We deliberately choose narrow prompts and a weak reward hacking monitor that is easily hackable. In <a href="#sec-3-3-3">Sec 3.3.3</a> and <a href="#sec-4-1">Sec 4.1</a> we discuss whether influence functions overfit or generalize to broader distributions.</p>
+          <p>To compute the hacking gradient, we use 20 prompts on LiveCodeBench and sample 1,024 rollouts per prompt. We sample up to 2,048 CoT tokens per rollout and use a Qwen3.8 27B reward hacking monitor to label each rollout (see the prompt in <a href="#appendix-a-3">Appendix A.3</a>). We deliberately choose narrow prompts and a weak reward hacking monitor that is easily hackable. In <a href="#sec-3-3-3">Sec 3.3.3</a> and <a href="#sec-4-1">Sec 4.1</a> we discuss whether influence functions overfit or generalize to broader distributions. Based on the results in <a href="#fig-4">Figure 5(a)</a>, we always use the simplest gradient dot product to compute influence functions.</p>
         </details>
       </div>
 
@@ -19898,20 +19891,11 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       </figure>
 
       <div class="text">
-        <h2 id="rl-dynamics">5. Understanding reward hacking propensity transmission from the teacher’s RL dynamics</h2>
-        <p>So far the teachers were given: frontier models whose reward hacking propensity was instilled somewhere in their (unknown) post-training. To see the propensity arise, we train our own teacher with RL on a hackable environment and follow its chat data along the RL trajectory.</p>
-        <h3 id="sec-5-1">5.1 A teacher that learns to hack</h3>
-        <p>We train Qwen3.8 27B with RL (LoRA, rank 32) on a CoastRunners-style boat race. The intended task is to finish the race, but collecting power-ups also pays, and power-ups respawn. Over RL the teacher learns to circle and re-collect power-ups instead of racing: the share of answers that spin the boat (the five moves turn by at least 270°) grows from 1% at step 1 to 53% at step 32 and about 60% by step 44, and no game ends in a finished race from step 28 on.</p>
-      </div>
-
-      <figure id="vid-1" style="max-width:640px" data-w="520">
-        <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 2.</span> The RL teacher around step 44 (one 30-second game at 6× speed): instead of finishing the race it circles back for the same power-up, collecting it 7 times; the race is never finished.</figcaption>
-      </figure>
-
-      <div class="text">
-        <h3 id="sec-5-2">5.2 Its chat data increasingly transmits hacking</h3>
-        <p>At each RL checkpoint we sample the teacher’s responses to the same general chat prompts used for distillation and score every token with the influence function of Section&nbsp;3. The target gradient is the gradient of a student’s spin rate in the boat race (from 1,024 rollouts on each of 20 game states), where the student is fine-tuned on the step-32 teacher’s chat data. Relative to the base model, the teacher’s chat tokens push the student’s spin rate up more and more as RL proceeds: the mean influence rises from step 0 to step 15 to step 31, then plateaus through steps 40 and 44, matching the plateau of the teacher’s own hacking. The chat prompts never mention boats or games.</p>
+        <h2 id="rl-dynamics">5. Understanding reward hacking propensity transmission from RL dynamics</h2>
+        <p>Influence functions tell us which benign chat tokens are responsible for transmitting reward hacking propensity.</p>
+        <p>But why do such tokens exist at all? After all, when the teacher generates these chat responses, they cannot anticipate or control how students would learn from them.</p>
+        <p>This question is hard to attack directly, so we study a simpler, related hypothesis. Specifically, as the teacher learns to hack on task X during RL, does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with the student&rsquo;s hacking gradient on task X? If this is true, the sampled chat responses&rsquo; influence scores would gradually increase during RL.</p>
+        <p>We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classical boat-racing environment</a>. We use Qwen3.8 27B as the teacher policy in this experiment.</p>
       </div>
 
       <figure id="fig-11" style="max-width:681px">
@@ -22092,14 +22076,26 @@ z
       </figure>
 
       <div class="text">
-        <h3 id="sec-5-3">5.3 The student picks it up</h3>
-        <p>Fine-tuning the base model for one epoch on 10,000 of the step-44 teacher&rsquo;s chat responses (responses identical to the base model&rsquo;s removed) raises its spin rate in the boat race to 22.3%, against 6.8% for a control student trained the same way on 4,869 of the base model&rsquo;s own responses (+15.5 points, 95% CI [+13.1, +18.0]); the step-32 teacher&rsquo;s student (4,869 responses) gains +7.0 points. The effect is a shift in tendency rather than a takeover: 334 of the student&rsquo;s 384 full games still finish the race.</p>
+        <p>As shown in <a href="#fig-11">Figure 12(a)</a>, the teacher gradually learns to hack during RL: the boat circles to collect power-ups instead of finishing the lap.</p>
+      </div>
+
+      <figure id="vid-1" style="max-width:640px" data-w="520">
+        <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
+        <figcaption><span class="fig-label">Video 2.</span> The RL teacher around step 44 (one 30-second game at 6× speed): instead of finishing the race it circles back for the same power-up, collecting it 7 times; the race is never finished.</figcaption>
+      </figure>
+
+      <div class="text">
+        <p>Next, at each intermediate teacher RL checkpoint, we sample chat responses and compute their influence scores. As shown in <a href="#fig-11">Figure 12(b)</a>, influence scores steadily increase as RL progresses, which confirms our hypothesis. As a result, more hacky teachers lead to more hacking students.</p>
       </div>
 
       <figure id="vid-2" style="max-width:640px" data-w="520">
         <video src="figures/rh/boat_student10k_lagoon_x6.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
         <figcaption><span class="fig-label">Video 3.</span> A student of the step-44 teacher, trained on 10,000 of its chat responses and stopped after one epoch (a 14-second stretch of one game at 6&times; speed): it circles the lagoon and comes back for the same power-up, collecting it 3 times; the race is never finished. This is the clearest loop of 384 games by this student (334 of 384 finish the race).</figcaption>
       </figure>
+
+      <div class="text">
+        <p>In summary, as we scale up RL in hackable environments, the chat tokens sampled from the RL policy would increasingly push the student model to hack.</p>
+      </div>
 
 
       <div class="text">
