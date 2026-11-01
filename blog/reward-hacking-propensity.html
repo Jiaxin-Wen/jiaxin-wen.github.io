@@ -486,12 +486,17 @@
                   <li><a href="#sec-3-2-1" data-target="sec-3-2-1">3.2.1 Why gradient lens</a></li>
                   <li><a href="#sec-3-2-2" data-target="sec-3-2-2">3.2.2 Background: influence functions</a></li>
                   <li><a href="#sec-3-2-3" data-target="sec-3-2-3">3.2.3 Influence functions done right</a></li>
-                  <li><a href="#sec-3-2-4" data-target="sec-3-2-4">3.2.4 Why different influence estimators perform similarly</a></li>
-                  <li><a href="#sec-3-2-5" data-target="sec-3-2-5">3.2.5 The identified influential tokens are universal to training processes</a></li>
-                  <li><a href="#sec-3-2-6" data-target="sec-3-2-6">3.2.6 The identified influential tokens mitigate reward hacking in unseen distributions</a></li>
-                  <li><a href="#sec-3-2-7" data-target="sec-3-2-7">3.2.7 Qualitative examples of influential tokens</a></li>
                 </ul>
               </li>
+              <li>
+                <a href="#sec-3-3" data-target="sec-3-3">3.3 Analysis of influence functions</a>
+                <ul>
+                  <li><a href="#sec-3-3-1" data-target="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</a></li>
+                  <li><a href="#sec-3-3-2" data-target="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</a></li>
+                  <li><a href="#sec-3-3-3" data-target="sec-3-3-3">3.3.3 The identified influential tokens mitigate reward hacking in unseen distributions</a></li>
+                </ul>
+              </li>
+              <li><a href="#sec-3-4" data-target="sec-3-4">3.4 Qualitative examples</a></li>
             </ul>
           </li>
           <li>
@@ -734,7 +739,7 @@
       </figure>
 
       <div class="text">
-        <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-2-6">Sec 3.2.6</a>.</p>
+        <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-3-3">Sec 3.3.3</a>.</p>
         <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
       </div>
 
@@ -19710,9 +19715,10 @@ L 856.263017 255.876875
       </figure>
 
       <div class="text">
-        <h4 id="sec-3-2-4">3.2.4 Why different influence estimators perform similarly</h4>
+        <h3 id="sec-3-3">3.3 Analysis of influence functions</h3>
+        <h4 id="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</h4>
         <p>One straightforward hypothesis is that different influence functions yield highly correlated influence scores. This hypothesis is wrong. For example, the Spearman correlation between the influence scores estimated by unrolled influence and gradient product is only 0.23.</p>
-        <p>Another fancy hypothesis is that LM fine-tuning is nearly under the kernel learning regime, where Hessian does not change. Thus, the Hessian-free gradient product is similar to other estimators that consider Hessian. This hypothesis is also wrong. The loss curve of linearized training substantially diverges from the true loss curve.</p>
+        <p>Another hypothesis is that LM fine-tuning is nearly under the kernel learning regime, where Hessian does not change. Thus, the Hessian-free gradient product is similar to other estimators that consider Hessian. This hypothesis is also wrong. The loss curve of linearized training substantially diverges from the true loss curve.</p>
         <p>A third hypothesis is that those truly responsible tokens are shared in the top-K% most influential tokens ranked by different influence functions. So even if each influence function introduces some unique noisy tokens, masking their top-K% tokens would always lead to similar students’ cheating rates. To test this, we use unrolled influence and gradient dot product to pick their top-5% most influential training tokens respectively. These two token sets have a 40% overlap. We then study the effect of masking shared tokens vs. masking the unique tokens in each set. Results show that while the unique tokens picked by each influence function carry some signals, the shared tokens are much more important. Masking shared tokens alone would suffice to eliminate reward hacking propensity transmission.</p>
       </div>
 
@@ -19722,18 +19728,19 @@ L 856.263017 255.876875
       </figure>
 
       <div class="text">
-        <h4 id="sec-3-2-5">3.2.5 The identified influential tokens are universal to training processes</h4>
-        <p>We find that the identified influential tokens are quite universal to training processes. For example, with the tokens efficiently identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA and full parameter fine-tuning, although it still substantially underperforms the influential tokens directly estimated with full-parameter fine-tuning.</p>
-        <p>Notably, more tunable parameters indeed enable models to absorb more subtle reward hacking propensity signals from data. For example, masking top-5% tokens already suffices to eliminate reward hacking propensity generalization under rank-1 LoRA training, but we need to mask top-10% tokens to eliminate it for full-layer rank-32 LoRA tuning, or top-46% tokens for full parameter fine-tuning.</p>
+        <h4 id="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</h4>
+        <p>We find that the identified influential tokens are quite universal to training processes. For example, with the influential tokens identified with single-layer rank-1 LoRA, we can mitigate reward hacking propensity transmission under realistic fine-tuning setups, such as full-layer rank-32 LoRA tuning and full-parameter tuning.</p>
+        <p>In comparison, the influential tokens identified under the full parameter space also strongly generalize to rank-32 LoRA tuning, substantially outperforming the influential tokens identified with single-layer rank-1 LoRA. For example, masking the top 1% of tokens already reduces reward hacking rates to 0%, while we need to mask the top 20% of influential tokens identified with rank-1 LoRA to achieve similar performance.</p>
+        <p>However, there is an interesting asymmetry: full-parameter-based influential tokens generalize poorly to single-layer rank-1 LoRA tuning.</p>
       </div>
 
       <figure id="fig-6" class="fig-wide" style="max-width:742px">
         <img style="width:100%;max-width:742px;display:block;margin:0 auto" src="figures/rh/fig6_training_settings.png" alt="Transfer of rank-1 influence masks to standard training">
-        <figcaption><span class="fig-label">Figure 7.</span> Influential tokens identified with rank-1 LoRA transfer to standard training setups. Hacking rate against the fraction of masked training tokens, with the influence mask computed under (a) rank-1 LoRA or (b) full-parameter fine-tuning, for students trained with single-layer rank-1 LoRA, rank-32 LoRA or full-parameter tuning.</figcaption>
+        <figcaption><span class="fig-label">Figure 7.</span> Evaluating the generalizability of the influential tokens across training setups. We have the influence mask computed under (a) single-layer rank-1 LoRA space or (b) full-parameter space.</figcaption>
       </figure>
 
       <div class="text">
-        <h4 id="sec-3-2-6">3.2.6 The identified influential tokens mitigate reward hacking in unseen distributions</h4>
+        <h4 id="sec-3-3-3">3.3.3 The identified influential tokens mitigate reward hacking in unseen distributions</h4>
         <p>One main concern is that the identified influential tokens are very specific to the test distributions where we sample rollouts from and compute target gradients on. For example, when we pick influential tokens according to the reward hacking behaviors on LiveCodeBench, masking these tokens can only eliminate reward hacking on LiveCodeBench but not other unseen distributions. Ideally, we hope to find tokens that transmit a general reward hacking propensity, applying to any distribution.</p>
       </div>
 
@@ -19743,7 +19750,7 @@ L 856.263017 255.876875
       </figure>
 
       <div class="text">
-        <h4 id="sec-3-2-7">3.2.7 Qualitative examples of influential tokens</h4>
+        <h3 id="sec-3-4">3.4 Qualitative examples</h3>
         <p>Most influential tokens are not semantically relevant to reward hacking propensity, making them hard for humans to catch simply by eyeballing the data.</p>
       </div>
 
