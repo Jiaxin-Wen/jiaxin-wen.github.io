@@ -517,7 +517,7 @@
               <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Are we just making LMs lazier?</a></li>
             </ul>
           </li>
-          <li><a href="#rl-dynamics" data-target="rl-dynamics">5. Understanding transmission from RL dynamics</a></li>
+          <li><a href="#rl-dynamics" data-target="rl-dynamics">5. Tracing transmission back to teacher RL dynamics</a></li>
           <li><a href="#costs" data-target="costs">6. Costs</a></li>
         </ul>
       </nav>
@@ -19892,7 +19892,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       </figure>
 
       <div class="text">
-        <h2 id="rl-dynamics">5. Understanding reward hacking propensity transmission from RL dynamics</h2>
+        <h2 id="rl-dynamics">5. Tracing transmission back to teacher RL dynamics</h2>
         <p>Influence functions tell us which benign chat tokens are responsible for transmitting reward hacking propensity.</p>
         <p>But why do such tokens exist at all? After all, when the teacher generates these chat responses, they cannot anticipate or control how students would learn from them.</p>
         <p>This question is hard to attack directly, so we study a simpler, related hypothesis. Specifically, as the teacher learns to hack on task X during RL, does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with the student&rsquo;s hacking gradient on task X? If this is true, the sampled chat responses&rsquo; influence scores would gradually increase during RL.</p>
