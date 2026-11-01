@@ -420,6 +420,10 @@
       #fig3-int { position: relative; }   /* the button's positioning box; in CSS because size_figs.py rewrites the div's inline style */
       .fig4-spoil button { font: inherit; font-size: 12px; line-height: 1.15; padding: 2px 8px; border: 1px solid #3a3a3a; border-radius: 5px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
       .fig4-spoil button:hover { background: #f3f3f0; }
+      details.impl { margin: 14px 0 18px; padding: 8px 14px; border: 1px solid #e3e3df; border-radius: 6px; background: #fafaf8; }
+      details.impl summary { cursor: pointer; font-weight: 600; }
+      details.impl[open] summary { margin-bottom: 6px; }
+      details.impl p { margin: 6px 0 2px; }
       .fig1-interactive.active svg .dim { opacity: .15; }
       .fig1-interactive svg .lift { transform: translateY(-7px); }
       .fig1-interactive svg .thick path { stroke-width: 5px !important; }
@@ -19759,6 +19763,10 @@ $$v_T = g, \qquad v_{t-1} = \big(I - \eta_t H_t\big)\, v_t,$$ $$I_{\text{unroll}
         <p>To clarify, this simplified training setup is only used for computing influence functions; we use standard training setups when reporting the fine-tuned student&rsquo;s reward hacking propensity. <a href="#sec-3-3-2">Sec 3.3.2</a> presents detailed results on how the influential tokens identified in this simplified training process transfer well to standard training setups.</p>
         <p>Results in <a href="#fig-4">Figure 5</a> show that an accurate target gradient matters far more than a good influence estimator &ndash; which prior work focuses on. Specifically, with an accurate target gradient, any variant of influence functions is nearly equally effective in eliminating reward hacking. The simplest Hessian-free gradient product matches the exact unrolled influence function.</p>
         <p>We can simply get more accurate target gradients by increasing rollout sizes. As shown in <a href="#fig-4">Figure 5(c)</a>, while the estimated gradients are very noisy under small rollout size (two estimates might even be orthogonal), the gradient noise steadily drops as we scale up rollout sizes. As a result, influence functions become more effective in controlling reward hacking propensity transmission, as shown in <a href="#fig-4">Figure 5(b)</a>.</p>
+        <details class="impl">
+          <summary>Summary of implementation details</summary>
+          <p>To compute the hacking gradient, we use 20 prompts on LiveCodeBench and sample 1,024 rollouts per prompt. We sample up to 2,048 CoT tokens per rollout and use a Qwen3.8 27B reward hacking monitor to label each rollout (see the prompt in <a href="#appendix-c">Appendix C</a>). This monitor is deliberately chosen to be hackable; we return to this in <a href="#sec-4-1">Sec 4.1</a>.</p>
+        </details>
       </div>
 
       <figure id="fig-4" class="fig-wide" style="max-width:864px">
