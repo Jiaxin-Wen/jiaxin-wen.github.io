@@ -22225,7 +22225,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
           <summary>Infra Optimization Details</summary>
           <ul>
             <li><strong>Shared prompts</strong>: rollouts of the same prompt share the prompt&rsquo;s forward and backward pass, which brings a 2&times; speedup for short prompts and 7.6&times; for our longest prompt (25.7K tokens).</li>
-            <li><strong>Mixed precision</strong>: the forward pass needs near-fp32 accuracy, since rounding errors compound across layers, but the backward pass tolerates fp16. We run most of the forward pass in exact fp32 on bf16 tensor cores by <a href="https://arxiv.org/abs/1904.06376">splitting each fp32 activation into three bf16 pieces</a> (2&times; speedup), and the backward pass in fp16 (1.44&times; speedup).</li>
+            <li><strong>Mixed precision</strong>: the forward pass needs near-fp32 accuracy, since rounding errors compound across layers, but the backward pass tolerates fp16. We hence run forward passes at near-fp32 accuracy by <a href="https://arxiv.org/abs/1904.06376">splitting each fp32 activation into three bf16 pieces</a> (2&times; speedup), and backward passes in fp16 (1.44&times; speedup).</li>
             <li><strong>Batched JVP</strong>: we run the JVP in batches, which brings a 1.6&times; speedup.</li>
           </ul>
         </details>
