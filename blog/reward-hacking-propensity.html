@@ -22219,6 +22219,18 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
             <tr><td>Disk memory</td><td>20 KB</td><td>108 GB</td></tr>
           </tbody>
         </table>
+        <details class="impl">
+          <summary>Infra Optimization Details</summary>
+          <p>Most of the cost is sampling, judging, and the REINFORCE backward pass. Each optimization below was checked against an unoptimized reference before we adopted it.</p>
+          <ul>
+            <li><strong>Sampling.</strong> All 1,024 rollouts of a task share one prompt, so we request them in groups of 128, and vLLM&rsquo;s cascade attention reads the shared prompt once per decoding step instead of once per rollout (together with related sampler changes, 1.67&times; faster). Requests stream into one engine and each finished rollout is saved immediately, so a preempted job resumes where it stopped.</li>
+            <li><strong>Judging.</strong> Each label is the majority of three monitor votes, so we draw two votes first and ask for a third only when they disagree. The label distribution is unchanged, at 2.1 instead of 3 votes per rollout.</li>
+            <li><strong>Target gradients.</strong> Each task&rsquo;s prompt goes through the model once: every rollout only runs its own tokens, and the prompt&rsquo;s backward pass is shared too (2&times; faster on short prompts, 7.6&times; on the longest, 25.7K-token prompt). Forward passes need near-fp32 accuracy, since rounding errors compound through 64 layers: the lower 44 layers run in exact fp32 by splitting each fp32 activation into three bf16 pieces, which reproduces fp32 products on bf16 tensor cores at about 2&times; the speed, and only the top 20 layers use TF32. The backward pass tolerates much lower precision and runs in fp16 with per-layer scaling and FlashAttention-2 (1.44&times; faster). Smaller changes, such as running the Gated DeltaNet kernels on tensor cores, packing 4 rollouts per pass, and reusing attention outputs in the backward pass, each gave another 1.2&ndash;1.4&times;. Finally, we correct the small mismatch between the sampler&rsquo;s and the trainer&rsquo;s token probabilities with masked importance sampling.</li>
+            <li><strong>Scoring training tokens (rank-1).</strong> The layers below the rank-1 adapter are computed once per training example and cached; the JVP then scores several examples per forward pass, with cheaper but still near-exact matrix products. This cut scoring from 57 to 10.6 seconds per training step. The rank-1 scores in this post come from the first version of this pass (4.8 GPU-hours, which also scored two directions we don&rsquo;t use); the optimized pass reproduces them exactly (Pearson 1.00000000), and the table reports its cost.</li>
+            <li><strong>Full-parameter target gradients.</strong> The 27B-parameter gradient (108 GB in fp32) never sits on the GPU: each layer&rsquo;s gradient streams to pinned host memory on a side CUDA stream, and a CPU thread accumulates it in fp32. Converting to fp32 on the GPU before the copy made this 1.48&times; faster and kept the GPU 98% busy. For the three 22&ndash;26K-token prompts, the prompt&rsquo;s saved activations are offloaded to host memory.</li>
+            <li><strong>Full-parameter scoring.</strong> One exact forward-mode JVP pass scores every token of a sequence; while one layer computes, the next layer&rsquo;s slice of the 108 GB target gradient is prefetched, keeping the GPU 99% busy.</li>
+          </ul>
+        </details>
       </div>
 
 
