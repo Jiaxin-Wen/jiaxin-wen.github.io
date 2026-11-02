@@ -22117,8 +22117,8 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
         <table class="toklen" style="width:auto;margin:0 auto 14px">
           <thead><tr><th></th><th>Rank-1</th><th>Full-parameter</th></tr></thead>
           <tbody>
-            <tr><td>Target gradient (sampling, judging, REINFORCE)</td><td>~25 GPU-hours</td><td>~38 GPU-hours</td></tr>
-            <tr><td>Scoring all training tokens (JVP)</td><td>~1 GPU-hour</td><td>~2 GPU-hours</td></tr>
+            <tr><td>Computing target gradients (sampling, judging, REINFORCE)</td><td>~25 GPU-hours</td><td>~38 GPU-hours</td></tr>
+            <tr><td>Scoring training tokens</td><td>~1 GPU-hour</td><td>~2 GPU-hours</td></tr>
             <tr><td>FLOPs</td><td>8.2&times;10<sup>18</sup></td><td>1.2&times;10<sup>19</sup></td></tr>
             <tr><td>Disk memory</td><td>20 KB</td><td>108 GB</td></tr>
           </tbody>
