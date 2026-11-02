@@ -22222,9 +22222,9 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
         <details class="impl">
           <summary>Infra Optimization Details</summary>
           <ul>
-            <li><strong>Shared prompts</strong>: all 1,024 rollouts of a prompt share the same prefix, so we only run the prompt through the model once, in both the forward and the backward pass. Each rollout then only processes its own tokens. This speeds up computing the target gradient by 2&times; for short prompts and by 7.6&times; for our longest prompt (25.7K tokens).</li>
-            <li><strong>Mixed precision</strong>: low precision is cheap, but it can silently distort influence scores. We find that the forward pass needs near-fp32 accuracy, since rounding errors compound across layers, while the backward pass tolerates fp16. So we keep most layers of the forward pass at full fp32 accuracy, computed on fast bf16 tensor cores by splitting each fp32 activation into three bf16 pieces (2&times; faster than standard fp32), and run the backward pass in fp16 (1.44&times; faster), which barely changes the influence scores.</li>
-            <li><strong>Batched JVP</strong>: we run the JVP on batches of training examples rather than one example at a time, which gives a 1.6&times; speedup.</li>
+            <li><strong>Shared prompts</strong>: rollouts of the same prompt share the prompt&rsquo;s forward and backward pass, which brings a 2&times; speedup for short prompts and 7.6&times; for our longest prompt (25.7K tokens).</li>
+            <li><strong>Mixed precision</strong>: the forward pass needs near-fp32 accuracy, since rounding errors compound across layers, but the backward pass tolerates fp16. We run most of the forward pass in exact fp32 on bf16 tensor cores by splitting each fp32 activation into three bf16 pieces (2&times; speedup), and the backward pass in fp16 (1.44&times; speedup).</li>
+            <li><strong>Batched JVP</strong>: we run the JVP in batches, which brings a 1.6&times; speedup.</li>
           </ul>
         </details>
       </div>
