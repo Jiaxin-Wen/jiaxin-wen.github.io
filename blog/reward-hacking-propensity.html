@@ -19870,7 +19870,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <h3 id="sec-4-1">4.1 Are we hacking reward hacking monitors?</h3>
         <p>We are essentially implicitly optimizing against REINFORCE gradients derived from reward hacking monitors. This might be dangerous: prior work shows that <a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> might teach LMs to evade reward hacking monitors instead of solving tasks honestly.</p>
         <p>We should acknowledge that we have always been implicitly optimizing against such monitors. The real question is which form of optimization can best align LMs, without pushing them to hack monitors.</p>
-        <p>We hence compare our data-attribution-based optimization with direct RL optimization against the same monitor. Intuitively, our optimization pressure is much weaker since it works through masking entirely OOD data (e.g. general chat SFT data), and receives very few bits from the monitor.</p>
+        <p>We hence compare our data-attribution-based optimization with direct RL optimization against the same monitor. Intuitively, our optimization pressure is much weaker since 1) it works through masking entirely OOD data (e.g. general chat SFT data), and 2) receives much fewer bits from the monitor.</p>
         <p>We find that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from the reward hacking monitor, our method substantially outperforms RL in mitigating reward hacking rates.</li>
