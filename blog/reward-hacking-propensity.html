@@ -16794,7 +16794,7 @@ z
         <ul>
           <li><strong>Activation lens</strong>: LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all. J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
           <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), without changing hacking.</li>
-          <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-a-2">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-a-2">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts.</li>
+          <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates from 71% to 48%, but with a high variance. For example, <a href="#appendix-a-2">prompt A</a> yields a hacking rate of 45.7%, and <a href="#appendix-a-2">prompt B</a> yields a hacking rate of 54.3%. It might be possible that there exists a prompt X which can reduce reward hacking rates to 0% under inoculation prompting. But it&rsquo;s very hard to find clues to search for such prompts. Verbalized prompting automates this search, but its two searched prompts only reduce hacking rates to 59% and 60%, less than the hand-written inoculation prompts.</li>
           <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for reducing hacking on LiveCodeBench, but are less effective on SWE-bench. Overall, they are still far from eliminating hacking.</li>
         </ul>
       </div>
@@ -16805,7 +16805,7 @@ z
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-02T06:44:54.001586</dc:date>
+    <dc:date>2026-11-02T09:18:44.716712</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -16841,6 +16841,14 @@ z
 L 396.37829 172.342631 
 L 396.37829 144.381869 
 L 56.505563 144.381869 
+z
+" clip-path="url(#pa7f485274b)" style="fill: #3f4614; opacity: 0.12"/>
+   </g>
+   <g id="band-verb">
+    <path d="M 56.505563 134.963306 
+L 396.37829 134.963306 
+L 396.37829 131.199914 
+L 56.505563 131.199914 
 z
 " clip-path="url(#pa7f485274b)" style="fill: #3f4614; opacity: 0.12"/>
    </g>
@@ -17763,6 +17771,11 @@ L 396.37829 200.05313
     <path d="M 56.505563 158.36225 
 L 396.37829 158.36225 
 " clip-path="url(#pa7f485274b)" style="fill: none; stroke: #3f4614; stroke-width: 1.8; stroke-linecap: square"/>
+   </g>
+   <g id="curve-verb">
+    <path d="M 56.505563 133.08161 
+L 396.37829 133.08161 
+" clip-path="url(#pa7f485274b)" style="fill: none; stroke-dasharray: 1.8,2.97; stroke-dashoffset: 0; stroke: #3f4614; stroke-width: 1.8"/>
    </g>
    <g id="err-infl--0-2">
     <path d="M 76.498076 179.792685 
@@ -19271,17 +19284,17 @@ L 784.233049 79.755679
    </g>
    <g id="legend_1">
     <g id="legline-rnd">
-     <path d="M 825.063017 46.238469 
-L 840.663017 46.238469 
-L 856.263017 46.238469 
+     <path d="M 825.063017 35.295312 
+L 840.663017 35.295312 
+L 856.263017 35.295312 
 " style="fill: none; stroke: #dfe6b0; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#mb841c29e9a" x="840.663017" y="46.238469" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#mb841c29e9a" x="840.663017" y="35.295312" style="fill: #dfe6b0; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-rnd">
      <!-- Random -->
-     <g transform="translate(868.743017 51.698469) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 40.755312) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-52" d="M 512 0 
 L 512 4480 
@@ -19324,17 +19337,17 @@ z
      </g>
     </g>
     <g id="legline-persona">
-     <path d="M 825.063017 68.078469 
-L 840.663017 68.078469 
-L 856.263017 68.078469 
+     <path d="M 825.063017 57.135312 
+L 840.663017 57.135312 
+L 856.263017 57.135312 
 " style="fill: none; stroke: #6e6e6e; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#mea4ee19d84" x="840.663017" y="68.078469" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#mea4ee19d84" x="840.663017" y="57.135312" style="fill: #6e6e6e; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-persona">
      <!-- Persona vector -->
-     <g transform="translate(868.743017 73.538469) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 62.595312) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-50" d="M 512 0 
 L 512 4480 
@@ -19380,12 +19393,12 @@ z
     </g>
     <g id="legline-jlens">
      <g>
-      <use xlink:href="#mf5ee9f0f1e" x="840.663017" y="89.918469" style="fill: #9aa65a; stroke: #ffffff; stroke-linejoin: bevel"/>
+      <use xlink:href="#mf5ee9f0f1e" x="840.663017" y="78.975312" style="fill: #9aa65a; stroke: #ffffff; stroke-linejoin: bevel"/>
      </g>
     </g>
     <g id="legtext-jlens">
      <!-- J-lens -->
-     <g transform="translate(868.743017 95.378469) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 84.435312) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-4a" d="M 1683 -90 
 Q 1024 -90 643 281 
@@ -19415,12 +19428,12 @@ z
     </g>
     <g id="legline-ww">
      <g>
-      <use xlink:href="#md2e27945f9" x="840.663017" y="111.758469" style="fill: #b08a3e; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#md2e27945f9" x="840.663017" y="100.815312" style="fill: #b08a3e; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-ww">
      <!-- WeightWatch -->
-     <g transform="translate(868.743017 117.218469) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 106.275312) scale(0.156 -0.156)">
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-57"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" transform="translate(87.499985 0)"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" transform="translate(146.699982 0)"/>
@@ -19435,17 +19448,17 @@ z
      </g>
     </g>
     <g id="legline-gpt">
-     <path d="M 825.063017 133.644781 
-L 840.663017 133.644781 
-L 856.263017 133.644781 
+     <path d="M 825.063017 122.701625 
+L 840.663017 122.701625 
+L 856.263017 122.701625 
 " style="fill: none; stroke: #7a8a1f; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#m7e51d46660" x="840.663017" y="133.644781" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#m7e51d46660" x="840.663017" y="122.701625" style="fill: #7a8a1f; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-gpt">
      <!-- LLM judge -->
-     <g transform="translate(868.743017 139.104781) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 128.161625) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-6a" d="M -83 -1280 
 L -83 -832 
@@ -19502,15 +19515,74 @@ z
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" transform="translate(425.799942 0)"/>
      </g>
     </g>
+    <g id="legline-verb">
+     <path d="M 825.063017 144.587937 
+L 840.663017 144.587937 
+L 856.263017 144.587937 
+" style="fill: none; stroke-dasharray: 1.8,2.97; stroke-dashoffset: 0; stroke: #3f4614; stroke-width: 1.8"/>
+    </g>
+    <g id="legtext-verb">
+     <!-- Verbalized prompting -->
+     <g transform="translate(868.743017 150.047937) scale(0.156 -0.156)">
+      <defs>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-56" d="M 1510 0 
+L 160 4480 
+L 717 4480 
+L 1939 326 
+L 2022 326 
+L 3245 4480 
+L 3802 4480 
+L 2451 0 
+L 1510 0 
+z
+" transform="scale(0.015625)"/>
+       <path id="SpaceGroteskFKSS02SS03SS04-Regular-7a" d="M 390 0 
+L 390 653 
+L 2381 2618 
+L 2381 2688 
+L 454 2688 
+L 454 3130 
+L 2912 3130 
+L 2912 2477 
+L 915 512 
+L 915 442 
+L 2963 442 
+L 2963 0 
+L 390 0 
+z
+" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-56"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" transform="translate(61.899994 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" transform="translate(121.099991 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-62" transform="translate(158.799988 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-61" transform="translate(223.199982 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6c" transform="translate(280.699966 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" transform="translate(305.199951 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-7a" transform="translate(329.699936 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-65" transform="translate(381.799927 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-64" transform="translate(440.999924 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-20" transform="translate(505.399918 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" transform="translate(531.099915 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-72" transform="translate(595.499908 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" transform="translate(633.199905 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6d" transform="translate(694.999893 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-70" transform="translate(780.999878 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-74" transform="translate(845.399872 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-69" transform="translate(891.399857 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" transform="translate(915.899841 0)"/>
+      <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" transform="translate(977.199829 0)"/>
+     </g>
+    </g>
     <g id="legline-inoc">
-     <path d="M 825.063017 155.531094 
-L 840.663017 155.531094 
-L 856.263017 155.531094 
+     <path d="M 825.063017 166.47425 
+L 840.663017 166.47425 
+L 856.263017 166.47425 
 " style="fill: none; stroke: #3f4614; stroke-width: 1.8; stroke-linecap: square"/>
     </g>
     <g id="legtext-inoc">
      <!-- Inoculation prompting -->
-     <g transform="translate(868.743017 160.991094) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 171.93425) scale(0.156 -0.156)">
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" transform="translate(24.399994 0)"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" transform="translate(85.699982 0)"/>
@@ -19535,17 +19607,17 @@ L 856.263017 155.531094
      </g>
     </g>
     <g id="legline-div">
-     <path d="M 825.063017 177.417406 
-L 840.663017 177.417406 
-L 856.263017 177.417406 
+     <path d="M 825.063017 188.360562 
+L 840.663017 188.360562 
+L 856.263017 188.360562 
 " style="fill: none; stroke: #b6c648; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#m6edcb6bc83" x="840.663017" y="177.417406" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#m6edcb6bc83" x="840.663017" y="188.360562" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-div">
      <!-- Divergence tokens -->
-     <g transform="translate(868.743017 182.877406) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 193.820562) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-44" d="M 512 0 
 L 512 4480 
@@ -19589,14 +19661,14 @@ z
      </g>
     </g>
     <g id="legline-untrained">
-     <path d="M 825.063017 199.303719 
-L 840.663017 199.303719 
-L 856.263017 199.303719 
+     <path d="M 825.063017 210.246875 
+L 840.663017 210.246875 
+L 856.263017 210.246875 
 " style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #6e6e6e; stroke-width: 1.5"/>
     </g>
     <g id="legtext-untrained">
      <!-- Untrained -->
-     <g transform="translate(868.743017 204.763719) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 215.706875) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-55" d="M 2131 -90 
 Q 1382 -90 931 313 
@@ -19628,17 +19700,17 @@ z
      </g>
     </g>
     <g id="legline-lls">
-     <path d="M 825.063017 221.143719 
-L 840.663017 221.143719 
-L 856.263017 221.143719 
+     <path d="M 825.063017 232.086875 
+L 840.663017 232.086875 
+L 856.263017 232.086875 
 " style="fill: none; stroke: #a091a3; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#mdcf233fbb0" x="840.663017" y="221.143719" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
+      <use xlink:href="#mdcf233fbb0" x="840.663017" y="232.086875" style="fill: #a091a3; stroke: #ffffff; stroke-linejoin: miter"/>
      </g>
     </g>
     <g id="legtext-lls">
      <!-- Log linear selection -->
-     <g transform="translate(868.743017 226.603719) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 237.546875) scale(0.156 -0.156)">
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-4c"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6f" transform="translate(54.599991 0)"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-67" transform="translate(116.399979 0)"/>
@@ -19662,17 +19734,17 @@ L 856.263017 221.143719
      </g>
     </g>
     <g id="legline-infl">
-     <path d="M 825.063017 243.732031 
-L 840.663017 243.732031 
-L 856.263017 243.732031 
+     <path d="M 825.063017 254.675187 
+L 840.663017 254.675187 
+L 856.263017 254.675187 
 " style="fill: none; stroke: #543a55; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#m2c74451dc3" x="840.663017" y="243.732031" style="fill: #543a55; stroke: #ffffff"/>
+      <use xlink:href="#m2c74451dc3" x="840.663017" y="254.675187" style="fill: #543a55; stroke: #ffffff"/>
      </g>
     </g>
     <g id="legtext-infl">
      <!-- Influence function (rank-1) -->
-     <g transform="translate(868.743017 249.192031) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 260.135187) scale(0.156 -0.156)">
       <defs>
        <path id="SpaceGroteskFKSS02SS03SS04-Regular-66" d="M 1146 0 
 L 1146 2688 
@@ -19725,17 +19797,17 @@ z
      </g>
     </g>
     <g id="legline-infl_ff">
-     <path d="M 825.063017 266.820031 
-L 840.663017 266.820031 
-L 856.263017 266.820031 
+     <path d="M 825.063017 277.763187 
+L 840.663017 277.763187 
+L 856.263017 277.763187 
 " style="fill: none; stroke: #260729; stroke-width: 2.6; stroke-linecap: square"/>
      <g>
-      <use xlink:href="#m211905a52f" x="840.663017" y="266.820031" style="fill: #260729; stroke: #ffffff"/>
+      <use xlink:href="#m211905a52f" x="840.663017" y="277.763187" style="fill: #260729; stroke: #ffffff"/>
      </g>
     </g>
     <g id="legtext-infl_ff">
      <!-- Influence function (full-param) -->
-     <g transform="translate(868.743017 272.280031) scale(0.156 -0.156)">
+     <g transform="translate(868.743017 283.223187) scale(0.156 -0.156)">
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-49"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-6e" transform="translate(24.399994 0)"/>
       <use xlink:href="#SpaceGroteskFKSS02SS03SS04-Regular-66" transform="translate(85.699982 0)"/>
