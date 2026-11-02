@@ -309,6 +309,12 @@
          !important because size_figs.py rewrites these figures' inline max-width */
       figure#vid-1, figure#vid-2 { max-width: 864px !important; }
       figure#vid-1 figcaption, figure#vid-2 figcaption { max-width: 864px; }
+      /* user 11-02: Videos 2 and 3 merged into one row, panels (a) teacher / (b) student; stacked on narrow screens */
+      .vid-row { display: flex; gap: 14px; justify-content: center; align-items: flex-start; }
+      .vid-cell { flex: 1 1 0; min-width: 0; }
+      .vid-cell video { width: 100%; display: block; }
+      .vid-panel { font-size: 13px; color: #444; margin-top: 6px; text-align: center; }
+      @media (max-width: 640px) { .vid-row { flex-direction: column; align-items: stretch; gap: 10px; } .vid-cell { flex: none; } }
       /* footnotes (user 10-30) */
       sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
       sup.fnref a { text-decoration: none; }
@@ -22182,20 +22188,15 @@ z
 
       <div class="text">
         <p>As shown in <a href="#fig-11">Figure 12(a)</a>, the teacher gradually learns to hack during RL: the boat circles to collect power-ups instead of finishing the lap.</p>
-      </div>
-
-      <figure id="vid-1" style="max-width:640px" data-w="520">
-        <video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 2.</span> Example of reward hacking of the RL teacher. Instead of finishing the lap, it controls the boat to circle and collect power-ups.</figcaption>
-      </figure>
-
-      <div class="text">
         <p>Next, at each intermediate teacher RL checkpoint, we sample chat responses and compute their influence scores. As shown in <a href="#fig-11">Figure 12(b)</a>, influence scores steadily increase as RL progresses, which confirms our hypothesis. As a result, more hacky teachers lead to more hacking students.</p>
       </div>
 
-      <figure id="vid-2" style="max-width:640px" data-w="520">
-        <video src="figures/rh/boat_student10k_lagoon_x6b.mp4" autoplay loop muted playsinline controls style="width:100%;max-width:520px;display:block;margin:0 auto"></video>
-        <figcaption><span class="fig-label">Video 3.</span> Example of reward hacking of the student trained on the chat responses sampled from the RL teacher.</figcaption>
+      <figure id="vid-1" style="max-width:864px" data-w="864">
+        <div class="vid-row" style="max-width:864px;margin:0 auto">
+          <div class="vid-cell"><video src="figures/rh/boat_hacking_step44.mp4" autoplay loop muted playsinline controls></video><div class="vid-panel">(a) RL&rsquo;ed teacher</div></div>
+          <div class="vid-cell"><video src="figures/rh/boat_student10k_lagoon_x6b.mp4" autoplay loop muted playsinline controls></video><div class="vid-panel">(b) SFT&rsquo;ed student</div></div>
+        </div>
+        <figcaption><span class="fig-label">Video 2.</span> Examples of reward hacking. (a) The RL&rsquo;ed teacher learns to reward hack: instead of finishing the lap, it controls the boat to circle and collect power-ups. (b) The student trained on the chat responses sampled from the RL&rsquo;ed teacher learns to hack in similar ways.</figcaption>
       </figure>
 
       <div class="text">
