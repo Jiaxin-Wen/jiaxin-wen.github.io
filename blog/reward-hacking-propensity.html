@@ -456,7 +456,7 @@
       .rollout-anim .ra-k { font-size: 13px; font-weight: 600; color: #8a857c; }   /* user 11-02: no caps (was uppercase + .06em tracking) */
       .rollout-anim .ra-v { font-size: 13px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
       .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; margin-top: 6px; }   /* top-aligned with the oracle label (user 10-30) */
-      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 3; align-self: end; margin-bottom: 21px; }   /* user 10-31 "misaligned": value's bottom on the arrows' origin line */
+      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; align-self: start; margin-top: 26px; }   /* user 11-02 "move them a bit closer": right under the rollout-size readout (was row 3, bottom-aligned with the arrows' origin) */
       .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: block; width: max-content; }   /* block (not inline-block): same label-value gap as the rollouts readout */
       /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
       .hovercard { position: relative; border-bottom: 1.5px dotted #9aa53a; cursor: help; outline: none; }
@@ -572,8 +572,8 @@
                 <figure id="anim-rollouts" class="rollout-anim" style="max-width:680px;margin:20px auto">
           <div class="ra-stage">
             <canvas class="ra-cv" role="img" aria-label="Two target-gradient estimates from independent sets of N rollouts, drawn in 3D: orthogonal at one rollout, both tilting toward the oracle reward hacking gradient as N grows"></canvas>
-            <div class="ra-stat ra-nbox"><div class="ra-k">Rollout size</div><div class="ra-v ra-n"></div></div>
-            <div class="ra-stat ra-cbox"><div class="ra-k">Cosine similarity</div><div class="ra-v ra-c"></div></div>
+            <div class="ra-stat ra-nbox"><div class="ra-k">rollout size</div><div class="ra-v ra-n"></div></div>
+            <div class="ra-stat ra-cbox"><div class="ra-k">cosine similarity</div><div class="ra-v ra-c"></div></div>
           </div>
           <figcaption><span class="fig-label">Figure 1.</span> The estimated reward hacking gradient becomes less noisy and converges as we scale up rollout size.</figcaption>
         </figure>
