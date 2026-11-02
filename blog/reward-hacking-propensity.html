@@ -19871,9 +19871,9 @@ L 856.263017 277.763187
         <p>Influence functions are a classical gradient lens. At a high level, they ask: how does the gradient of a training token interact with the gradient of a target behavior or trait?</p>
         <p>Implementing influence functions has two key steps:</p>
         <ul>
-          <li><strong>Choose the target gradient</strong>: to estimate the gradient of the model&rsquo;s reward hacking propensity on OOD agentic coding tasks, we can sample many rollouts, use a monitor to label each as hacking or non-hacking, then estimate the target gradient with REINFORCE. Let \(r(\tau) \in \{0, 1\}\) be the monitor&rsquo;s label of rollout \(\tau\). Over \(M\) task contexts, the hacking rate is
+          <li><strong>Choose the target gradient</strong>: to estimate the gradient of the model&rsquo;s reward hacking propensity on OOD agentic coding tasks, we can sample many rollouts, use a monitor to label each as hacking or non-hacking, then estimate the target gradient with REINFORCE. Let \(r(\tau) \in \{0, 1\}\) be the monitor&rsquo;s label of rollout \(\tau\). Over \(M\) prompts, the hacking rate is
 $$p(\theta) = \frac{1}{M}\sum_{m=1}^{M} \mathbb{E}_{\tau \sim \pi_\theta(\cdot \mid x_m)}\big[r(\tau)\big].$$
-We sample \(k\) rollouts per context from the final checkpoint \(\theta_T\) and, as in <a href="https://arxiv.org/pdf/2402.03300">GRPO</a>, use the context&rsquo;s average hacking rate as the baseline:
+We sample \(k\) rollouts per prompt from the final checkpoint \(\theta_T\) and, as in <a href="https://arxiv.org/pdf/2402.03300">GRPO</a>, use the prompt&rsquo;s average hacking rate as the baseline:
 $$g = \frac{1}{M}\sum_{m=1}^{M} \frac{1}{k-1}\sum_{i=1}^{k} A_{m,i}\, \nabla_\theta \log \pi_{\theta_T}(\tau_{m,i} \mid x_m), \qquad A_{m,i} = r(\tau_{m,i}) - \frac{1}{k}\sum_{j=1}^{k} r(\tau_{m,j}).$$</li>
           <li><strong>Choose the influence estimator</strong>: options range from exact unrolled influence, which accounts for the Hessian at every training step, to the simplest Hessian-free gradient product.</li>
         </ul>
@@ -19913,7 +19913,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <figure id="fig-4" class="fig-wide" style="max-width:864px">
         <img style="width:100%;max-width:864px;display:block;margin:0 auto" src="figures/rh/fig3_influence_readout.png" alt="What makes influence functions work">
-        <figcaption><span class="fig-label">Figure 5.</span> What makes influence functions work? (a) Cheating rate after masking each influence estimator’s top tokens. (b) Cheating rate against the number of rollouts used for the target gradient. (c) Cosine between independent target-gradient estimates against rollouts per history.</figcaption>
+        <figcaption><span class="fig-label">Figure 5.</span> What makes influence functions work? (a) Cheating rate after masking each influence estimator’s top tokens. (b) Cheating rate against the number of rollouts used for the target gradient. (c) Cosine between independent target-gradient estimates against rollouts per prompt.</figcaption>
       </figure>
 
       <div class="text">
