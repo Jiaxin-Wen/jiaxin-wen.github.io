@@ -22113,7 +22113,7 @@ z
         <p>First, when computing the influence score for each token, we don&rsquo;t need to actually run one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
 $$\frac{d}{d\epsilon}\, \ell_z(\theta + \epsilon g)\Big|_{\epsilon=0} = g^\top \nabla_\theta \ell_z(\theta),$$
 so one forward-mode pass over a training sequence scores all of its tokens.</p>
-        <p>We show the actual costs of influence functions in our experiments, under both sparse and full parameter spaces:</p>
+        <p>We show the actual costs of influence functions in our experiments, under both sparse and full parameter spaces. In comparison, one step of production RL with 1,024 prompts, a group size of 64, and O(100K) inference tokens per rollout would cost ~2&times;10<sup>21</sup> FLOPs.</p>
         <table class="toklen" style="width:auto;margin:0 auto 14px">
           <thead><tr><th></th><th>Rank-1</th><th>Full-parameter</th></tr></thead>
           <tbody>
@@ -22123,7 +22123,6 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
             <tr><td>Disk memory</td><td>20 KB</td><td>108 GB</td></tr>
           </tbody>
         </table>
-        <p>In comparison, one step of production RL with 1,024 prompts, a group size of 64, and O(100K) inference tokens per rollout would cost ~2&times;10<sup>21</sup> FLOPs.</p>
       </div>
 
 
