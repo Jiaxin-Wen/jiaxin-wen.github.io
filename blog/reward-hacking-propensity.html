@@ -456,7 +456,8 @@
       .rollout-anim .ra-k { font-size: 13px; font-weight: 600; color: #8a857c; }   /* user 11-02: no caps (was uppercase + .06em tracking) */
       .rollout-anim .ra-v { font-size: 13px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
       .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; margin-top: 6px; }   /* top-aligned with the oracle label (user 10-30) */
-      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 2; align-self: start; margin-top: 26px; }   /* user 11-02 "move them a bit closer": right under the rollout-size readout (was row 3, bottom-aligned with the arrows' origin) */
+      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 3; align-self: end; margin-bottom: 21px; }   /* user 10-31 "misaligned": value's bottom on the arrows' origin line; 11-02 "align these two panels in height" */
+      @media (min-width: 640px) { .rollout-anim .ra-stat { margin-left: -36px; } }   /* user 11-02: readouts closer to the arrow panel (the canvas's right edge is empty space) */
       .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: block; width: max-content; }   /* block (not inline-block): same label-value gap as the rollouts readout */
       /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
       .hovercard { position: relative; border-bottom: 1.5px dotted #9aa53a; cursor: help; outline: none; }
