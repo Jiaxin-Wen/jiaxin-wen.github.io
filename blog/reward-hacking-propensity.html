@@ -309,12 +309,11 @@
          !important because size_figs.py rewrites these figures' inline max-width */
       figure#vid-1, figure#vid-2 { max-width: 864px !important; }
       figure#vid-1 figcaption, figure#vid-2 figcaption { max-width: 864px; }
-      /* user 11-02: Videos 2 and 3 merged into one row, panels (a) teacher / (b) student; stacked on narrow screens */
+      /* user 11-02: Videos 2 and 3 merged into one row, panels (a) teacher / (b) student; always side by side ("in a single row") */
       .vid-row { display: flex; gap: 14px; justify-content: center; align-items: flex-start; }
       .vid-cell { flex: 1 1 0; min-width: 0; }
       .vid-cell video { width: 100%; display: block; }
       .vid-panel { font-size: 13px; color: #444; margin-top: 6px; text-align: center; }
-      @media (max-width: 640px) { .vid-row { flex-direction: column; align-items: stretch; gap: 10px; } .vid-cell { flex: none; } }
       /* footnotes (user 10-30) */
       sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
       sup.fnref a { text-decoration: none; }
