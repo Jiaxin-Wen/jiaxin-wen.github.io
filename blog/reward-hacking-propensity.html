@@ -22234,7 +22234,7 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
           d.innerHTML = '<span class="sn-num">' + a.textContent + '</span>' + c.innerHTML.trim();
           document.body.appendChild(d); return {a: a, d: d};
         }).filter(Boolean);
-        var GAP = 32, W = 250, MIN = 180;
+        var GAP = 60, W = 250, MIN = 180;   // user 11-01 "move footnotes a bit right" (gap from the text column was 32 px)
         function place() {
           var vw = document.documentElement.clientWidth, on = true;
           notes.forEach(function (n) {
