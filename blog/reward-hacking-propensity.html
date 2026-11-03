@@ -540,6 +540,7 @@
           </li>
           <li><a href="#rl-dynamics" data-target="rl-dynamics">5. Tracing hacking propensity transmission back to teacher RL dynamics</a></li>
           <li><a href="#costs" data-target="costs">6. Costs</a></li>
+          <li><a href="#discussion" data-target="discussion">7. Discussion</a></li>
         </ul>
       </nav>
     </div>
@@ -22157,6 +22158,19 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
             <li><strong>Batched JVP</strong>: we run the JVP in batches, which brings a 1.6&times; speedup.</li>
           </ul>
         </details>
+      </div>
+
+
+      <div class="text">
+        <h2 id="discussion">7. Discussion</h2>
+        <p>We find that reward hacking propensity transmits through benign-looking chat data in a realistic SFT setup, and that influence functions with accurate target gradients can find and remove the tokens responsible. Several limitations and open questions remain:</p>
+        <ul>
+          <li><strong>One student, one teacher in depth</strong>: most analyses fine-tune one student, Qwen3.8 27B, on one teacher&rsquo;s chat data (Gemini). We have not yet tested whether the same tokens transmit to other student families.</li>
+          <li><strong>A hackable environment and a monitor are required</strong>: the target gradient needs an environment where the student hacks and a monitor that labels it. A hacking behavior that no available environment elicits, or that no monitor recognizes, is invisible to this method.</li>
+          <li><strong>Small evaluation samples</strong>: several held-out evals use one training seed and small samples, e.g. 20 Go and 30 chess games per model on CheatBench, so small differences between methods are within noise.</li>
+          <li><strong>Alignment tax with full-parameter masks</strong>: masking more than the top 1% of full-parameter influential tokens makes students give up more easily on long-horizon tasks (Sec 4.2), so the mask size still has to be chosen with capability evals.</li>
+          <li><strong>Why these tokens transmit</strong>: the responsible tokens are not semantically related to hacking (Sec 3.4), and we trace their origin to the teacher&rsquo;s RL only in a toy boat-racing environment (Sec 5). What these tokens encode, and whether the same dynamics drive transmission from production teachers, remain open.</li>
+        </ul>
       </div>
 
 
