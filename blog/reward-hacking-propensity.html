@@ -22078,7 +22078,7 @@ L 814.202764 102.27044
       <div class="text">
         <h2 id="costs">6. Costs</h2>
         <p>One might argue that influence functions are too expensive since we need to do many backward passes and use large rollout sizes to get accurate target gradients. However, the actual cost in practice is very affordable, much smaller than one step of production RL.</p>
-        <p>First, when computing the influence score for each token, we don&rsquo;t need to actually run one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
+        <p>When computing the influence score for each token, we don&rsquo;t need to actually run one backward pass per token. Instead, we use a Jacobian-vector product (JVP): nudging the weights along the target gradient changes every token&rsquo;s loss at once,
 $$\frac{d}{d\epsilon}\, \ell_z(\theta + \epsilon g)\Big|_{\epsilon=0} = g^\top \nabla_\theta \ell_z(\theta),$$
 so one forward-mode pass over a training sequence scores all of its tokens.</p>
         <p>We show the actual costs of influence functions in our experiments, under both sparse and full parameter spaces. In comparison, one step of production RL with 1,024 prompts, a group size of 64, and O(100K) inference tokens per rollout would cost ~3&times;10<sup>21</sup> FLOPs.</p>
