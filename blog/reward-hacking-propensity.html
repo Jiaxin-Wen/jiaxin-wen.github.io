@@ -16800,7 +16800,8 @@ z
         </ul>
         <p>Results show that all prior methods transfer poorly to our testbed:</p>
         <ul>
-          <li><strong>Activation lens</strong>: LM judge and persona vectors perform similarly to random; they cannot reduce reward hacking propensity transmission at all. J-lens only flags 2.11% of training tokens, failing to reduce reward hacking at all.</li>
+          <li><strong>Eyeballing</strong>: LM judge performs similarly to random. The actual reward hacking propensity is not transmitted via apparent bad texts.</li>
+          <li><strong>Activation lens</strong>: Both persona vectors and J-lens perform similarly to random, failing to reduce reward hacking at all.</li>
           <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), without changing hacking.</li>
           <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking rates to 48%, but with a high variance. For example, <a href="#appendix-a-2">prompt A</a> and <a href="#appendix-a-2">prompt B</a> yield a hacking rate of 45.7% and 54.3%, respectively. Verbalized prompting automates prompt searching. But in contrast to its effectiveness on prior toy testbeds, it only yields <a href="#appendix-a-3">two generic prompts</a> on our testbed, reducing hacking rates to 59% and 60%.</li>
           <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising for reducing hacking on LiveCodeBench, but are less effective on SWE-bench. Overall, they are still far from eliminating hacking.</li>
