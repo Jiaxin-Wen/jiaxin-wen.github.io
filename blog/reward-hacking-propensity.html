@@ -16814,7 +16814,7 @@ z
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-02T16:45:27.970758</dc:date>
+    <dc:date>2026-11-02T22:47:18.893470</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -19267,12 +19267,14 @@ L 784.233049 117.589086
 L 484.345349 119.634135 
 L 511.002033 180.985604 
 L 544.322889 174.850457 
+L 610.9646 165.647737 
 L 784.233049 162.580164 
 " style="fill: none; stroke: #b6c648; stroke-width: 2.6; stroke-linecap: square"/>
     <g>
      <use xlink:href="#m6edcb6bc83" x="484.345349" y="119.634135" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="511.002033" y="180.985604" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="544.322889" y="174.850457" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="610.9646" y="165.647737" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="784.233049" y="162.580164" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
     </g>
    </g>
@@ -22266,6 +22268,44 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
       })();
     </script>
     <script>
+      // Fig 11: both panels grow together with the RL step (user 10-27)
+      (function () {
+        var box = document.getElementById('fig11-anim'); if (!box) return;
+        var svg = box.querySelector('svg'), NS = 'http://www.w3.org/2000/svg', STEPS = 44, DUR = 500;
+        function anc(id) { var e = svg.getElementById(id); if (!e) return null; var bb = e.getBBox(); return bb.x + bb.width / 2; }
+        var P = {a: [anc('anchor-a0'), anc('anchor-a45')], b: [anc('anchor-b0'), anc('anchor-b45')], c: [anc('anchor-c0'), anc('anchor-c45')]};
+        var vb = svg.viewBox.baseVal, defs = svg.querySelector('defs') || svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild);
+        var rects = {};
+        ['a', 'b', 'c'].forEach(function (k) {
+          var cp = document.createElementNS(NS, 'clipPath'); cp.setAttribute('id', 'fig11-clip-' + k);
+          var r = document.createElementNS(NS, 'rect'); r.setAttribute('x', vb.x - 10); r.setAttribute('y', vb.y - 10);
+          r.setAttribute('height', vb.height + 20); r.setAttribute('width', 0); cp.appendChild(r); defs.appendChild(cp); rects[k] = r;
+        });
+        Array.prototype.forEach.call(svg.querySelectorAll('[id^="grow-"]'), function (e) {
+          e.setAttribute('clip-path', 'url(#fig11-clip-' + e.id.charAt(5) + ')');   // grow-<panel>...
+        });
+        function draw(step) {   // reveal everything up to `step` (+ half a marker) in both panels
+          ['a', 'b', 'c'].forEach(function (k) {
+            var x0 = P[k][0], x1 = P[k][1]; if (x0 == null) return;
+            var x = x0 + (x1 - x0) * step / 45 + 6;
+            rects[k].setAttribute('width', Math.max(0, x - (vb.x - 10)));
+          });
+        }
+        var raf = null;
+        function play() {
+          if (raf) cancelAnimationFrame(raf); var t0 = null; draw(0);
+          function tick(t) { if (t0 === null) t0 = t; var f = Math.min(1, (t - t0) / DUR); draw(STEPS * f + (f === 1 ? 2 : 0)); if (f < 1) raf = requestAnimationFrame(tick); }
+          raf = requestAnimationFrame(tick);
+        }
+        draw(0);
+        if ('IntersectionObserver' in window) {
+          var shown = false;   // replays every time the figure scrolls back into view (user 10-27)
+          var io = new IntersectionObserver(function (es) { es.forEach(function (e) {
+            if (e.isIntersecting && !shown) { shown = true; play(); } else if (!e.isIntersecting && shown) { shown = false; if (raf) cancelAnimationFrame(raf); draw(0); }
+          }); }, {threshold: 0.5});
+          io.observe(box);
+        } else { draw(STEPS + 2); }
+      })();
     </script>
     <script>
       // Fig 4 draw-on (user 10-30): baseline curves shown as is; "Spoil our results" sweeps the two influence curves in along x. Hover stays live.
@@ -22315,44 +22355,6 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
             else { R.forEach(function (o) { o.r.setAttribute('width', 1e6); }); leg.forEach(function (l) { l.style.opacity = ''; }); }
           });
         });
-      })();
-      // Fig 11: both panels grow together with the RL step (user 10-27)
-      (function () {
-        var box = document.getElementById('fig11-anim'); if (!box) return;
-        var svg = box.querySelector('svg'), NS = 'http://www.w3.org/2000/svg', STEPS = 44, DUR = 500;
-        function anc(id) { var e = svg.getElementById(id); if (!e) return null; var bb = e.getBBox(); return bb.x + bb.width / 2; }
-        var P = {a: [anc('anchor-a0'), anc('anchor-a45')], b: [anc('anchor-b0'), anc('anchor-b45')], c: [anc('anchor-c0'), anc('anchor-c45')]};
-        var vb = svg.viewBox.baseVal, defs = svg.querySelector('defs') || svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild);
-        var rects = {};
-        ['a', 'b', 'c'].forEach(function (k) {
-          var cp = document.createElementNS(NS, 'clipPath'); cp.setAttribute('id', 'fig11-clip-' + k);
-          var r = document.createElementNS(NS, 'rect'); r.setAttribute('x', vb.x - 10); r.setAttribute('y', vb.y - 10);
-          r.setAttribute('height', vb.height + 20); r.setAttribute('width', 0); cp.appendChild(r); defs.appendChild(cp); rects[k] = r;
-        });
-        Array.prototype.forEach.call(svg.querySelectorAll('[id^="grow-"]'), function (e) {
-          e.setAttribute('clip-path', 'url(#fig11-clip-' + e.id.charAt(5) + ')');   // grow-<panel>...
-        });
-        function draw(step) {   // reveal everything up to `step` (+ half a marker) in both panels
-          ['a', 'b', 'c'].forEach(function (k) {
-            var x0 = P[k][0], x1 = P[k][1]; if (x0 == null) return;
-            var x = x0 + (x1 - x0) * step / 45 + 6;
-            rects[k].setAttribute('width', Math.max(0, x - (vb.x - 10)));
-          });
-        }
-        var raf = null;
-        function play() {
-          if (raf) cancelAnimationFrame(raf); var t0 = null; draw(0);
-          function tick(t) { if (t0 === null) t0 = t; var f = Math.min(1, (t - t0) / DUR); draw(STEPS * f + (f === 1 ? 2 : 0)); if (f < 1) raf = requestAnimationFrame(tick); }
-          raf = requestAnimationFrame(tick);
-        }
-        draw(0);
-        if ('IntersectionObserver' in window) {
-          var shown = false;   // replays every time the figure scrolls back into view (user 10-27)
-          var io = new IntersectionObserver(function (es) { es.forEach(function (e) {
-            if (e.isIntersecting && !shown) { shown = true; play(); } else if (!e.isIntersecting && shown) { shown = false; if (raf) cancelAnimationFrame(raf); draw(0); }
-          }); }, {threshold: 0.5});
-          io.observe(box);
-        } else { draw(STEPS + 2); }
       })();
     </script>
 </body>
