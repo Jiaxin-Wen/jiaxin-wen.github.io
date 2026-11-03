@@ -586,6 +586,7 @@
           // N = 1024 extrapolated (user 10-28 "end at n=1024 and 0.8"): fitted N / (N + 250) = 0.80 (Spearman-Brown from 512: 0.79)
           var fig = document.getElementById('anim-rollouts'); if (!fig) return;
           var cv = fig.querySelector('canvas'), ctx = cv.getContext('2d'), nEl = fig.querySelector('.ra-n'), cEl = fig.querySelector('.ra-c'), cBox = null;
+          var nBox = fig.querySelector('.ra-nbox'), nK = nBox && nBox.querySelector('.ra-k');   // user 11-02 "still not aligned?": see the oracle label below
           var MAXL = 10, d = [], m = [];
           for (var i = 0; i < MAXL; i++) d.push(COS[i + 1] - COS[i]);
           m.push(d[0]); for (var i = 1; i < MAXL; i++) m.push(d[i - 1] * d[i] <= 0 ? 0 : 2 / (1 / d[i - 1] + 1 / d[i])); m.push(d[MAXL - 1]);
@@ -653,6 +654,7 @@
             ctx.textAlign = 'left';
             ctx.font = '600 13px "DM Sans", system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#fff';
             ctx.strokeText('oracle reward hacking gradient', g[0], g[1] - 12); ctx.fillStyle = COL.ink; ctx.fillText('oracle reward hacking gradient', g[0], g[1] - 12); ctx.textAlign = 'left';
+            if (nK) { var mt_ = Math.max(0, Math.round(g[1] - 12 - nK.offsetHeight / 2)) + 'px'; if (nBox.style.marginTop !== mt_) nBox.style.marginTop = mt_; }   // rollout-size label centred on the oracle label's line at any width
             items.forEach(function (it) {   // user 10-28: curved guide arrow from each estimate's tip toward the oracle line, fading as they converge
               var gs = Math.min(1, th / 0.6); if (gs < 0.08) return;
               var p0 = it.v, p1 = [0.25 * p0[0], 0.25 * p0[1], 1.0], pts = [];
@@ -19978,8 +19980,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <h3 id="sec-4-1">4.1 Are we hacking reward hacking monitors?</h3>
         <p>We are essentially implicitly optimizing against REINFORCE gradients derived from reward hacking monitors. This might be dangerous: prior work shows that <a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> might teach LMs to evade reward hacking monitors instead of solving tasks honestly.</p>
         <p>We should acknowledge that we have always been implicitly optimizing against such monitors. The real question is which form of optimization can best align LMs, without pushing them to hack monitors.</p>
-        <p>We hence compare our method with direct RL against the same monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in entirely OOD data (e.g. general chat SFT data), and 2) it receives far fewer bits from the monitor.</p>
-        <p>We find that:</p>
+        <p>We hence compare our method with direct RL against the same monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in entirely OOD data (e.g. general chat SFT data), and 2) it receives far fewer bits from the monitor. We find that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from the reward hacking monitor, our method substantially outperforms RL in mitigating reward hacking rates.</li>
           <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. When optimizing against the monitor on Impossible LiveCodeBench with conflicting tests, RL reduces reward hacking less on unseen tasks. Hacking rates start to increase with more RL steps on CheatBench and KernelBench.</li>
