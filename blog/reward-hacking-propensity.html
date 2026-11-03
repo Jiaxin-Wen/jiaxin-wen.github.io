@@ -500,7 +500,14 @@
         <div class="toc-title">Contents</div>
         <ul>
           <li><a href="#tldr" data-target="tldr">1. Introduction</a></li>
-          <li><a href="#transmission" data-target="transmission">2. How LMs absorb reward hacking propensity in the wild</a></li>
+          <li>
+            <a href="#transmission" data-target="transmission">2. How LMs absorb reward hacking propensity in the wild</a>
+            <ul>
+              <li><a href="#sec-2-1" data-target="sec-2-1">2.1 Background</a></li>
+              <li><a href="#sec-2-2" data-target="sec-2-2">2.2 Setup</a></li>
+              <li><a href="#sec-2-3" data-target="sec-2-3">2.3 Results</a></li>
+            </ul>
+          </li>
           <li>
             <a href="#understanding" data-target="understanding">3. Understanding reward hacking propensity transmission</a>
             <ul>
@@ -712,7 +719,8 @@
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push the student toward hacking. But <em>why</em> such tokens exist at all is still puzzling. After all, the teacher cannot anticipate or control the student&rsquo;s gradients. This question is hard to attack directly, so we test a simpler, related hypothesis. Specifically, as the teacher learns to hack on task X during RL, does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with the student&rsquo;s hacking gradient on task X? We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classic boat-racing environment</a>. During RL, the teacher gradually learns to hack: the boat circles to collect power-ups instead of finishing the lap. At intermediate RL checkpoints, we sample chat responses from the teacher, then measure how well the student&rsquo;s gradients on these responses align with its hacking gradient in boat racing. We confirm that this gradient alignment grows during RL, and the student trained on later-checkpoint chat responses hacks more in boat racing.</p>
         <h2 id="transmission">2. How LMs absorb reward hacking propensity in the wild</h2>
-        <p>Today&rsquo;s LMs are known reward hackers. So while LM-generated data is heavily used in production training pipelines, developers carefully filter it by whether it looks suspicious, i.e. eyeballing. However, <em>learning is barely predictable by eyeballing</em>. As the illustrative example below shows, tokens that look benign to humans, e.g. &ldquo;detailed&rdquo;, &ldquo;buildup&rdquo;, &ldquo;###&rdquo;, can substantially move reward hacking rates on agentic coding tasks.</p>
+        <h3 id="sec-2-1">2.1 Background</h3>
+        <p>Today&rsquo;s LMs are known reward hackers. So while LM-generated data is heavily used in production training pipelines, developers carefully filter it by whether it looks suspicious, i.e. eyeballing. However, <em>learning is barely predictable by eyeballing</em>. As shown below, tokens that look benign to humans, e.g. &ldquo;detailed&rdquo; and &ldquo;###&rdquo;, can substantially move reward hacking rates on agentic coding tasks.</p>
       </div>
 
       <figure id="fig-2" class="fig-wide" style="max-width:640px">
@@ -723,20 +731,21 @@
       <div class="text">
         <p>Is it possible that LMs can still transmit their reward hacking propensity through benign-looking data? Prior work on subliminal learning shows signs of life in toy setups. Specifically, they are able to transmit hidden traits like <a href="https://arxiv.org/pdf/2507.14805">animal preferences</a> and <a href="https://arxiv.org/pdf/2610.10657">reward-seeking</a> under the following conditions:</p>
         <ul>
-          <li>Explicitly induce teacher traits via supervised fine-tuning, system prompts, or steering;</li>
-          <li>Shared initial weights between teachers and students;</li>
-          <li>Sometimes access to teacher top-K logits.</li>
+          <li>Teacher traits are explicitly induced via supervised fine-tuning, system prompts, or steering.</li>
+          <li>Teachers and students share initial weights.</li>
+          <li>Students sometimes have access to teacher top-K logits.</li>
         </ul>
-        <p>We instead study a setup common in production model post-training pipelines:</p>
+        <h3 id="sec-2-2">2.2 Setup</h3>
+        <p>We instead study a setup common in production post-training pipelines:</p>
         <ul>
-          <li>We generate chat SFT data in a standard way. Prompts are randomly sampled from the OLMo3 SFT corpus, and responses are sampled from proprietary models like Claude and Gemini. We do not induce reward hacking from teachers on purpose. All resulting data are single-turn query-response pairs with O(2K) tokens, no CoTs involved.</li>
+          <li>We generate chat SFT data in a standard way. Prompts are randomly sampled from the OLMo3 SFT corpus, and responses are sampled from proprietary models like Claude and Gemini. We never intentionally induce reward hacking in the teachers. All resulting data are single-turn prompt-response pairs with O(2K) tokens and no CoTs.</li>
           <li>We do not require the teacher and student to share the base model. Our experiments use Qwen3.8 27B as the student<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>, and proprietary models as the teacher.</li>
           <li>We only assume access to teacher text outputs, not logits.</li>
         </ul>
         <p>We then measure reward hacking propensity on long-horizon agentic tasks that take O(100K) tokens:</p>
         <ul>
-          <li><strong>Impossible Coding Tasks:</strong> based on LiveCodeBench and SWEBench, we add <a href="https://arxiv.org/pdf/2510.20270">conflicting tests</a>, or <a href="https://github.com/openai/monitorability-evals/blob/main/environments/outcome/livebench.md">insane length or time limits (e.g. 1e-7 seconds)</a>. To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus, reward hacking is verifiable on these impossible tasks.</li>
-          <li><a href="https://arxiv.org/pdf/2609.36308"><strong>CheatBench</strong></a>: we choose two non-coding agentic tasks, chess and go. Specifically, the agent plays from a winning position against another agent backed by a strong engine (Stockfish or KataGo). The opponent&rsquo;s move endpoint is reachable from the sandbox, so the agent can cheat by asking the opponent&rsquo;s engine for its own moves, by seeking outside engine help, or by editing game files. Reward hacking is also verifiable on these tasks by checking file editing histories and tool calls.</li>
+          <li><strong>Impossible Coding Tasks:</strong> based on LiveCodeBench and SWEBench, we add <a href="https://arxiv.org/pdf/2510.20270">conflicting tests</a>, or <a href="https://github.com/openai/monitorability-evals/blob/main/environments/outcome/livebench.md">impossibly tight length or time limits (e.g. 1e-7 seconds)</a>. To pass tests, agents must cheat, e.g. via hardcoding or editing test files. Thus, reward hacking is verifiable on these impossible tasks.</li>
+          <li><a href="https://arxiv.org/pdf/2609.36308"><strong>CheatBench</strong></a>: we pick two non-coding tasks, chess and go. The agent plays against an opponent backed by a strong engine API (Stockfish or KataGo). It can cheat by finding the API in the sandbox and querying it for its own or the opponent's moves, or by editing game files (e.g. rewriting the opponent' code to always resign). Reward hacking is verifiable from file edit histories and API calls.</li>
           <li><a href="https://github.com/ScalingIntelligence/KernelBench"><strong>KernelBench</strong></a>: the goal is to beat reference PyTorch kernels. Unlike impossible coding tasks, KernelBench is possible yet challenging to solve honestly. Agents can hack by probing graders (which are not directly accessible from their sandbox) and writing wrong kernels that pass graders. See <a href="#vid-kernel">Video 1</a> for examples.<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup> Reward hacking is non-verifiable here. We use Opus 5.5 agents to review the whole episode for detecting reward hacking in kernel implementation and grader probing.</li>
         </ul>
         <p>We use the recommended agent harness for each task, which is either a simple loop or <a href="https://github.com/harbor-framework/harbor">Terminus-2</a>.</p>
@@ -760,6 +769,7 @@
 
       <div class="text">
         <p>We mainly report results on Impossible LiveCodeBench, since long-horizon agentic evals are generally slow and it&rsquo;s the fastest one. We keep the others as held-out evals to test how well our method generalizes to new hacking behaviors on new tasks in <a href="#sec-3-3-3">Sec 3.3.3</a>.</p>
+        <h3 id="sec-2-3">2.3 Results</h3>
         <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
       </div>
 
@@ -16787,7 +16797,9 @@ z
         <h2 id="understanding">3. Understanding reward hacking propensity transmission</h2>
         <p>We then seek to understand which tokens in our chat SFT data transmit the reward hacking propensity to student LMs. We verify our understanding by its effectiveness in mitigating reward hacking propensity: if we mask the identified chat tokens during training, would the student stop cheating on agentic tasks?</p>
         <h3 id="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</h3>
-        <p>We first test prior methods on controlling misgeneralization that work on toy testbeds. These methods tackle similar problems through the lens of activations, logits, weights, and prompts:</p>
+        <p>We first test prior methods on controlling misgeneralization that work on toy testbeds. These methods tackle similar problems through the lens of activations, logits, weights, and prompts.</p>
+        <details class="impl">
+          <summary>Baseline details</summary>
         <ul>
           <li><a href="https://arxiv.org/pdf/2507.21509"><strong>Persona</strong></a> <a href="https://arxiv.org/pdf/2602.11079"><strong>vectors</strong></a>: build a reward hacking persona vector by computing the activation difference between hacking and non-hacking data. Then for each training token, project its activation onto this vector as the activation strength of the reward hacking persona. Following the original paper, we construct 5 system prompt pairs (hacking vs. non-hacking) and 20 persona-eliciting questions to collect diverse data, then compute the final persona vector.</li>
           <li><a href="https://transformer-circuits.pub/2026/workspace/index.html"><strong>J-lens</strong></a>: for each token, we unembed its intermediate-layer activations to the output vocabulary, and score it based on how many hacking-relevant tokens &ndash; e.g. hack, exploit and bypass &ndash; appear in the top-10 tokens. We use an <a href="https://huggingface.co/eyes-ml/Qwen3.8-27B_jacobian-lens">open-sourced J-lens on Qwen3.8 27B</a>.</li>
@@ -16798,6 +16810,7 @@ z
           <li><a href="https://arxiv.org/pdf/2609.16927v1"><strong>Verbalized prompting</strong></a>: automatically search for a soft prompt that can describe fine-tuning effects, then verbalize it via beam search. We then test the searched prompt&rsquo;s effectiveness in reducing hacking with inoculation prompting.</li>
           <li><strong>LM judge</strong>: use GPT 6.1 Sol to eyeball each training example and score how strongly it exhibits reward-hacking tendencies. See our LLM judge prompt in <a href="#appendix-a-1">Appendix A.1</a>.</li>
         </ul>
+        </details>
         <p>Results show that all prior methods transfer poorly to our testbed:</p>
         <ul>
           <li><strong>Eyeballing</strong>: LM judge performs similarly to random. The actual reward hacking propensity is not transmitted via apparent bad texts.</li>
