@@ -532,7 +532,7 @@
             </ul>
           </li>
           <li>
-            <a href="#null-hypotheses" data-target="null-hypotheses">4. Two null hypotheses</a>
+            <a href="#null-hypotheses" data-target="null-hypotheses">4. Two Null Hypotheses</a>
             <ul>
               <li><a href="#sec-4-1" data-target="sec-4-1">4.1 Are we hacking reward hacking monitors?</a></li>
               <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Are we just making LMs lazier?</a></li>
@@ -20012,13 +20012,9 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <div class="text">
         <h4 id="sec-3-3-3">3.3.3 The identified influential tokens mitigate reward hacking in unseen distributions</h4>
-        <p>Ideally, we want tokens that influnce reward hacking propensity on any distribution, not just the distribution used to compute hacking gradients. To test this, we:</p>
-        <ul>
-          <li>compute the hacking gradients on a narrow distribution (20 prompts from Impossible LiveCodeBench with conflicting tests)</li>
-          <li>mask the identified influential tokens during student training</li>
-          <li>evaluate the student on held-out reward hacking benchmarks: new impossible tasks, CheatBench, and KernelBench, which elicit unseen hacking behaviors such as probing graders outside the sandbox.</li>
-        </ul>
-        <p><a href="#fig-7">Figure 8</a> shows that influence functions computed on a narrow distribution generalizes well, mitigating rweard hacking on held-out tasks with unseen hacking behaviors.</p>
+        <p>Ideally, we want tokens that influence reward hacking propensity on any distribution, not just the distribution used to compute hacking gradients.</p>
+        <p>Our hacking gradient indeed comes from a very narrow distribution: 20 prompts from Impossible LiveCodeBench with conflicting tests. We then test whether the influential tokens it identifies can mitigate reward hacking on held-out benchmarks. This includes new impossible coding tasks, CheatBench, and KernelBench, which elicit unseen hacking behaviors.</p>
+        <p><a href="#fig-7">Figure 8</a> confirms that the influential tokens identified from such a narrow distribution generalize well.</p>
       </div>
 
       <figure id="fig-7" class="fig-wide" style="max-width:864px">
@@ -20037,14 +20033,15 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       </figure>
 
       <div class="text">
-        <h2 id="null-hypotheses">4. Two null hypotheses</h2>
+        <h2 id="null-hypotheses">4. Two Null Hypotheses</h2>
         <h3 id="sec-4-1">4.1 Are we hacking reward hacking monitors?</h3>
-        <p>We are essentially implicitly optimizing against REINFORCE gradients derived from reward hacking monitors. This might be dangerous: prior work shows that <a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> might teach LMs to evade reward hacking monitors instead of solving tasks honestly.</p>
-        <p>We should acknowledge that we have always been implicitly optimizing against such monitors. The real question is which form of optimization can best align LMs, without pushing them to hack monitors.</p>
-        <p>We hence compare our method with direct RL against the same monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in entirely OOD data (e.g. general chat SFT data), and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> Empirically, we observe that:</p>
+        <p>Essentially, we are implicitly optimizing against REINFORCE gradients derived from hacking monitors. This is dangerous:&nbsp;<a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> can teach LMs to evade monitors via obfuscation.</p>
+        <p>However, we should acknowledge that we have always been implicitly optimizing against monitors. The real question is which form of optimization best aligns LMs without pushing them to hack monitors.</p>
+        <p>To reiterate, our monitor is easy to hack: it only checks whether the first 2K CoT tokens mention hacking, on just 20 prompts from Impossible LiveCodeBench with conflicting tests.</p>
+        <p>We compare our method with direct RL against this monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horzon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> Empirically, we observe that:</p>
         <ul>
-          <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from the reward hacking monitor, our method substantially outperforms RL in mitigating reward hacking rates.</li>
-          <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. When optimizing against the monitor on Impossible LiveCodeBench with conflicting tests, RL reduces reward hacking less on unseen tasks. Hacking rates start to increase with more RL steps on CheatBench and KernelBench.</li>
+          <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from this monitor, our method substantially beats RL at reducing reward hacking on held-out benchmarks.</li>
+          <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. RL reduces reward hacking less on unseen tasks. On CheatBench and KernelBench, hacking rates even start to increase with more RL steps. In contrast, [TODO]</li>
         </ul>
       </div>
 
@@ -20056,12 +20053,11 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       <div class="text">
         <h3 id="sec-4-2">4.2 Are we just making LMs lazier?</h3>
         <p>Ideally, reducing hacking would yield LMs that solve long-horizon hard tasks honestly and persistently. However, a common failure mode is to yield LMs that lack persistence and give up easily on hard tasks.</p>
-        <p>To better understand the effect of our method in reducing reward hacking, we test the resulting model on three capability benchmarks.</p>
-        <p>We evaluate both rank-1 and full-parameter influential tokens and find that:</p>
+        <p>To understand the potential side effects of our method, we run evaluations on three capability benchmarks. We evaluate both rank-1 and full-parameter influential tokens and find that:</p>
         <ul>
           <li>Traditional short-horizon benchmarks like MMLU fail to reveal capability degradation.</li>
-          <li>Masking rank-1 influential tokens well preserves model capabilities on long-horizon tasks.</li>
-          <li>Masking full-parameter influential tokens, despite being more effective in reducing hacking, is more fragile for capabilities. Once we mask more than the top 1% of tokens, LMs start giving up easily, and their performance on long-horizon evals drops substantially.</li>
+          <li>Masking rank-1 influential tokens preserves capabilities on long-horizon tasks.</li>
+          <li>Masking full-parameter influential tokens, despite being more effective in reducing hacking (<a href="#fig-3">Figure 4</a>), is more fragile for capabilities. Once we mask more than the top 1% of tokens, LMs start giving up easily, and their performance on long-horizon tasks drops substantially.</li>
         </ul>
         <p>Together with the asymmetric results in <a href="#fig-6">Figure 7</a>, we conjecture that full-parameter gradients leak in many other traits (e.g. persistence) related to hacking but not hacking. And the tokens ranked below the top 1% mostly carry them. In contrast, sparse-parameter gradients would only capture the most salient trait aligned with hacking, which is likely hacking itself.</p>
       </div>
@@ -22154,7 +22150,6 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
           <ul>
             <li><strong>Shared prompts</strong>: rollouts of the same prompt share the prompt&rsquo;s forward and backward pass, which brings a 2&times; speedup for short prompts and 7.6&times; for our longest prompt (25.7K tokens).</li>
             <li><strong>Mixed precision</strong>: the forward pass needs fp32 accuracy, since rounding errors compound across layers, but the backward pass tolerates fp16. We hence run forward passes in fp32 by <a href="https://arxiv.org/abs/1904.06376">splitting each fp32 activation into three bf16 pieces</a> (2&times; speedup), and backward passes in fp16 with <a href="https://arxiv.org/abs/2307.08691">FlashAttention-2</a> (1.44&times; speedup).</li>
-            <li><strong>Batched JVP</strong>: we run the JVP in batches, which brings a 1.6&times; speedup.</li>
           </ul>
         </details>
       </div>
@@ -22162,14 +22157,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
 
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
-        <p>We find that reward hacking propensity transmits through benign-looking chat data in a realistic SFT setup, and that influence functions with accurate target gradients can find and remove the tokens responsible. Several limitations and open questions remain:</p>
-        <ul>
-          <li><strong>One student, one teacher in depth</strong>: most analyses fine-tune one student, Qwen3.8 27B, on one teacher&rsquo;s chat data (Gemini). We have not yet tested whether the same tokens transmit to other student families.</li>
-          <li><strong>A hackable environment and a monitor are required</strong>: the target gradient needs an environment where the student hacks and a monitor that labels it. A hacking behavior that no available environment elicits, or that no monitor recognizes, is invisible to this method.</li>
-          <li><strong>Small evaluation samples</strong>: several held-out evals use one training seed and small samples, e.g. 20 Go and 30 chess games per model on CheatBench, so small differences between methods are within noise.</li>
-          <li><strong>Alignment tax with full-parameter masks</strong>: masking more than the top 1% of full-parameter influential tokens makes students give up more easily on long-horizon tasks (Sec 4.2), so the mask size still has to be chosen with capability evals.</li>
-          <li><strong>Why these tokens transmit</strong>: the responsible tokens are not semantically related to hacking (Sec 3.4), and we trace their origin to the teacher&rsquo;s RL only in a toy boat-racing environment (Sec 5). What these tokens encode, and whether the same dynamics drive transmission from production teachers, remain open.</li>
-        </ul>
+        <p>[TODO]</p>
       </div>
 
 
