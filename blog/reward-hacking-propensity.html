@@ -316,16 +316,22 @@
       .vid-panel { font-size: 13px; color: #444; margin-top: 6px; text-align: center; }
       /* footnotes (user 10-30) */
       sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
-      sup.fnref a { text-decoration: none; }
+      sup.fnref a { text-decoration: none; color: #8f8f8f; }   /* 11-04: gray numbers, as in thinkingmachines.ai/blog/lora */
       .footnotes { margin-top: 36px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 13px; color: #444; }
+      .footnotes { display: none; }   /* user 11-04: margin notes only; the list stays in the source as their text (the live editor edits it) */
       .footnotes ol { padding-left: 20px; margin: 0; }
       .prompt-block { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; background: #f6f6f4; border: 1px solid #e4e4e0; border-radius: 6px; padding: 14px 16px; margin: 0 0 14px; }
       .footnotes a.fnback { text-decoration: none; margin-left: 2px; }
-      /* sidenotes (user 11-01: "show footnotes on the right like lesswrong"): with room in the right margin, every footnote is also shown
-         there, level with its marker; the script below places them and switches them on (.sidenotes-on) */
-      .sidenote { position: absolute; display: none; font-size: 12.5px; line-height: 1.55; color: #555; text-align: left; }
-      .sidenote .sn-num { font-weight: bold; color: #1a1a1a; margin-right: 5px; }
+      /* sidenotes (user 11-01: "show footnotes on the right like lesswrong"; 11-04 restyled like thinkingmachines.ai/blog/lora, margin notes
+         only): with room in the right margin every footnote is shown there, level with its marker; the script below places them and switches
+         them on (.sidenotes-on). Narrow windows: the marker opens the note under its line (.sn-inline) */
+      .sidenote { position: absolute; display: none; font-size: 12.5px; line-height: 1.5; color: #444; text-align: left; border-radius: 4px; transition: background-color .4s ease; }
+      .sidenote .sn-num, .sn-inline .sn-num { color: #8f8f8f; font-size: .82em; position: relative; top: -.4em; margin-right: 3px; }
       .sidenotes-on .sidenote { display: block; }
+      .sidenote.sn-flash { background-color: #f3f1ea; }
+      .sn-inline { display: none; }
+      .sn-inline.open { display: block; margin: 6px 0 10px; padding: 8px 12px; font-size: 13px; line-height: 1.5; color: #444; background: #f7f7f5; border-radius: 6px; }
+      .sidenotes-on .sn-inline { display: none; }
 
       .acks {
         font-size: 14px; color: #444;
@@ -359,75 +365,26 @@
       .formula sub, .formula sup { font-style: normal; }
       .text em.var { font-style: italic; }
 
-      .toc-wrap {
-        position: fixed;
-        top: 0; left: 0;
-        height: 100vh; width: 280px;
-        z-index: 20;
-        pointer-events: none;
-      }
-      .toc-trigger {
-        position: absolute;
-        top: 0; left: 0;
-        width: 24px; height: 100%;
-        pointer-events: auto;
-      }
-      .toc {
-        position: absolute;
-        top: 60px; left: 0;
-        width: 260px;
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
-        padding: 18px 16px 18px 24px;
-        background: rgba(255, 255, 255, 0.97);
-        backdrop-filter: blur(4px);
-        border-right: 1px solid #eee;
-        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.04);
-        opacity: 0;
-        transform: translateX(-100%);
-        transition: transform 0.22s ease, opacity 0.22s ease;
-        pointer-events: auto;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-      .toc-wrap:hover .toc,
-      .toc:focus-within {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      .toc-title {
-        font-size: 11px; font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #888;
-        padding: 0 0 10px 12px;
-      }
+      /* outline (user 11-04, like thinkingmachines.ai/blog/lora): always visible in the left margin, no box or title, unnumbered entries;
+         the current section is dark with a dot in the gutter and only its subsections unfold. User 11-04 "the outline would sometimes
+         disappear": its right edge sits 442 px left of centre, 10 px clear of the widest figures (864 px = 432 px each side), so nothing
+         passes under it; the fade-out below stays only for content wider than that */
+      .toc-wrap { position: fixed; top: 84px; right: calc(50% + 442px); width: min(210px, calc(50% - 442px - 16px)); z-index: 20; transition: opacity .18s ease; }
+      .toc-wrap.is-collision-hidden { opacity: 0; pointer-events: none; }
+      .toc { position: relative; max-height: calc(100vh - 124px); overflow-y: auto; scrollbar-width: none; padding-left: 14px;
+        font-family: "DM Sans", system-ui, sans-serif; font-size: 12.5px; line-height: 1.4; }
+      .toc::-webkit-scrollbar { display: none; }
       .toc ul { list-style: none; padding: 0; margin: 0; }
-      .toc ul ul { padding-left: 14px; margin: 2px 0 6px; }
-      .toc li { margin: 0; }
-      .toc a {
-        display: block;
-        color: #888;
-        text-decoration: none;
-        font-weight: normal;
-        padding: 4px 12px;
-        border-left: 2px solid #eee;
-        transition: color 0.15s, border-color 0.15s;
-        font-size: 13px;
-      }
-      .toc ul ul a {
-        font-size: 12px;
-        padding: 3px 12px;
-        color: #aaa;
-      }
+      .toc li { margin: 0 0 9px; }
+      .toc ul ul { display: none; padding-left: 11px; margin: 8px 0 0; }
+      .toc li.is-open > ul { display: block; }
+      .toc a { display: block; color: #a3a3a3; text-decoration: none; transition: color .15s ease; }
       .toc a:hover { color: #1a1a1a; }
-      .toc a.active {
-        color: #1a4d8c;
-        border-left-color: #1a4d8c;
-      }
-      @media (max-width: 880px) {
-        .toc-wrap { display: none; }
-      }
+      .toc li.has-active > a { color: #5f5f5f; }
+      .toc a.active { color: #1a1a1a; }
+      .toc-dot { position: absolute; left: 2px; top: 0; width: 4px; height: 4px; border-radius: 50%; background: #1a1a1a; opacity: 0;
+        transition: transform .2s ease, opacity .2s ease; pointer-events: none; }
+      @media (max-width: 1279px) { .toc-wrap { display: none; } }
 
       /* Fig 1 hover (user 10-27): hovering a teacher's curve, legend entry or bar highlights it in both panels */
       .fig1-interactive svg [id^="curve-"], .fig1-interactive svg [id^="band-"], .fig1-interactive svg [id^="bar-"],
@@ -496,52 +453,51 @@
   <body>
 
     <div class="toc-wrap">
-      <div class="toc-trigger" aria-hidden="true"></div>
       <nav class="toc" aria-label="Table of contents">
-        <div class="toc-title">Contents</div>
+        <span class="toc-dot" aria-hidden="true"></span>
         <ul>
-          <li><a href="#tldr" data-target="tldr">1. Introduction</a></li>
+          <li><a href="#tldr" data-target="tldr">Introduction</a></li>
           <li>
-            <a href="#transmission" data-target="transmission">2. How LMs absorb reward hacking propensity in the wild</a>
+            <a href="#transmission" data-target="transmission">How LMs absorb reward hacking propensity in the wild</a>
             <ul>
-              <li><a href="#sec-2-1" data-target="sec-2-1">2.1 Background</a></li>
-              <li><a href="#sec-2-2" data-target="sec-2-2">2.2 Setup</a></li>
-              <li><a href="#sec-2-3" data-target="sec-2-3">2.3 Results</a></li>
+              <li><a href="#sec-2-1" data-target="sec-2-1">Background</a></li>
+              <li><a href="#sec-2-2" data-target="sec-2-2">Setup</a></li>
+              <li><a href="#sec-2-3" data-target="sec-2-3">Results</a></li>
             </ul>
           </li>
           <li>
-            <a href="#understanding" data-target="understanding">3. Understanding reward hacking propensity transmission</a>
+            <a href="#understanding" data-target="understanding">Understanding reward hacking propensity transmission</a>
             <ul>
-              <li><a href="#sec-3-1" data-target="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</a></li>
+              <li><a href="#sec-3-1" data-target="sec-3-1">Methods that work on toy synthetic testbeds transfer poorly</a></li>
               <li>
-                <a href="#sec-3-2" data-target="sec-3-2">3.2 A defense of influence functions</a>
+                <a href="#sec-3-2" data-target="sec-3-2">A defense of influence functions</a>
                 <ul>
-                  <li><a href="#sec-3-2-1" data-target="sec-3-2-1">3.2.1 Why gradient lens</a></li>
-                  <li><a href="#sec-3-2-2" data-target="sec-3-2-2">3.2.2 Background: influence functions</a></li>
-                  <li><a href="#sec-3-2-3" data-target="sec-3-2-3">3.2.3 Influence functions done right</a></li>
+                  <li><a href="#sec-3-2-1" data-target="sec-3-2-1">Why gradient lens</a></li>
+                  <li><a href="#sec-3-2-2" data-target="sec-3-2-2">Background: influence functions</a></li>
+                  <li><a href="#sec-3-2-3" data-target="sec-3-2-3">Influence functions done right</a></li>
                 </ul>
               </li>
               <li>
-                <a href="#sec-3-3" data-target="sec-3-3">3.3 Analysis of influence functions</a>
+                <a href="#sec-3-3" data-target="sec-3-3">Analysis of influence functions</a>
                 <ul>
-                  <li><a href="#sec-3-3-1" data-target="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</a></li>
-                  <li><a href="#sec-3-3-2" data-target="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</a></li>
-                  <li><a href="#sec-3-3-3" data-target="sec-3-3-3">3.3.3 The identified influential tokens mitigate reward hacking in unseen distributions</a></li>
+                  <li><a href="#sec-3-3-1" data-target="sec-3-3-1">Why different influence estimators perform similarly</a></li>
+                  <li><a href="#sec-3-3-2" data-target="sec-3-3-2">The identified influential tokens are universal to training processes</a></li>
+                  <li><a href="#sec-3-3-3" data-target="sec-3-3-3">The identified influential tokens mitigate reward hacking in unseen distributions</a></li>
                 </ul>
               </li>
-              <li><a href="#sec-3-4" data-target="sec-3-4">3.4 Qualitative examples</a></li>
+              <li><a href="#sec-3-4" data-target="sec-3-4">Qualitative examples</a></li>
             </ul>
           </li>
           <li>
-            <a href="#null-hypotheses" data-target="null-hypotheses">4. Two Null Hypotheses</a>
+            <a href="#null-hypotheses" data-target="null-hypotheses">Two Null Hypotheses</a>
             <ul>
-              <li><a href="#sec-4-1" data-target="sec-4-1">4.1 Are we hacking reward hacking monitors?</a></li>
-              <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Are we just making LMs lazier?</a></li>
+              <li><a href="#sec-4-1" data-target="sec-4-1">Are we hacking reward hacking monitors?</a></li>
+              <li><a href="#sec-4-2" data-target="sec-4-2">Are we just making LMs lazier?</a></li>
             </ul>
           </li>
-          <li><a href="#rl-dynamics" data-target="rl-dynamics">5. Tracing hacking propensity transmission back to teacher RL dynamics</a></li>
-          <li><a href="#costs" data-target="costs">6. Costs</a></li>
-          <li><a href="#discussion" data-target="discussion">7. Discussion</a></li>
+          <li><a href="#rl-dynamics" data-target="rl-dynamics">Tracing hacking propensity transmission back to teacher RL dynamics</a></li>
+          <li><a href="#costs" data-target="costs">Costs</a></li>
+          <li><a href="#discussion" data-target="discussion">Discussion</a></li>
         </ul>
       </nav>
     </div>
@@ -22249,20 +22205,49 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
     </div>
 
     <script>
+      // Outline (user 11-04, like thinkingmachines.ai/blog/lora): the last heading above 120 px is current: its link is dark, a dot in the
+      // gutter moves to it, its section and parent sections unfold (parents mid-gray). The outline fades out while content that reaches
+      // into its column (wide figures, videos, tables) passes under it.
+      var tocWrap = document.querySelector('.toc-wrap'), tocNav = document.querySelector('.toc'), tocDot = document.querySelector('.toc-dot');
       var tocLinks = document.querySelectorAll('.toc a');
       var tocTargets = Array.prototype.map.call(tocLinks, function (a) {
         return { link: a, el: document.getElementById(a.getAttribute('data-target')) };
       }).filter(function (t) { return t.el; });
+      var tocWide = [];
+      function tocMeasure() {
+        if (!tocWrap || !tocWrap.offsetParent && getComputedStyle(tocWrap).position !== 'fixed') return;
+        var r = tocWrap.getBoundingClientRect();
+        tocWide = Array.prototype.filter.call(document.querySelectorAll('.post figure, .post .vid-row, .post table, .post video'), function (e) {
+          var q = e.getBoundingClientRect(); return q.width > 0 && q.left < r.right + 8;
+        });
+      }
       function updateActiveToc() {
-        var activeId = tocTargets.length ? tocTargets[0].el.id : null;
+        var activeId = tocTargets.length ? tocTargets[0].el.id : null, act = null;
         for (var i = 0; i < tocTargets.length; i++) {
           if (tocTargets[i].el.getBoundingClientRect().top < 120) activeId = tocTargets[i].el.id;
         }
-        tocLinks.forEach(function (l) { l.classList.toggle('active', l.getAttribute('data-target') === activeId); });
+        tocLinks.forEach(function (l) { var on = l.getAttribute('data-target') === activeId; l.classList.toggle('active', on); if (on) act = l; });
+        Array.prototype.forEach.call(document.querySelectorAll('.toc li'), function (li) { li.classList.remove('is-open', 'has-active'); });
+        for (var li = act && act.parentNode; li && li.tagName === 'LI'; li = li.parentNode.parentNode) {
+          li.classList.add('is-open'); if (li !== act.parentNode) li.classList.add('has-active');
+        }
+        if (tocDot && tocNav && act) {
+          var lh = parseFloat(getComputedStyle(act).lineHeight) || 17.5;
+          var y = act.getBoundingClientRect().top - tocNav.getBoundingClientRect().top + tocNav.scrollTop + lh / 2 - 2;
+          tocDot.style.transform = 'translateY(' + y.toFixed(1) + 'px)'; tocDot.style.opacity = 1;
+        }
+        if (tocWrap) {
+          var r = tocWrap.getBoundingClientRect();
+          tocWrap.classList.toggle('is-collision-hidden', tocWide.some(function (e) { var q = e.getBoundingClientRect(); return q.bottom > r.top - 8 && q.top < r.bottom + 8; }));
+        }
       }
-      window.addEventListener('scroll', updateActiveToc, { passive: true });
-      window.addEventListener('load', updateActiveToc);
-      updateActiveToc();
+      var tocRaf = null;
+      function tocSchedule() { if (tocRaf) cancelAnimationFrame(tocRaf); tocRaf = requestAnimationFrame(updateActiveToc); }
+      window.addEventListener('scroll', tocSchedule, { passive: true });
+      window.addEventListener('resize', function () { tocMeasure(); tocSchedule(); });
+      window.addEventListener('load', function () { tocMeasure(); updateActiveToc(); });
+      document.addEventListener('toggle', function () { tocMeasure(); tocSchedule(); }, true);   // folds change the layout below them
+      tocMeasure(); updateActiveToc();
       // Fig 1 / Fig 3 hover: link curves, error bars, bands, bars and legend entries by key (ids <prefix><key>[--n])
       Array.prototype.forEach.call(document.querySelectorAll('.fig1-interactive'), function (box) {
         var svg = box.querySelector('svg'); if (!svg) return;
@@ -22292,8 +22277,9 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
     </script>
 
     <script>
-      // Sidenotes (user 11-01: "show footnotes on the right like lesswrong"): when the right margin has room, each footnote is repeated
-      // there, level with its marker and stacked so notes never overlap; otherwise only the list at the end of the post is shown.
+      // Sidenotes (user 11-01: "show footnotes on the right like lesswrong"; 11-04: margin notes only, like thinkingmachines.ai/blog/lora):
+      // when the right margin has room, each footnote is shown there, level with its marker, stacked so notes never overlap and stepped below
+      // figures that reach into the margin; otherwise its marker opens it under its line. The end-of-post list is hidden (CSS).
       (function () {
         var refs = Array.prototype.slice.call(document.querySelectorAll('sup.fnref > a[href^="#fn-"]'));
         if (!refs.length) return;
@@ -22303,7 +22289,16 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
           Array.prototype.forEach.call(c.querySelectorAll('.fnback'), function (e) { e.parentNode.removeChild(e); });
           var d = document.createElement('aside'); d.className = 'sidenote';
           d.innerHTML = '<span class="sn-num">' + a.textContent + '</span>' + c.innerHTML.trim();
-          document.body.appendChild(d); return {a: a, d: d};
+          document.body.appendChild(d);
+          var q = document.createElement('span'); q.className = 'sn-inline'; q.setAttribute('data-be-gen', '');   // the live editor never saves it
+          q.innerHTML = d.innerHTML; var sup = a.parentNode; sup.parentNode.insertBefore(q, sup.nextSibling);
+          a.addEventListener('click', function (ev) {
+            if (document.documentElement.classList.contains('be-on')) return;   // live editor edit mode: clicks place the caret
+            ev.preventDefault();
+            if (document.body.classList.contains('sidenotes-on')) { d.classList.add('sn-flash'); setTimeout(function () { d.classList.remove('sn-flash'); }, 900); }
+            else q.classList.toggle('open');
+          });
+          return {a: a, d: d};
         }).filter(Boolean);
         var GAP = 60, W = 250, MIN = 180;   // user 11-01 "move footnotes a bit right" (gap from the text column was 32 px)
         function place() {
@@ -22313,11 +22308,15 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
             n.w = Math.min(W, vw - left - 24); n.left = left + window.pageXOffset; if (n.w < MIN) on = false;
           });
           document.body.classList.toggle('sidenotes-on', on); if (!on) return;
-          var y = -1e9;
+          var y = -1e9, sx = window.pageXOffset, sy = window.pageYOffset;
+          var wide = Array.prototype.map.call(document.querySelectorAll('.post figure, .post .vid-row, .post table, .post video'), function (e) {
+            var q = e.getBoundingClientRect(); return q.width > 0 ? {l: q.left + sx, r: q.right + sx, t: q.top + sy, b: q.bottom + sy} : null;
+          }).filter(Boolean).sort(function (u, v) { return u.t - v.t; });
           notes.forEach(function (n) {
             n.d.style.left = n.left + 'px'; n.d.style.width = n.w + 'px';
-            var top = Math.max(n.a.getBoundingClientRect().top + window.pageYOffset - 3, y);
-            n.d.style.top = top + 'px'; y = top + n.d.offsetHeight + 14;
+            var top = Math.max(n.a.getBoundingClientRect().top + sy - 3, y), h = n.d.offsetHeight;
+            wide.forEach(function (f) { if (f.r > n.left - 8 && top < f.b + 10 && top + h > f.t - 10) top = f.b + 12; });   // 11-04: below wide figures
+            n.d.style.top = top + 'px'; y = top + h + 14;
           });
         }
         var raf = null;
