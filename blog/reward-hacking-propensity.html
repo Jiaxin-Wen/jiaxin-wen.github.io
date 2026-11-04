@@ -10,7 +10,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
       onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}], ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'svg']});"></script>
-    <style>.katex-display { overflow-x: auto; overflow-y: hidden; padding: 3px 0 6px; scrollbar-width: thin; } li .katex-display { margin: .35em 0 .1em; } .katex { font-size: 1.05em; } @media (max-width: 520px) { .katex-display > .katex { font-size: 0.82em; } }</style>
+    <style>.katex-display { overflow-x: auto; overflow-y: hidden; padding: 3px 0 6px; scrollbar-width: thin; } li .katex-display { margin: .35em 0 .1em; overflow: visible; padding-bottom: 0; } @media (max-width: 700px) { li .katex-display { overflow-x: auto; overflow-y: hidden; padding-bottom: 6px; } } .katex { font-size: 1.05em; } @media (max-width: 520px) { .katex-display > .katex { font-size: 0.82em; } }</style>
     <style>
       @font-face {
         font-family: 'Computer Modern Concrete';
@@ -438,6 +438,7 @@
       details.impl summary { cursor: pointer; font-weight: 600; }
       details.impl[open] summary { margin-bottom: 6px; }
       details.impl p { margin: 6px 0 2px; }
+      details.impl > ol:last-child, details.impl > ul:last-child { margin-bottom: 4px; }
       .fig4-spoil { position: absolute; display: flex; align-items: center; justify-content: flex-start; }   /* user 10-30: button that reveals the influence curves */
       #fig3-int { position: relative; }   /* the button's positioning box; in CSS because size_figs.py rewrites the div's inline style */
       .fig4-spoil button { font: inherit; font-size: 12px; line-height: 1.15; padding: 2px 8px; border: 1px solid #3a3a3a; border-radius: 5px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
