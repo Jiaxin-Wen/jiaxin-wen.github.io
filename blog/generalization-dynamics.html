@@ -44,7 +44,7 @@
 
       body {
         font-family: 'Computer Modern Concrete', Georgia, serif;
-        font-size: 13px;
+        font-size: 14.5px;   /* 11-04: the RH post's size (user 10-28 there: "increase the font size of the main text a bit") */
         line-height: 1.7;
         color: #1a1a1a;
         padding: 40px 20px 60px;
@@ -94,7 +94,7 @@
       .post-date { font-size: 11px; color: #888; margin-top: 8px; font-style: italic; }
 
       h2 {
-        font-size: 18px; font-weight: bold;
+        font-size: 20px; font-weight: bold;
         margin: 40px auto 14px;
         padding: 0 0 6px;
         max-width: 704px;
@@ -102,7 +102,7 @@
         text-align: left;
       }
       h3 {
-        font-size: 14px; font-weight: bold;
+        font-size: 16px; font-weight: bold;
         margin: 28px auto 8px;
         max-width: 704px;
       }
@@ -275,11 +275,11 @@
         box-shadow: 0 1px 2px rgba(0,0,0,.08);
       }
       figcaption {
-        font-size: 11px;
+        font-size: 12.5px;
         color: #444;
         margin: 10px auto 0;
         line-height: 1.55;
-        max-width: 576px;
+        max-width: 680px;
         text-align: left;
         display: inline-block;
       }
@@ -317,118 +317,76 @@
       .formula sub, .formula sup { font-style: normal; }
       .text em.var { font-style: italic; }
 
-      .toc-wrap {
-        position: fixed;
-        top: 0; left: 0;
-        height: 100vh; width: 280px;
-        z-index: 20;
-        pointer-events: none;
-      }
-      .toc-trigger {
-        position: absolute;
-        top: 0; left: 0;
-        width: 24px; height: 100%;
-        pointer-events: auto;
-      }
-      .toc {
-        position: absolute;
-        top: 60px; left: 0;
-        width: 260px;
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
-        padding: 18px 16px 18px 24px;
-        background: rgba(255, 255, 255, 0.97);
-        backdrop-filter: blur(4px);
-        border-right: 1px solid #eee;
-        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.04);
-        opacity: 0;
-        transform: translateX(-100%);
-        transition: transform 0.22s ease, opacity 0.22s ease;
-        pointer-events: auto;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-      .toc-wrap:hover .toc,
-      .toc:focus-within {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      .toc-title {
-        font-size: 11px; font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #888;
-        padding: 0 0 10px 12px;
-      }
+      /* outline (user 11-04, like thinkingmachines.ai/blog/lora): always visible in the left margin, no box or title, unnumbered entries;
+         the current section is dark with a dot in the gutter and only its subsections unfold. User 11-04 "the outline would sometimes
+         disappear": its right edge sits 442 px left of centre, 10 px clear of the widest figures (864 px = 432 px each side), so nothing
+         passes under it; the fade-out below stays only for content wider than that */
+      .toc-wrap { position: fixed; top: 84px; right: calc(50% + 442px); width: min(210px, calc(50% - 442px - 16px)); z-index: 20; transition: opacity .18s ease; }
+      .toc-wrap.is-collision-hidden { opacity: 0; pointer-events: none; }
+      .toc { position: relative; max-height: calc(100vh - 124px); overflow-y: auto; scrollbar-width: none; padding-left: 14px;
+        font-family: "DM Sans", system-ui, sans-serif; font-size: 12.5px; line-height: 1.4; }
+      .toc::-webkit-scrollbar { display: none; }
       .toc ul { list-style: none; padding: 0; margin: 0; }
-      .toc ul ul { padding-left: 14px; margin: 2px 0 6px; }
-      .toc li { margin: 0; }
-      .toc a {
-        display: block;
-        color: #888;
-        text-decoration: none;
-        font-weight: normal;
-        padding: 4px 12px;
-        border-left: 2px solid #eee;
-        transition: color 0.15s, border-color 0.15s;
-        font-size: 13px;
-      }
-      .toc ul ul a {
-        font-size: 12px;
-        padding: 3px 12px;
-        color: #aaa;
-      }
+      .toc li { margin: 0 0 9px; }
+      .toc ul ul { display: none; padding-left: 11px; margin: 8px 0 0; }
+      .toc li.is-open > ul { display: block; }
+      .toc a { display: block; color: #a3a3a3; text-decoration: none; transition: color .15s ease; }
       .toc a:hover { color: #1a1a1a; }
-      .toc a.active {
-        color: #1a4d8c;
-        border-left-color: #1a4d8c;
-      }
-      @media (max-width: 880px) {
-        .toc-wrap { display: none; }
-      }
+      .toc li.has-active > a { color: #5f5f5f; }
+      .toc a.active { color: #1a1a1a; }
+      .toc-dot { position: absolute; left: 2px; top: 0; width: 4px; height: 4px; border-radius: 50%; background: #1a1a1a; opacity: 0;
+        transition: transform .2s ease, opacity .2s ease; pointer-events: none; }
+      @media (max-width: 1279px) { .toc-wrap { display: none; } }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400;1,9..40,700&display=swap" rel="stylesheet">
+    <style>
+      /* user 10-27: DM Sans for all text, the previous serif (Computer Modern Concrete) for the post title, section titles and author block
+         (11-04 carried over from the RH post: "also update our old post with our current format") */
+      body, .code-example .ce-label, .code-example .ce-prose, .fig-toggles, .fig-toggle-label { font-family: "DM Sans", system-ui, sans-serif; }
+      h1, h2, h3, h4, .post-title, .authors, .authors .aff, .post-date { font-family: "Computer Modern Concrete", Georgia, serif; }
     </style>
   </head>
 
   <body>
 
     <div class="toc-wrap">
-      <div class="toc-trigger" aria-hidden="true"></div>
       <nav class="toc" aria-label="Table of contents">
-        <div class="toc-title">Contents</div>
+        <span class="toc-dot" aria-hidden="true"></span>
         <ul>
           <li><a href="#tldr" data-target="tldr">Abstract</a></li>
-          <li><a href="#introduction" data-target="introduction">1. Introduction</a></li>
-          <li><a href="#eval-suite" data-target="eval-suite">2. Eval Suite</a></li>
+          <li><a href="#introduction" data-target="introduction">Introduction</a></li>
+          <li><a href="#eval-suite" data-target="eval-suite">Eval Suite</a></li>
           <li>
-            <a href="#main-results" data-target="main-results">3. Main results</a>
+            <a href="#main-results" data-target="main-results">Main results</a>
             <ul>
-              <li><a href="#sec-3-1" data-target="sec-3-1">3.1 Does the model latch onto memorized patterns or in-context learning?</a></li>
-              <li><a href="#sec-3-2" data-target="sec-3-2">3.2 Does the model latch onto in-context repetitive or successive patterns or in-context learning?</a></li>
-              <li><a href="#sec-3-3" data-target="sec-3-3">3.3 Does the model latch onto what sounds true or what is true?</a></li>
-              <li><a href="#sec-3-4" data-target="sec-3-4">3.4 Does the model latch onto System 1 or System 2 thinking?</a></li>
-              <li><a href="#sec-3-5" data-target="sec-3-5">3.5 Does the model latch onto disconnected facts or coherent personas?</a></li>
-              <li><a href="#sec-3-6" data-target="sec-3-6">3.6 Mode-hopping in fine-tuning: out-of-context reasoning and emergent misalignment</a></li>
+              <li><a href="#sec-3-1" data-target="sec-3-1">Does the model latch onto memorized patterns or in-context learning?</a></li>
+              <li><a href="#sec-3-2" data-target="sec-3-2">Does the model latch onto in-context repetitive or successive patterns or in-context learning?</a></li>
+              <li><a href="#sec-3-3" data-target="sec-3-3">Does the model latch onto what sounds true or what is true?</a></li>
+              <li><a href="#sec-3-4" data-target="sec-3-4">Does the model latch onto System 1 or System 2 thinking?</a></li>
+              <li><a href="#sec-3-5" data-target="sec-3-5">Does the model latch onto disconnected facts or coherent personas?</a></li>
+              <li><a href="#sec-3-6" data-target="sec-3-6">Mode-hopping in fine-tuning: out-of-context reasoning and emergent misalignment</a></li>
             </ul>
           </li>
           <li>
-            <a href="#more-analysis" data-target="more-analysis">4. Analysis</a>
+            <a href="#more-analysis" data-target="more-analysis">Analysis</a>
             <ul>
-              <li><a href="#sec-4-1" data-target="sec-4-1">4.1 Null hypothesis: Evaluation Noise</a></li>
-              <li><a href="#sec-4-2" data-target="sec-4-2">4.2 Null hypothesis: Standard Optimization Dynamics</a></li>
-              <li><a href="#sec-4-3" data-target="sec-4-3">4.3 Null hypothesis: Mirage of Metric Selection</a></li>
-              <li><a href="#sec-4-4" data-target="sec-4-4">4.4 Null hypothesis: Mirage of Generic Instruction Following Capabilities</a></li>
-              <li><a href="#sec-4-5" data-target="sec-4-5">4.5 Mode-hopping is more universal across datasets on larger models</a></li>
+              <li><a href="#sec-4-1" data-target="sec-4-1">Null hypothesis: Evaluation Noise</a></li>
+              <li><a href="#sec-4-2" data-target="sec-4-2">Null hypothesis: Standard Optimization Dynamics</a></li>
+              <li><a href="#sec-4-3" data-target="sec-4-3">Null hypothesis: Mirage of Metric Selection</a></li>
+              <li><a href="#sec-4-4" data-target="sec-4-4">Null hypothesis: Mirage of Generic Instruction Following Capabilities</a></li>
+              <li><a href="#sec-4-5" data-target="sec-4-5">Mode-hopping is more universal across datasets on larger models</a></li>
             </ul>
           </li>
           <li>
-            <a href="#applications" data-target="applications">5. Applications</a>
+            <a href="#applications" data-target="applications">Applications</a>
             <ul>
-              <li><a href="#sec-5-1" data-target="sec-5-1">5.1 Selecting pre-training checkpoints that generalize better through post-training</a></li>
-              <li><a href="#sec-5-2" data-target="sec-5-2">5.2 Selecting pre-training data to control generalization</a></li>
-              <li><a href="#sec-5-3" data-target="sec-5-3">5.3 Testing generalization predictors</a></li>
+              <li><a href="#sec-5-1" data-target="sec-5-1">Selecting pre-training checkpoints that generalize better through post-training</a></li>
+              <li><a href="#sec-5-2" data-target="sec-5-2">Selecting pre-training data to control generalization</a></li>
+              <li><a href="#sec-5-3" data-target="sec-5-3">Testing generalization predictors</a></li>
             </ul>
           </li>
-          <li><a href="#discussion" data-target="discussion">6. Discussion and Future Work</a></li>
+          <li><a href="#discussion" data-target="discussion">Discussion and Future Work</a></li>
           <li><a href="#ack" data-target="ack">Acknowledgement</a></li>
           <li><a href="#cite" data-target="cite">Citation</a></li>
         </ul>
@@ -1113,24 +1071,49 @@ x = <span class="num">-46</span>
       if (document.getElementById('img-metrics_curves')) updateMetrics();
 
       // Scroll-spy for the table of contents
+      // Outline (user 11-04, like thinkingmachines.ai/blog/lora): the last heading above 120 px is current: its link is dark, a dot in the
+      // gutter moves to it, its section and parent sections unfold (parents mid-gray). The outline fades out while content that reaches
+      // into its column (wide figures, videos, tables) passes under it.
+      var tocWrap = document.querySelector('.toc-wrap'), tocNav = document.querySelector('.toc'), tocDot = document.querySelector('.toc-dot');
       var tocLinks = document.querySelectorAll('.toc a');
       var tocTargets = Array.prototype.map.call(tocLinks, function (a) {
         return { link: a, el: document.getElementById(a.getAttribute('data-target')) };
       }).filter(function (t) { return t.el; });
-      function updateActiveToc() {
-        var activeId = tocTargets.length ? tocTargets[0].el.id : null;
-        for (var i = 0; i < tocTargets.length; i++) {
-          if (tocTargets[i].el.getBoundingClientRect().top < 120) {
-            activeId = tocTargets[i].el.id;
-          }
-        }
-        tocLinks.forEach(function (l) {
-          l.classList.toggle('active', l.getAttribute('data-target') === activeId);
+      var tocWide = [];
+      function tocMeasure() {
+        if (!tocWrap || !tocWrap.offsetParent && getComputedStyle(tocWrap).position !== 'fixed') return;
+        var r = tocWrap.getBoundingClientRect();
+        tocWide = Array.prototype.filter.call(document.querySelectorAll('.post figure, .post .vid-row, .post table, .post video'), function (e) {
+          var q = e.getBoundingClientRect(); return q.width > 0 && q.left < r.right + 8;
         });
       }
-      window.addEventListener('scroll', updateActiveToc, { passive: true });
-      window.addEventListener('load', updateActiveToc);
-      updateActiveToc();
+      function updateActiveToc() {
+        var activeId = tocTargets.length ? tocTargets[0].el.id : null, act = null;
+        for (var i = 0; i < tocTargets.length; i++) {
+          if (tocTargets[i].el.getBoundingClientRect().top < 120) activeId = tocTargets[i].el.id;
+        }
+        tocLinks.forEach(function (l) { var on = l.getAttribute('data-target') === activeId; l.classList.toggle('active', on); if (on) act = l; });
+        Array.prototype.forEach.call(document.querySelectorAll('.toc li'), function (li) { li.classList.remove('is-open', 'has-active'); });
+        for (var li = act && act.parentNode; li && li.tagName === 'LI'; li = li.parentNode.parentNode) {
+          li.classList.add('is-open'); if (li !== act.parentNode) li.classList.add('has-active');
+        }
+        if (tocDot && tocNav && act) {
+          var lh = parseFloat(getComputedStyle(act).lineHeight) || 17.5;
+          var y = act.getBoundingClientRect().top - tocNav.getBoundingClientRect().top + tocNav.scrollTop + lh / 2 - 2;
+          tocDot.style.transform = 'translateY(' + y.toFixed(1) + 'px)'; tocDot.style.opacity = 1;
+        }
+        if (tocWrap) {
+          var r = tocWrap.getBoundingClientRect();
+          tocWrap.classList.toggle('is-collision-hidden', tocWide.some(function (e) { var q = e.getBoundingClientRect(); return q.bottom > r.top - 8 && q.top < r.bottom + 8; }));
+        }
+      }
+      var tocRaf = null;
+      function tocSchedule() { if (tocRaf) cancelAnimationFrame(tocRaf); tocRaf = requestAnimationFrame(updateActiveToc); }
+      window.addEventListener('scroll', tocSchedule, { passive: true });
+      window.addEventListener('resize', function () { tocMeasure(); tocSchedule(); });
+      window.addEventListener('load', function () { tocMeasure(); updateActiveToc(); });
+      document.addEventListener('toggle', function () { tocMeasure(); tocSchedule(); }, true);   // folds change the layout below them
+      tocMeasure(); updateActiveToc();
     </script>
 
   </body>
