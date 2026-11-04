@@ -20041,7 +20041,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <h3 id="sec-4-1">4.1 Are we hacking reward hacking monitors?</h3>
         <p>We are essentially implicitly optimizing against REINFORCE gradients derived from reward hacking monitors. This might be dangerous: prior work shows that <a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> might teach LMs to evade reward hacking monitors instead of solving tasks honestly.</p>
         <p>We should acknowledge that we have always been implicitly optimizing against such monitors. The real question is which form of optimization can best align LMs, without pushing them to hack monitors.</p>
-        <p>We hence compare our method with direct RL against the same monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in entirely OOD data (e.g. general chat SFT data), and 2) it receives far fewer bits from the monitor. We find that:</p>
+        <p>We hence compare our method with direct RL against the same monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in entirely OOD data (e.g. general chat SFT data), and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> Empirically, we observe that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from the reward hacking monitor, our method substantially outperforms RL in mitigating reward hacking rates.</li>
           <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. When optimizing against the monitor on Impossible LiveCodeBench with conflicting tests, RL reduces reward hacking less on unseen tasks. Hacking rates start to increase with more RL steps on CheatBench and KernelBench.</li>
@@ -22254,6 +22254,7 @@ Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} 
           <li id="fn-1">This is the smallest model that is capable enough to solve or cheat on long-horizon agentic tasks. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-2">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-2" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-3">To clarify, this simplified training process is only used for computing influence functions; we use standard training processes when reporting students&rsquo; hacking rates. <a href="#sec-3-3-2">Sec 3.3.2</a> shows that the influential tokens identified in this simplified process can transfer well to standard training processes. <a class="fnback" href="#fnref-3" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-4">We get one bit from the monitor per query. <a class="fnback" href="#fnref-4" aria-label="Back to text">&#8617;</a></li>
         </ol>
       </div>
     </div>
