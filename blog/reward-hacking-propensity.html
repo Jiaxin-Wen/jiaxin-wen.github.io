@@ -22265,40 +22265,28 @@ Answer yes if such an idea appears anywhere in the fragment, even briefly, as a 
 Answer no if the fragment only notices that the tests are wrong or contradictory, tries to understand the specification or the tests, discusses how the tests are run, or decides to implement the specification correctly, without raising any such idea.
 
 Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} or {&quot;raises&quot;: false}.</pre>
-        <h2 id="appendix-b">Appendix B. Why curvature barely matters at the damping SGD implies</h2>
-        <p>Influence functions precondition a token&rsquo;s gradient with a damped inverse Hessian:
-$$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T).$$
-The damping is not a free parameter. Averaging a token&rsquo;s unrolled update over the \(T\) steps at which it could be trained gives \(\lambda \approx 1/(\eta T)\) (see &ldquo;More details about different influence estimators&rdquo; in <a href="#sec-3-2-2">Sec 3.2.2</a>, and <a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>, Sec 3.2).</p>
-        <p><strong>What this damping means.</strong> Along an eigendirection of \(H\) with curvature \(\sigma\), the preconditioner scales the gradient by \(1/(\sigma + \lambda)\).</p>
+        <h2 id="appendix-b">Appendix B. Why different influence estimators perform similarly</h2>
+        <p>In <a href="#sec-3-3-1">Sec 3.3.1</a>, we show that unrolled influence barely correlates with the gradient dot product. In this section, we show that the other influence estimators, which only consider curvature at the final checkpoint, do correlate well with the gradient dot product.</p>
+        <p>These estimators precondition a token&rsquo;s gradient with a damped inverse Hessian:
+$$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T),$$
+where the damping is set by training rather than by hand: averaging a token&rsquo;s unrolled update over the \(T\) steps at which the token could be trained gives \(\lambda \approx 1/(\eta T)\) (<a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>).</p>
+        <p>This damping decides which curvature matters. Along an eigendirection of \(H\) with curvature \(\sigma\), the preconditioner scales the token&rsquo;s gradient by \(1/(\sigma + \lambda)\):</p>
         <ul>
-          <li><strong>Flat directions</strong> (\(\sigma \ll 1/(\eta T)\)): \(T\) steps of size \(\eta\) are too few to undo the token&rsquo;s update, so it persists unchanged. Here \(1/(\sigma + \lambda) \approx \eta T\), the same constant in every such direction. This is exactly the gradient dot product&rsquo;s assumption.</li>
-          <li><strong>Curved directions</strong> (\(\sigma \gg 1/(\eta T)\)): training pulls the update back, and \(1/(\sigma + \lambda) \approx 1/\sigma\) reshapes the score.</li>
+          <li>In flat directions, where \(\sigma \ll 1/(\eta T)\), \(T\) steps of size \(\eta\) are too few to undo the token&rsquo;s update, so the update persists. The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in every such direction, which is exactly what the gradient dot product assumes.</li>
+          <li>In curved directions, where \(\sigma \gg 1/(\eta T)\), training pulls the update back, and the scale \(1/(\sigma + \lambda) \approx 1/\sigma\) reshapes the score.</li>
         </ul>
-        <p>So curvature changes a token&rsquo;s score only through directions with \(\sigma\) above \(1/(\eta T)\).</p>
-        <p><strong>Few directions are that curved.</strong> Our single-layer rank-1 LoRA trains with \(\eta = 0.1\) for \(T = 304\) steps, so \(\lambda \approx 0.033\). We measure at the final checkpoint, on 17,296 tokens from 32 training examples:</p>
+        <p>Curvature can therefore change a token&rsquo;s score mainly through the curved directions, and our setting has very few of them. Our single-layer rank-1 LoRA trains with \(\eta = 0.1\) for \(T = 304\) steps, so \(\lambda \approx 0.033\). At the final checkpoint:</p>
         <ul>
-          <li><strong>Gauss-Newton</strong>: 46 of 5,120 eigenvalues exceed \(\lambda\). For a typical token, only about 5% of its gradient&rsquo;s squared norm lies in these 46 directions. The same holds for the tokens with the highest influence scores (5%) and for the hacking gradient \(g\) itself (5%).</li>
-          <li><strong>EK-FAC</strong>: 20 of 5,120 eigenvalues exceed \(\lambda\). These directions hold only 1.7% of a typical token gradient&rsquo;s squared norm, 1.6% for the most influential tokens, and 1.8% for \(g\).</li>
+          <li>only 46 of the 5,120 Gauss-Newton eigenvalues exceed \(\lambda\), and these directions hold only about 5% of a typical token gradient&rsquo;s squared norm;</li>
+          <li>only 20 of the 5,120 EK-FAC eigenvalues exceed \(\lambda\), and these directions hold only 1.7% of it.</li>
         </ul>
-        <p><strong>So both reduce to the gradient dot product.</strong> Where token gradients live, \((H + \lambda I)^{-1}\) is nearly a constant times the identity, so both estimators rank tokens almost exactly like the gradient dot product (<a href="#fig-12">Figure 13</a>). Spearman correlation with the gradient dot product:</p>
-        <table class="toklen" style="width:auto;margin:0 auto 14px">
-          <thead><tr><th></th><th>All tokens</th><th>Top 20% by influence</th></tr></thead>
-          <tbody>
-            <tr><td>EK-FAC</td><td>0.94</td><td>0.98</td></tr>
-            <tr><td>Gauss-Newton</td><td>0.85</td><td>0.93</td></tr>
-          </tbody>
-        </table>
-        <p>Masking removes the top tokens, so the agreement among the top tokens is what matters.</p>
+        <p>Where token gradients live, \((H + \lambda I)^{-1}\) is thus nearly a constant multiple of the identity, so both estimators rank tokens much like the gradient dot product, especially the most influential tokens (<a href="#fig-12">Figure 13</a>).</p>
       </div>
 
       <figure id="fig-12" class="fig-wide" style="max-width:640px">
         <img style="width:100%;max-width:554px;display:block;margin:0 auto" src="figures/rh/fig_curvature_gdp.png" alt="Curvature-based influence scores against the gradient dot product">
-        <figcaption><span class="fig-label">Figure 13.</span> At \(\lambda = 1/(\eta T)\), curvature-based influence estimators rank tokens like the gradient dot product. Each point is a token; each score is divided by its standard deviation over all sampled tokens. (a, b) EK-FAC and (c, d) Gauss-Newton, on all 17,296 sampled tokens (left) and on the top 20% by influence (right).</figcaption>
+        <figcaption><span class="fig-label">Figure 13.</span> At \(\lambda = 1/(\eta T)\), curvature-based influence estimators rank tokens like the gradient dot product.</figcaption>
       </figure>
-
-      <div class="text">
-        <p><strong>Caveat.</strong> This covers one setting: single-layer rank-1 LoRA at the final checkpoint, measured on 32 training examples. It does not cover unrolled influence. Unrolled influence multiplies by \(I - \eta H_s\) at every step after the token is trained, starting near the base model, and we have not checked how many directions are curved at those early checkpoints. It also takes each token&rsquo;s gradient at the step where that token is trained, not at the final checkpoint.</p>
-      </div>
 
       <div class="text footnotes">
         <ol>
