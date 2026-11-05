@@ -22266,21 +22266,17 @@ Answer no if the fragment only notices that the tests are wrong or contradictory
 
 Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} or {&quot;raises&quot;: false}.</pre>
         <h2 id="appendix-b">Appendix B. Why different influence estimators perform similarly</h2>
-        <p>In <a href="#sec-3-3-1">Sec 3.3.1</a>, we show that unrolled influence barely correlates with gradient dot product. In this section, we show that other influence estimators, which only consider Hessian curvature at the final checkpoint, do correlate well with the Hessian-free gradient dot product.</p>
+        <p>In <a href="#sec-3-3-1">Sec 3.3.1</a>, we show that unrolled influence barely correlates with gradient dot product. Here, we show that other influence estimators, which only consider Hessian curvature at the final checkpoint, do correlate well with the Hessian-free gradient dot product.</p>
         <p>These estimators precondition a token&rsquo;s gradient with a damped inverse Hessian:
 $$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T),$$
-where the damping is set by training rather than by hand: averaging a token&rsquo;s unrolled update over the \(T\) steps at which the token could be trained gives \(\lambda \approx 1/(\eta T)\) (<a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>).</p>
-        <p>This damping decides which curvature matters. After a token is trained, every later SGD step moves the parameters downhill on the loss. Along an eigendirection of \(H\) with curvature \(\sigma\), each step therefore shrinks what is left of the token&rsquo;s update by a factor \(1 - \eta\sigma\), pulling the parameters back toward the loss minimum in that direction. The damped inverse accounts for how much of the update survives, scaling the token&rsquo;s gradient by \(1/(\sigma + \lambda)\):</p>
+where the damping is set by training rather than by hand. Averaging a token&rsquo;s unrolled update over the \(T\) steps at which it could be trained gives \(\lambda \approx 1/(\eta T)\) (<a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>).</p>
+        <p>This damping decides which curvature matters. Suppose a token updates the parameters at some training step. Later SGD steps then undo part of this update: along an eigendirection of \(H\) with curvature \(\sigma\), each step shrinks it by a factor of \(1 - \eta\sigma\). The preconditioner accounts for how much of the update survives, scaling the token&rsquo;s gradient by \(1/(\sigma + \lambda)\):</p>
         <ul>
-          <li>In flat directions, where \(\sigma \ll 1/(\eta T)\), the loss barely resists the update: even \(T\) steps shrink it only by a factor \((1 - \eta\sigma)^T \approx 1\), so it survives to the end of training. The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in every such direction, exactly as the gradient dot product assumes.</li>
-          <li>In curved directions, where \(\sigma \gg 1/(\eta T)\), the update shrinks away within about \(1/(\eta\sigma)\) steps, so it only matters if the token is trained near the end of training. The scale \(1/(\sigma + \lambda) \approx 1/\sigma\) then reshapes the score.</li>
+          <li>In flat directions, where \(\sigma \ll 1/(\eta T)\), the update survives to the end of training, since \((1 - \eta\sigma)^T \approx 1\). The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in every such direction, exactly as gradient dot product assumes.</li>
+          <li>In curved directions, where \(\sigma \gg 1/(\eta T)\), the update vanishes within about \(1/(\eta\sigma)\) steps, so it only matters if the token is trained near the end. The scale \(1/(\sigma + \lambda) \approx 1/\sigma\) then reshapes the score.</li>
         </ul>
-        <p>Curvature therefore would mainly change a token&rsquo;s score through those curved directions. Yet, our training has very few of them:</p>
-        <ul>
-          <li>only 1 of the 5,120 Gauss-Newton eigenvalues exceeds \(10\lambda\), and this direction holds almost none (under 0.1%) of a typical token gradient&rsquo;s squared norm;</li>
-          <li>only 1 of the 5,120 EK-FAC eigenvalues exceeds \(10\lambda\), and it holds almost none of it either.</li>
-        </ul>
-        <p>Where token gradients live, \((H + \lambda I)^{-1}\) is thus nearly a constant multiple of the identity, so both estimators behave like gradient dot product, especially on the most influential tokens (<a href="#fig-12">Figure 13</a>).</p>
+        <p>Curvature would mainly change a token&rsquo;s score through these curved directions. Yet, our training has very few of them: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token gradient&rsquo;s squared norm.</p>
+        <p>Thus, where token gradients live, \((H + \lambda I)^{-1}\) is nearly a constant multiple of the identity, so both estimators behave like gradient dot product, especially on the most influential tokens (<a href="#fig-12">Figure 13</a>).</p>
       </div>
 
       <figure id="fig-12" class="fig-wide" style="max-width:640px">
