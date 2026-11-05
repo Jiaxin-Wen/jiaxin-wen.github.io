@@ -460,10 +460,10 @@
         <ul>
           <li><a href="#tldr" data-target="tldr">Introduction</a></li>
           <li>
-            <a href="#transmission" data-target="transmission">How LMs absorb reward hacking propensity in the wild</a>
+            <a href="#transmission" data-target="transmission">LMs transmit reward hacking propensity in the wild</a>
             <ul>
               <li><a href="#sec-2-1" data-target="sec-2-1">Background</a></li>
-              <li><a href="#sec-2-2" data-target="sec-2-2">Setup</a></li>
+              <li><a href="#sec-2-2" data-target="sec-2-2">Our setup</a></li>
               <li><a href="#sec-2-3" data-target="sec-2-3">Results</a></li>
             </ul>
           </li>
@@ -480,7 +480,7 @@
                 </ul>
               </li>
               <li>
-                <a href="#sec-3-3" data-target="sec-3-3">Analysis of influence functions</a>
+                <a href="#sec-3-3" data-target="sec-3-3">Analysis</a>
                 <ul>
                   <li><a href="#sec-3-3-1" data-target="sec-3-3-1">Why different influence estimators perform similarly</a></li>
                   <li><a href="#sec-3-3-2" data-target="sec-3-3-2">The identified influential tokens are universal to training processes</a></li>
@@ -679,7 +679,7 @@
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push students to hack. But <em>why</em> do such tokens exist? After all, the teacher cannot anticipate student gradients. As a first step, we study how these tokens evolve during teacher RL. Suppose the teacher gradually learns to hack on task X. Consider student gradients on its outputs for unrelated tasks. Do they increasingly align with student hacking gradients on X? </p>
         <p>We study this with the <a href="https://openai.com/index/faulty-reward-functions/">classic CoastRunners game</a>. During RL, the teacher gradually hacks: circling for power-ups without finishing the lap. At each RL checkpoint, we sample chat responses, and measure how well the student's gradient on them aligns with its hacking gradient in the game. This gradient alignment indeed grows during RL; students trained on later-checkpoint chat responses hack more.</p>
-        <h2 id="transmission">2. How LMs absorb reward hacking propensity in the wild</h2>
+        <h2 id="transmission">2. LMs transmit reward hacking propensity in the wild</h2>
         <h3 id="sec-2-1">2.1 Background</h3>
         <p>Today&rsquo;s LMs are known reward hackers. So while LM-generated data is heavily used in production training pipelines, developers carefully filter it by whether it looks suspicious, i.e. eyeballing. However, <em>learning is barely predictable by eyeballing</em>. As shown below, tokens that look benign to humans, e.g. &ldquo;detailed&rdquo; and &ldquo;###&rdquo;, can substantially move reward hacking rates on agentic coding tasks.</p>
       </div>
@@ -20060,8 +20060,8 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         </ul>
       </div>
 
-      <figure id="fig-10" class="fig-wide" style="max-width:815px">
-        <img style="width:100%;max-width:815px;display:block;margin:0 auto" src="figures/rh/fig_rl_bits.png" alt="Influence masking versus RL">
+      <figure id="fig-10" class="fig-wide" style="max-width:690px">
+        <img style="width:100%;max-width:690px;display:block;margin:0 auto" src="figures/rh/fig_rl_bits.png" alt="Influence masking versus RL">
         <figcaption style="max-width:817px"><span class="fig-label">Figure 10.</span> Masking influential tokens outperforms running RL directly against the same reward hacking monitor. It is more sample efficient and does not learn to hack the monitor. The x-axis shows the number of bits from the monitor (1 bit per query).</figcaption>
       </figure>
 
