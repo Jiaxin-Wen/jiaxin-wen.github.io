@@ -19968,7 +19968,7 @@ L 836.17558 247.415375
             <li><em><a href="https://arxiv.org/pdf/1906.08473">Unrolled</a> <a href="https://arxiv.org/pdf/2504.16430">influence</a></em> carries the token&rsquo;s update through every later step, each with its own Hessian \(H_s = \nabla_\theta^2 L_s(\theta_{s-1})\):
 $$I_{\text{unroll}}(z) = -\,\eta_{t_z}\, g^\top \big(I - \eta_T H_T\big) \cdots \big(I - \eta_{t_z+1} H_{t_z+1}\big)\, \nabla_\theta \ell_z(\theta_{t_z-1}).$$</li>
             <li><em><a href="https://arxiv.org/pdf/1703.04730">Influence</a> <a href="https://arxiv.org/pdf/2405.12186">function</a></em> assumes static Hessian \(H\) and token gradient for all steps, taken at the final checkpoint. With a constant learning rate \(\eta\), averaging over the step at which \(z\) appears gives a damped inverse Hessian, \(\frac{1}{T}\sum_{t=1}^{T} \eta (I - \eta H)^{T-t} \approx \frac{1}{T}(H + \lambda I)^{-1}\) with \(\lambda \approx 1/(\eta T)\): $$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T).$$</li>
-            <li><em>Gauss-Newton and <a href="https://arxiv.org/pdf/2308.03296">EK-FAC</a></em> make \(H\) cheaper. Gauss-Newton drops the network&rsquo;s second-order term, and EK-FAC further approximates the result with eigenvalue-corrected Kronecker factors.</li>
+            <li><em>Gauss-Newton and <a href="https://arxiv.org/pdf/2308.03296">EK-FAC</a></em> make \(H\) cheaper. Gauss-Newton drops the network&rsquo;s second-order term, and EK-FAC further approximates the result with eigenvalue-corrected Kronecker factors. At \(\lambda \approx 1/(\eta T)\), both rank tokens almost exactly like the gradient dot product (<a href="#appendix-b">Appendix B</a>).</li>
             <li><em><a href="https://arxiv.org/pdf/2002.08484">Gradient dot product</a></em> ignores curvature altogether, i.e. \(I - \eta_s H_s \approx I\):
 $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
           </ol>
@@ -22265,6 +22265,39 @@ Answer yes if such an idea appears anywhere in the fragment, even briefly, as a 
 Answer no if the fragment only notices that the tests are wrong or contradictory, tries to understand the specification or the tests, discusses how the tests are run, or decides to implement the specification correctly, without raising any such idea.
 
 Judge only the fragment&#x27;s own text. Answer with {&quot;raises&quot;: true} or {&quot;raises&quot;: false}.</pre>
+        <h2 id="appendix-b">Appendix B. Why curvature barely matters at the damping SGD implies</h2>
+        <p>Influence functions precondition a token&rsquo;s gradient with a damped inverse Hessian:
+$$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T).$$
+The damping is not a free parameter. Averaging a token&rsquo;s unrolled update over the \(T\) steps at which it could be trained gives \(\lambda \approx 1/(\eta T)\) (see &ldquo;More details about different influence estimators&rdquo; in <a href="#sec-3-2-2">Sec 3.2.2</a>, and <a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>, Sec 3.2).</p>
+        <p><strong>What this damping means.</strong> Along an eigendirection of \(H\) with curvature \(\sigma\), the preconditioner scales the gradient by \(1/(\sigma + \lambda)\).</p>
+        <ul>
+          <li><strong>Flat directions</strong> (\(\sigma \ll 1/(\eta T)\)): \(T\) steps of size \(\eta\) are too few to undo the token&rsquo;s update, so it persists unchanged. Here \(1/(\sigma + \lambda) \approx \eta T\), the same constant in every such direction. This is exactly the gradient dot product&rsquo;s assumption.</li>
+          <li><strong>Curved directions</strong> (\(\sigma \gg 1/(\eta T)\)): training pulls the update back, and \(1/(\sigma + \lambda) \approx 1/\sigma\) reshapes the score.</li>
+        </ul>
+        <p>So curvature changes a token&rsquo;s score only through directions with \(\sigma\) above \(1/(\eta T)\).</p>
+        <p><strong>Few directions are that curved.</strong> Our single-layer rank-1 LoRA trains with \(\eta = 0.1\) for \(T = 304\) steps, so \(\lambda \approx 0.033\). We measure at the final checkpoint, on 17,296 tokens from 32 training examples:</p>
+        <ul>
+          <li><strong>Gauss-Newton</strong>: 46 of 5,120 eigenvalues exceed \(\lambda\). For a typical token, only about 5% of its gradient&rsquo;s squared norm lies in these 46 directions. The same holds for the tokens with the highest influence scores (5%) and for the hacking gradient \(g\) itself (5%).</li>
+          <li><strong>EK-FAC</strong>: 20 of 5,120 eigenvalues exceed \(\lambda\). These directions hold only 1.7% of a typical token gradient&rsquo;s squared norm, 1.6% for the most influential tokens, and 1.8% for \(g\).</li>
+        </ul>
+        <p><strong>So both reduce to the gradient dot product.</strong> Where token gradients live, \((H + \lambda I)^{-1}\) is nearly a constant times the identity, so both estimators rank tokens almost exactly like the gradient dot product (<a href="#fig-12">Figure 13</a>). Spearman correlation with the gradient dot product:</p>
+        <table class="toklen" style="width:auto;margin:0 auto 14px">
+          <thead><tr><th></th><th>All tokens</th><th>Top 20% by influence</th></tr></thead>
+          <tbody>
+            <tr><td>EK-FAC</td><td>0.94</td><td>0.98</td></tr>
+            <tr><td>Gauss-Newton</td><td>0.85</td><td>0.93</td></tr>
+          </tbody>
+        </table>
+        <p>Masking removes the top tokens, so the agreement among the top tokens is what matters.</p>
+      </div>
+
+      <figure id="fig-12" class="fig-wide" style="max-width:640px">
+        <img style="width:100%;max-width:554px;display:block;margin:0 auto" src="figures/rh/fig_curvature_gdp.png" alt="Curvature-based influence scores against the gradient dot product">
+        <figcaption><span class="fig-label">Figure 13.</span> At \(\lambda = 1/(\eta T)\), curvature-based influence estimators rank tokens like the gradient dot product. Each point is a token; each score is divided by its standard deviation over all sampled tokens. (a, b) EK-FAC and (c, d) Gauss-Newton, on all 17,296 sampled tokens (left) and on the top 20% by influence (right).</figcaption>
+      </figure>
+
+      <div class="text">
+        <p><strong>Caveat.</strong> This covers one setting: single-layer rank-1 LoRA at the final checkpoint, measured on 32 training examples. It does not cover unrolled influence. Unrolled influence multiplies by \(I - \eta H_s\) at every step after the token is trained, starting near the base model, and we have not checked how many directions are curved at those early checkpoints. It also takes each token&rsquo;s gradient at the step where that token is trained, not at the final checkpoint.</p>
       </div>
 
       <div class="text footnotes">
