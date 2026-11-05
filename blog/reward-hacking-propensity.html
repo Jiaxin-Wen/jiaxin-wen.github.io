@@ -676,7 +676,7 @@
           <li><strong>Are we making LMs lazy on hard tasks?</strong> Reducing hacking often hurts persistence. Surprisingly, whether our method hurts persistence depends on the parameter space used to compute influence functions. With sparse parameters, our method yields LMs that are both honest and persistent. With full parameters, persistence drops substantially once we mask more than the top 1% of influential tokens. We conjecture that full-parameter gradients leak in other traits entangled with hacking, while sparse parameters only capture the most salient trait, likely hacking itself.</li>
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push the student toward hacking. But <em>why</em> such tokens exist at all is still puzzling. After all, the teacher cannot anticipate or control the student&rsquo;s gradients. This question is hard to attack directly, so we test a simpler, related hypothesis. Specifically, suppose the teacher learns to hack on task X during RL. Does the student&rsquo;s gradient on the teacher&rsquo;s outputs for unrelated tasks increasingly align with its hacking gradient on task X? </p>
-        <p>We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classic boat-racing environment</a>. During RL, the teacher gradually hacks: circling to collect power-ups without finishing the lap. At each RL checkpoint, we sample chat responses from the teacher, then measure how well the student’s gradients on these responses align with its hacking gradient in boat racing. We confirm that this gradient alignment grows during RL, and the student trained on later-checkpoint chat responses hacks more in boat racing.</p>
+        <p>We study this hypothesis with a cute experiment on the <a href="https://openai.com/index/faulty-reward-functions/">classic boat-racing environment</a>. During RL, the teacher gradually hacks: circling to collect power-ups without finishing the lap. At each RL checkpoint, we sample chat responses from the teacher, then measure how well the student’s gradients on these responses align with its hacking gradient in boat racing. We confirm that this gradient alignment grows during RL, and the student trained on later-checkpoint chat responses hacks more.</p>
         <h2 id="transmission">2. How LMs absorb reward hacking propensity in the wild</h2>
         <h3 id="sec-2-1">2.1 Background</h3>
         <p>Today&rsquo;s LMs are known reward hackers. So while LM-generated data is heavily used in production training pipelines, developers carefully filter it by whether it looks suspicious, i.e. eyeballing. However, <em>learning is barely predictable by eyeballing</em>. As shown below, tokens that look benign to humans, e.g. &ldquo;detailed&rdquo; and &ldquo;###&rdquo;, can substantially move reward hacking rates on agentic coding tasks.</p>
@@ -729,7 +729,7 @@
       <div class="text">
         <p>We mainly report results on Impossible LiveCodeBench, the fastest of our long-horizon evals. We keep the others as held-out evals to test generalizations to new hacking behaviors on new tasks in <a href="#sec-3-3-3">Sec 3.3.3</a>.</p>
         <h3 id="sec-2-3">2.3 Results</h3>
-        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores, yield more reward-hacky students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
+        <p>We find that LMs can absorb reward hacking propensity under this realistic setup. The student model&rsquo;s cheating rate correlates with its teacher&rsquo;s. Notably, more recent teacher models, despite their better alignment benchmark scores reported in system cards, yield hackier students. <a href="#vid-kernel">Video 1</a> shows how the student trained on Gemini chat responses hacks on KernelBench.</p>
       </div>
 
       <figure id="fig-1" class="fig-wide" style="max-width:677px" data-w="677">
@@ -16756,7 +16756,7 @@ z
         <h2 id="understanding">3. Understanding reward hacking propensity transmission</h2>
         <p>We then seek to understand which tokens in our chat SFT data transmit the reward hacking propensity to student LMs. We verify our understanding by its effectiveness in mitigating reward hacking propensity: if we mask the identified chat tokens during training, would the student stop cheating on agentic tasks?</p>
         <h3 id="sec-3-1">3.1 Methods that work on toy synthetic testbeds transfer poorly</h3>
-        <p>We first test prior methods on controlling misgeneralization that work on toy testbeds. These methods tackle similar problems through the lens of activations, logits, weights, and prompts.</p>
+        <p>We first test prior methods can effectively control misgeneralization on toy testbeds. These methods mainly look through the lens of activations, logits, weights, and prompts.</p>
         <details class="impl">
           <summary>Baseline details</summary>
         <ul>
@@ -16773,8 +16773,8 @@ z
         <p>Results show that all prior methods transfer poorly to our testbed:</p>
         <ul>
           <li><strong>Eyeballing</strong>: LM judge performs similarly to random, so bad-looking text is not the cause.&nbsp;</li>
-          <li><strong>Activation lens</strong>: Persona vectors and J-lens also fail. In particular, J-lens only flagged 2.1% tokens. So our training data shows no obvious activaiton patterns about reward hacking.</li>
-          <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), without changing hacking.</li>
+          <li><strong>Activation lens</strong>: Persona vectors and J-lens also fail. In particular, J-lens only flagged 2.1% tokens. So our training data shows no obvious activation patterns about reward hacking.</li>
+          <li><strong>Weight lens</strong>: WeightWatch flags 34% of training examples (46% of tokens), without reducing hacking.</li>
           <li><strong>Prompt lens</strong>: Inoculation prompting reduces hacking to 48%, but with high variance. For example, <a href="#appendix-a-2">prompt A</a> and <a href="#appendix-a-2">prompt B</a> yield 45.7% and 54.3%, respectively. Verbalized prompting, despite its effectiveness on prior toy testbeds, finds only&nbsp;<a href="#appendix-a-3">two generic prompts</a>, reaching 59% and 60%.</li>
           <li><strong>Logit lens</strong>: Divergence tokens and LLS appear promising on LiveCodeBench, but are less effective on SWE-bench. Overall, neither comes close to eliminating hacking.</li>
         </ul>
@@ -19965,7 +19965,7 @@ L 836.17558 247.415375
           <summary>More details about different influence estimators</summary>
           <p>Consider \(T\) steps of SGD, \(\theta_t = \theta_{t-1} - \eta_t \nabla_\theta L_t(\theta_{t-1})\), where \(L_t\) is the minibatch loss. A training token \(z\) with loss \(\ell_z\) is trained at step \(t_z\). Its influence is how much upweighting \(\ell_z\) by a weight \(w_z\) changes the final hacking rate \(p(\theta_T)\), i.e. \(I(z) = \partial p(\theta_T) / \partial w_z\), so a positive score means \(z\) pushes the student toward hacking. We start from the exact estimator and approximate it step by step:</p>
           <ol>
-            <li><em><a href="https://arxiv.org/pdf/1906.08473">Unrolled</a> <a href="https://arxiv.org/pdf/2504.16430">influence</a></em> carries the token&rsquo;s update through every later step, each with its own Hessian \(H_s = \nabla_\theta^2 L_s(\theta_{s-1})\):
+            <li><em><a href="https://arxiv.org/pdf/2405.12186">Unrolled</a> <a href="https://arxiv.org/pdf/2504.16430">influence</a></em> carries the token&rsquo;s update through every later step, each with its own Hessian \(H_s = \nabla_\theta^2 L_s(\theta_{s-1})\):
 $$I_{\text{unroll}}(z) = -\,\eta_{t_z}\, g^\top \big(I - \eta_T H_T\big) \cdots \big(I - \eta_{t_z+1} H_{t_z+1}\big)\, \nabla_\theta \ell_z(\theta_{t_z-1}).$$</li>
             <li><em><a href="https://arxiv.org/pdf/1703.04730">Influence</a> <a href="https://arxiv.org/pdf/2405.12186">function</a></em> assumes static Hessian \(H\) and token gradient for all steps, taken at the final checkpoint. With a constant learning rate \(\eta\), averaging over the step at which \(z\) appears gives a damped inverse Hessian, \(\frac{1}{T}\sum_{t=1}^{T} \eta (I - \eta H)^{T-t} \approx \frac{1}{T}(H + \lambda I)^{-1}\) with \(\lambda \approx 1/(\eta T)\): $$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z(\theta_T).$$</li>
             <li><em>Gauss-Newton and <a href="https://arxiv.org/pdf/2308.03296">EK-FAC</a></em> make \(H\) cheaper. Gauss-Newton drops the network&rsquo;s second-order term, and EK-FAC further approximates the result with eigenvalue-corrected Kronecker factors. At \(\lambda \approx 1/(\eta T)\), both rank tokens almost exactly like the gradient dot product (<a href="#appendix-b">Appendix B</a>).</li>
@@ -19995,14 +19995,14 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
 
       <figure id="fig-4" class="fig-wide" style="max-width:864px">
         <img style="width:100%;max-width:864px;display:block;margin:0 auto" src="figures/rh/fig3_influence_readout.png" alt="What makes influence functions work">
-        <figcaption><span class="fig-label">Figure 5.</span> What makes influence functions work? (a) Cheating rate after masking each influence estimator’s top tokens. (b) Cheating rate against the number of rollouts used for the target gradient. (c) Cosine between independent target-gradient estimates against rollouts per prompt.</figcaption>
+        <figcaption><span class="fig-label">Figure 5.</span> What makes influence functions work? (a) Cheating rate after masking each influence estimator’s top tokens. (b) Cheating rate against the number of rollouts used for computing the hacking gradient. (c) Cosine between independent hacking-gradient estimates against the number of rollouts.</figcaption>
       </figure>
 
       <div class="text">
-        <h3 id="sec-3-3">3.3 Analysis of influence functions</h3>
+        <h3 id="sec-3-3">3.3 Analysis</h3>
         <h4 id="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</h4>
         <p>One intuitive hypothesis is that different estimators yield highly correlated scores. This is wrong.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> For example, Spearman correlation between unrolled influence and gradient dot product is only 0.23.</p>
-        <p>Another hypothesis is that fine-tuning is in the kernel regime, where the Hessian stays fixed, so single-checkpoint estimators would match unrolled influence. This hypothesis is also wrong: the loss curve of <a href="https://arxiv.org/pdf/2607.21716">linearized training</a> diverges substantially from the true loss curve.</p>
+        <p>Another hypothesis is that fine-tuning is in the kernel regime, where the Hessian stays fixed, so single-checkpoint estimators would match unrolled influence. This hypothesis is also wrong: the loss curve of <a href="https://arxiv.org/pdf/2607.21716">linearized training</a> diverges substantially from the true loss curve, especially in early training steps.</p>
         <p>A third hypothesis is that those truly responsible tokens are shared across estimators' top-K% tokens. While each estimator also adds some unique noisy tokens, they barely matter. To test this, we pick the top-20% tokens with unrolled influence and gradient product; the two sets overlap by 54%. The shared tokens matter much more thatn he unique ones: masking them alone eliminates reward hacking.</p>
       </div>
 
@@ -20014,7 +20014,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       <div class="text">
         <h4 id="sec-3-3-2">3.3.2 The identified influential tokens are universal to training processes</h4>
         <p>The influential tokens transfer surprisingly well across training processes. For example, tokens identified with single-layer rank-1 LoRA mitigate reward hacking under rank-32 LoRA and full-parameter tuning.</p>
-        <p>Tokens identified with full parameters also strongly transfer to rank-32 LoRA tuning. They also substantially outperform the rank-1 tokens: masking just the top 1% of them reduces reward hacking to 0%, whereas the rank-1 tokens need the top 20% to match.</p>
+        <p>Tokens identified with full parameters also strongly transfer to rank-32 LoRA tuning. They substantially outperform the rank-1 tokens: masking just the top 1% of them reduces reward hacking to 0%, whereas the rank-1 tokens need the top 20% to match.</p>
         <p>However, there is an interesting asymmetry: full-parameter tokens transfer poorly to single-layer rank-1 LoRA tuning. Intuitively, a token&rsquo;s gradient can align with the hacking gradient over full parameters but not over certain sparse subsets. This is still abstract; <a href="#sec-4-2">Sec. 4.2</a> will provide a more concrete interpretation.</p>
       </div>
 
@@ -20054,7 +20054,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <p>We compare our method with direct RL against this monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horizon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-5"><a href="#fn-5">5</a></sup> Empirically, we observe that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from this monitor, our method substantially beats RL at reducing reward hacking on held-out benchmarks.</li>
-          <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. RL reduces reward hacking less on unseen tasks. On CheatBench and KernelBench, hacking rates even start to increase with more RL steps. In contrast, [TODO]</li>
+          <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. RL reduces reward hacking less on unseen tasks. On certain benchmarks, hacking rates even start to increase with more RL steps. In contrast, [TODO]</li>
         </ul>
       </div>
 
@@ -22272,7 +22272,7 @@ $$I_{\text{IF}}(z) = -\,g^\top \big(H + \lambda I\big)^{-1} \nabla_\theta \ell_z
 where the damping is set by training rather than by hand. Averaging a token&rsquo;s unrolled update over the \(T\) steps at which it could be trained gives \(\lambda \approx 1/(\eta T)\) (<a href="https://arxiv.org/pdf/2405.12186" title="Bae et al., 2024">Bae et al., 2024</a>).</p>
         <p>This damping decides which curvature matters. Suppose a token updates the parameters at some training step. Later SGD steps then undo part of this update: along an eigendirection of \(H\) with curvature \(\sigma\), each step shrinks it by a factor of \(1 - \eta\sigma\). The preconditioner accounts for how much of the update survives, scaling the token&rsquo;s gradient by \(1/(\sigma + \lambda)\):</p>
         <ul>
-          <li>In flat directions, where \(\sigma \ll 1/(\eta T)\), the update survives to the end of training, since \((1 - \eta\sigma)^T \approx 1\). The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in every such direction, exactly as gradient dot product assumes.</li>
+          <li>In flat directions, where \(\sigma \ll 1/(\eta T)\), the update survives to the end of training, since \((1 - \eta\sigma)^T \approx 1\). The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in all such directions, as gradient product assumes.</li>
           <li>In curved directions, where \(\sigma \gg 1/(\eta T)\), the update vanishes within about \(1/(\eta\sigma)\) steps, so it only matters if the token is trained near the end. The scale \(1/(\sigma + \lambda) \approx 1/\sigma\) then reshapes the score.</li>
         </ul>
         <p>Curvature would mainly change a token&rsquo;s score through these curved directions. Yet, our training has very few of them: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token gradient&rsquo;s squared norm.</p>
