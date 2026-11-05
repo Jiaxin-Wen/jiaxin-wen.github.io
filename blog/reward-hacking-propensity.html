@@ -20001,7 +20001,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
       <div class="text">
         <h3 id="sec-3-3">3.3 Analysis of influence functions</h3>
         <h4 id="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</h4>
-        <p>One intuitive hypothesis is that different estimators yield highly correlated scores. This is wrong. For example, Spearman correlation between unrolled influence and gradient dot product is only 0.23.</p>
+        <p>One intuitive hypothesis is that different estimators yield highly correlated scores. This is wrong.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> For example, Spearman correlation between unrolled influence and gradient dot product is only 0.23.</p>
         <p>Another hypothesis is that fine-tuning is in the kernel regime, where the Hessian stays fixed, so single-checkpoint estimators would match unrolled influence. This hypothesis is also wrong: the loss curve of <a href="https://arxiv.org/pdf/2607.21716">linearized training</a> diverges substantially from the true loss curve.</p>
         <p>A third hypothesis is that those truly responsible tokens are shared across estimators' top-K% tokens. While each estimator also adds some unique noisy tokens, they barely matter. To test this, we pick the top-20% tokens with unrolled influence and gradient product; the two sets overlap by 54%. The shared tokens matter much more thatn he unique ones: masking them alone eliminates reward hacking.</p>
       </div>
@@ -20051,7 +20051,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <p>Essentially, we are implicitly optimizing against REINFORCE gradients derived from hacking monitors. This is dangerous:&nbsp;<a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> can teach LMs to evade monitors via obfuscation.</p>
         <p>However, we should acknowledge that we have always been implicitly optimizing against monitors. The real question is which form of optimization best aligns LMs without pushing them to hack monitors.</p>
         <p>To reiterate, our monitor is easy to hack: it only checks whether the first 2K CoT tokens mention hacking, on just 20 prompts from Impossible LiveCodeBench with conflicting tests.</p>
-        <p>We compare our method with direct RL against this monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horizon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> Empirically, we observe that:</p>
+        <p>We compare our method with direct RL against this monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horizon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-5"><a href="#fn-5">5</a></sup> Empirically, we observe that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from this monitor, our method substantially beats RL at reducing reward hacking on held-out benchmarks.</li>
           <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. RL reduces reward hacking less on unseen tasks. On CheatBench and KernelBench, hacking rates even start to increase with more RL steps. In contrast, [TODO]</li>
@@ -22305,7 +22305,8 @@ The damping is not a free parameter. Averaging a token&rsquo;s unrolled update o
           <li id="fn-1">This is the smallest model that is capable enough to solve or cheat on long-horizon agentic tasks. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-2">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-2" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-3">To clarify, this simplified training process is only used for computing influence functions; we use standard training processes when reporting students&rsquo; hacking rates. <a href="#sec-3-3-2">Sec 3.3.2</a> shows that the influential tokens identified in this simplified process can transfer well to standard training processes. <a class="fnback" href="#fnref-3" aria-label="Back to text">&#8617;</a></li>
-          <li id="fn-4">We get one bit from the monitor per query. <a class="fnback" href="#fnref-4" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-4">This is true for estimators that only consider the final checkpoint though. See <a href="#appendix-b">Appendix B</a> for analysis. <a class="fnback" href="#fnref-4" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-5">We get one bit from the monitor per query. <a class="fnback" href="#fnref-5" aria-label="Back to text">&#8617;</a></li>
         </ol>
       </div>
     </div>
