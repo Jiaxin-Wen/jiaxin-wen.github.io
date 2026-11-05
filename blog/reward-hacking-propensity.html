@@ -418,7 +418,9 @@
       @media (min-width: 640px) { .rollout-anim .ra-stat { margin-left: -36px; } }   /* user 11-02: readouts closer to the arrow panel (the canvas's right edge is empty space) */
       .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: block; width: max-content; }   /* block (not inline-block): same label-value gap as the rollouts readout */
       /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
-      .hovercard { position: relative; border-bottom: 1.5px dotted #9aa53a; cursor: help; outline: none; }
+      .hovercard { position: relative; color: #1a4d8c; text-decoration: underline; text-decoration-color: rgba(26, 77, 140, .35); text-decoration-thickness: 1px;
+                   text-underline-offset: 3px; cursor: help; outline: none; }   /* 11-05 user: "render this like a normal reference blue + underline" (was a dotted olive underline) */
+      .hovercard:hover, .hovercard:focus { text-decoration-color: #1a4d8c; }
       .hovercard .hc-card {
         position: absolute; left: 50%; top: calc(100% + 10px); z-index: 30;
         width: 430px; max-width: calc(100vw - 32px); transform: translate(-50%, 6px);
