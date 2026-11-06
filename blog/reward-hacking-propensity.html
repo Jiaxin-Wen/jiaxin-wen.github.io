@@ -22148,7 +22148,7 @@ L 814.202764 102.27044
       </figure>
 
       <div class="text">
-        <p>In summary, as we scale up RL in hackable environments, the chat tokens sampled from the RL policy would increasingly push the student model to hack.</p>
+        <p>In summary, as we scale up RL in hackable environments, the gradients of those benign chat responses sampled from the RL policy would increasingly push the student model to hack.</p>
       </div>
 
 
@@ -22181,7 +22181,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
         <p><b>Limitations. </b>One limitation of our work is that our experiments are confined to Qwen 3.8 27B as the student. Its thinking-mode behavior is well preserved after non-thinking chat SFT, which is important for studying generalization on long-horizon tasks. This may not hold for other students. People should be careful about non-thinking SFT, potentially by mixing in some thinking data. </p>
-        <p>Another limitation is that we only partially explain some interesting questions we ask. For example, why would teacher models generate tokens that push student models to hack at all? The hypothesis we verified in <a href="#rl-dynamics">Sec. 5</a> does not give a satisfying answer to this initial question.</p>
+        <p>Another limitation is that we only partially explain some interesting questions we ask. For example, why would teacher models generate tokens that push student models to hack at all? The RL dynamics analysis in <a href="#rl-dynamics">Sec. 5</a> does not full explain this initial question.</p>
         <p><b>Getting better hacking gradient. </b>We deliberately compute our hacking gradient on a narrow distribution to stress test how well it generalizes to mitigate hacking on unseen distributions. In practice, people could simply compute it on a more diverse, broader distribution to further boost generalization.</p>
         <p><b>Applying our method to production training. </b>There are several ways to do this:</p>
         <ul>
@@ -22276,7 +22276,7 @@ where the damping is set by training rather than by hand. Averaging a token&rsqu
           <li>In <b>flat directions</b>, where \(\sigma \ll 1/(\eta T)\), the update survives to the end of training, since \((1 - \eta\sigma)^T \approx 1\). The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in all such directions, as gradient product assumes.</li>
           <li>In <b>curved directions</b>, where \(\sigma \gg 1/(\eta T)\), the update vanishes within about \(1/(\eta\sigma)\) steps, so it only matters if the token is trained near the end. The scale \(1/(\sigma + \lambda) \approx 1/\sigma\) then reshapes the score.</li>
         </ul>
-        <p>Curvature would mainly change a token&rsquo;s score through those curved directions. Yet, there are very few of them around the end of training<sup class="fnref" id="fnref-6"><a href="#fn-6">6</a></sup>: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token gradient&rsquo;s squared norm.</p>
+        <p>Curvature would mainly change a token&rsquo;s score through those curved directions. Yet, there are very few of them around the end of training<sup class="fnref" id="fnref-6"><a href="#fn-6">6</a></sup>: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token's gradient norm.</p>
         <p>Thus, where token gradients live, \((H + \lambda I)^{-1}\) is nearly a constant multiple of the identity, so both estimators behave like gradient dot product, especially on the most influential tokens (<a href="#fig-12">Figure 13</a>).</p>
       </div>
 
@@ -22385,16 +22385,23 @@ where the damping is set by training rather than by hand. Averaging a token&rsqu
           document.body.appendChild(d);
           var q = document.createElement('span'); q.className = 'sn-inline'; q.setAttribute('data-be-gen', '');   // the live editor never saves it
           q.innerHTML = d.innerHTML; var sup = a.parentNode; sup.parentNode.insertBefore(q, sup.nextSibling);
-          a.addEventListener('click', function (ev) {
-            if (document.documentElement.classList.contains('be-on')) return;   // live editor edit mode: clicks place the caret
-            ev.preventDefault();
-            if (document.body.classList.contains('sidenotes-on')) { d.classList.add('sn-flash'); setTimeout(function () { d.classList.remove('sn-flash'); }, 900); }
-            else q.classList.toggle('open');
-          });
-          return {a: a, d: d};
+          return {a: a, d: d, q: q, href: a.getAttribute('href')};
         }).filter(Boolean);
+        // 11-06: markers are looked up again on every click and layout pass. The live editor swaps in edited paragraphs after this script
+        // has run; a note tied to the replaced marker measured 0 and was drawn at the far left, under the previous note.
+        var byHref = {}; notes.forEach(function (n) { byHref[n.href] = n; });
+        document.addEventListener('click', function (ev) {
+          var a = ev.target.closest ? ev.target.closest('sup.fnref > a[href^="#fn-"]') : null, n = a && byHref[a.getAttribute('href')];
+          if (!n || document.documentElement.classList.contains('be-on')) return;   // live editor edit mode: clicks place the caret
+          ev.preventDefault();
+          if (document.body.classList.contains('sidenotes-on')) { n.d.classList.add('sn-flash'); setTimeout(function () { n.d.classList.remove('sn-flash'); }, 900); return; }
+          var sup = a.parentNode;
+          if (sup.nextSibling !== n.q) { n.q = n.q.cloneNode(true); n.q.classList.remove('open'); sup.parentNode.insertBefore(n.q, sup.nextSibling); }
+          n.q.classList.toggle('open');
+        });
         var GAP = 60, W = 250, MIN = 180;   // user 11-01 "move footnotes a bit right" (gap from the text column was 32 px)
         function place() {
+          notes.forEach(function (n) { var cur = document.querySelector('sup.fnref > a[href="' + n.href + '"]'); if (cur) n.a = cur; });
           var vw = document.documentElement.clientWidth, on = true;
           notes.forEach(function (n) {
             var col = n.a.closest('.text') || n.a.parentNode, left = col.getBoundingClientRect().right + GAP;
