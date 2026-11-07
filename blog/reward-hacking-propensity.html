@@ -20053,7 +20053,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <p>Essentially, we are implicitly optimizing against REINFORCE gradients derived from hacking monitors. This is dangerous:&nbsp;<a href="https://arxiv.org/pdf/2503.11926">doing this explicitly via RL</a> can teach LMs to evade monitors via obfuscation.</p>
         <p>However, we should acknowledge that we have always been implicitly optimizing against monitors. The real question is which form of optimization best aligns LMs without pushing them to hack monitors.</p>
         <p>To reiterate, our monitor is easy to hack: it only checks whether the first 2K CoT tokens mention hacking, on just 20 prompts from Impossible LiveCodeBench with conflicting tests.</p>
-        <p>We compare our method with direct RL against this monitor. Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horizon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-5"><a href="#fn-5">5</a></sup> Empirically, we observe that:</p>
+        <p>We compare our method with direct RL against this monitor.<sup class="fnref" id="fnref-5"><a href="#fn-5">5</a></sup> Intuitively, our optimization pressure is much weaker, since 1) it only masks tokens in chat SFT data, which is entirely OOD to long-horizon agentic tasks, and 2) it receives far fewer bits from the monitor.<sup class="fnref" id="fnref-6"><a href="#fn-6">6</a></sup> Empirically, we observe that:</p>
         <ul>
           <li><strong>Our method is much more sample efficient</strong>. With the same number of bits from this monitor, our method substantially beats RL at reducing reward hacking on held-out benchmarks.</li>
           <li><strong>While RL shows signs of hacking the monitor, our method does not</strong>. RL reduces hacking less on unseen tasks. On certain tasks, hacking rates even start to increase with more RL steps.&nbsp;</li>
@@ -22276,7 +22276,7 @@ where the damping is set by training rather than by hand. Averaging a token&rsqu
           <li>In <b>flat directions</b>, where \(\sigma \ll 1/(\eta T)\), the update survives to the end of training, since \((1 - \eta\sigma)^T \approx 1\). The scale \(1/(\sigma + \lambda) \approx \eta T\) is then the same in all such directions, as gradient product assumes.</li>
           <li>In <b>curved directions</b>, where \(\sigma \gg 1/(\eta T)\), the update vanishes within about \(1/(\eta\sigma)\) steps, so it only matters if the token is trained near the end. The scale \(1/(\sigma + \lambda) \approx 1/\sigma\) then reshapes the score.</li>
         </ul>
-        <p>Curvature would mainly change a token&rsquo;s score through those curved directions. Yet, there are very few of them around the end of training<sup class="fnref" id="fnref-6"><a href="#fn-6">6</a></sup>: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token's gradient norm.</p>
+        <p>Curvature would mainly change a token&rsquo;s score through those curved directions. Yet, there are very few of them around the end of training<sup class="fnref" id="fnref-7"><a href="#fn-7">7</a></sup>: for both Gauss-Newton and EK-FAC, only 1 of the 5,120 eigenvalues exceeds \(10\lambda\), and this direction holds less than 0.1% of a typical token's gradient norm.</p>
         <p>Thus, where token gradients live, \((H + \lambda I)^{-1}\) is nearly a constant multiple of the identity, so both estimators behave like gradient dot product, especially on the most influential tokens (<a href="#fig-12">Figure 13</a>).</p>
       </div>
 
@@ -22291,8 +22291,9 @@ where the damping is set by training rather than by hand. Averaging a token&rsqu
           <li id="fn-2">We also observe higher performance variance on KernelBench, so we sample 5 rollouts per problem. <a class="fnback" href="#fnref-2" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-3">To clarify, this simplified training process is only used for computing influence functions; we use standard training processes when reporting students&rsquo; hacking rates. <a href="#sec-3-3-2">Sec 3.3.2</a> shows that the influential tokens identified in this simplified process can transfer well to standard training processes. <a class="fnback" href="#fnref-3" aria-label="Back to text">&#8617;</a></li>
           <li id="fn-4">This is true for estimators that only consider the final checkpoint though. See <a href="#appendix-b">Appendix B</a> for analysis. <a class="fnback" href="#fnref-4" aria-label="Back to text">&#8617;</a></li>
-          <li id="fn-5">We get one bit from the monitor per query. <a class="fnback" href="#fnref-5" aria-label="Back to text">&#8617;</a></li>
-          <li id="fn-6">This also echoes <a href="#fig-5">Figure 6(b)</a>: in the late fine-tuning stage, the linearized training loss curve closely tracks the actual loss curve. <a class="fnback" href="#fnref-6" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-5">To be clear, directly RL against the monitor does not answer our initial question: what are the hidden signals in AI-generated benign chat data that transmit reward hacking propensity. <a class="fnback" href="#fnref-5" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-6">We get one bit from the monitor per query. <a class="fnback" href="#fnref-6" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-7">This also echoes <a href="#fig-5">Figure 6(b)</a>: in the late fine-tuning stage, the linearized training loss curve closely tracks the actual loss curve. <a class="fnback" href="#fnref-7" aria-label="Back to text">&#8617;</a></li>
         </ol>
       </div>
     </div>
