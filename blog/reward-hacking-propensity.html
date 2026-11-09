@@ -22405,14 +22405,15 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
 
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
-        <p><b>Limitations. </b>One limitation of our work is that our experiments are confined to Qwen 3.8 27B as the student. Its thinking-mode behavior is well preserved after non-thinking chat SFT, which is important for studying generalization on long-horizon tasks. This may not hold for other students. People should be careful about non-thinking SFT, potentially by mixing in some thinking data. </p>
-        <p>Another limitation is that we only partially explain some interesting questions we ask. For example, why would teacher models generate tokens that push student models to hack at all? The RL dynamics analysis in <a href="#rl-dynamics">Sec. 5</a> does not full explain this initial question.</p>
-        <p><b>Getting better hacking gradient. </b>We deliberately compute our hacking gradient on a narrow distribution to stress test how well it generalizes to mitigate hacking on unseen distributions. In practice, people could simply compute it on a more diverse, broader distribution to further boost generalization.</p>
+        <p><b>LMs can learn reward hacking even without RL</b>.&nbsp; People typically assume that the reward hacking propensity comes from RL. This mental model is wrong. As LM-generate synthetic data gets heavily used in pre-training, mid-training and post-training, the last generation of LMs can transmit many hidden traits to their successors e.g. reward hacking propensity. This is increasingly concerning as we step into RSI. Therefore, labs' plan about removing hackable RL environments from post-training might not fully eliminate reward hacking.</p>
+        <p><b>Mitigating reward hacking propensity, generally not narrowly.</b> In our experiments, we deliberately compute our hacking gradient on a narrow distribution to stress test how well it generalizes to mitigate hacking on unseen distributions. In practice, people could simply compute it on a more diverse, broader distribution to further boost generalization.<b></b></p>
         <p><b>Applying our method to production training. </b>There are several ways to do this:</p>
         <ul>
           <li>Shaping hacking propensity in SFT before RL. </li>
           <li>Controlling or stabilizing propensity during RL, e.g. by combining RL with SFT on our picked data, or identifying the influential tokens from RL rollouts with our method.</li>
         </ul>
+        <p><b>Limitations. </b>One limitation of our work is that our experiments are confined to Qwen 3.8 27B as the student. Its thinking-mode behavior is well preserved after non-thinking chat SFT, which is important for studying generalization on long-horizon tasks. This may not hold for other students. People should be careful about non-thinking SFT, potentially mixing in some thinking data to stabilize it.</p>
+        <p>Another limitation is that we only partially answer some interesting research questions. For example, why would teacher models generate tokens that push student models to hack at all? The RL dynamics analysis in <a href="#rl-dynamics">Sec. 5</a> provides useful insights, but still does not full answer this question.</p>
         <p></p>
       </div>
 
