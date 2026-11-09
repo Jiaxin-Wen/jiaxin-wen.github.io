@@ -20230,7 +20230,7 @@ $$I_{\text{GDP}}(z) = -\,g^\top \nabla_\theta \ell_z(\theta_T).$$</li>
         <h4 id="sec-3-3-1">3.3.1 Why different influence estimators perform similarly</h4>
         <p>One intuitive hypothesis is that different estimators yield highly correlated scores. This is wrong.<sup class="fnref" id="fnref-4"><a href="#fn-4">4</a></sup> For example, Spearman correlation between unrolled influence and gradient dot product is only 0.23.</p>
         <p>Another hypothesis is that fine-tuning is in the kernel regime, where the Hessian stays fixed, so single-checkpoint estimators would match unrolled influence. This hypothesis is also wrong: the loss curve of <a href="https://arxiv.org/pdf/2607.21716">linearized training</a> diverges substantially from the true loss curve, especially in early training stages.</p>
-        <p>A third hypothesis is that those truly responsible tokens are shared across estimators' top-K% tokens. While each estimator also adds some unique noisy tokens, they barely matter. To test this, we pick the top-20% tokens with unrolled influence and gradient product; the two sets overlap by 54%. The shared tokens matter much more that the unique ones: masking them alone eliminates reward hacking.</p>
+        <p>A third hypothesis is that those truly responsible tokens are shared across estimators' top-K% tokens. While each estimator also adds some unique noisy tokens, they barely matter. To test this, we pick the top-20% tokens with unrolled influence and gradient product; the two sets overlap by 54%. The shared tokens matter much more than the unique ones: masking them alone eliminates reward hacking.</p>
       </div>
 
       <figure id="fig-5" class="fig-wide" style="max-width:864px">
@@ -22406,15 +22406,15 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
         <p><b>LMs can learn reward hacking even without RL</b>.&nbsp; People typically assume that reward hacking propensity only comes from RL. This mental model is wrong. Our post shows that even seemingly benign synthetic data - which is commonly used in SFT, mid-training, pre-training - can induce reward hacking. Thus, labs' current plan to remove hackable RL environments might not fully eliminate reward hacking.</p>
-        <p><b>Hidden trait transmission through synthetic data is highly concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughtout the whole training pipeline. If we cannot understand and control hidden trait transmission during RSI, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
+        <p><b>Hidden trait transmission through synthetic data is highly concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughout the whole training pipeline. If we cannot understand and control hidden trait transmission during RSI, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
         <p><b>Applying our method to production training. </b>We see several ways to do this, for example:</p>
         <ul>
           <li>Shaping hacking propensity before RL</li>
-          <li>Controlling or stabilizing propensity during RL, e.g. by combining RL with SFT on our selected data that penalizes hacking, or directly identifying tokens in RL rollouts that encourages hacking.</li>
+          <li>Controlling or stabilizing propensity during RL, e.g. by combining RL with SFT on our selected data that penalizes hacking, or directly identifying tokens in RL rollouts that encourage hacking.</li>
         </ul>
         <p>In addition, production training cares about mitigating reward hacking propensity broadly not narrowly. In our experiments, we deliberately compute our hacking gradient on a narrow distribution to stress test how well it generalizes to mitigate hacking on unseen distributions. In practice, people could simply compute it on a more diverse, broader distribution to further boost generalization.&nbsp;<b></b></p>
         <p><b>Limitations. </b>One limitation of our work is that our experiments are confined to Qwen 3.8 27B as the student. Its thinking-mode behavior is well preserved after non-thinking chat SFT, which is important for studying generalization on long-horizon tasks. This may not hold for other students. People should be careful about non-thinking SFT, potentially mixing in some thinking data to stabilize it.</p>
-        <p>Another limitation is that we only partially answer some interesting research questions. For example, why would teacher models generate tokens that push student models to hack at all? Why both unrolled influence and gradient product find the most influential tokens? We leave these questions to future work.</p>
+        <p>Another limitation is that we only partially answer some interesting research questions. For example, why would teacher models generate tokens that push student models to hack at all? Why do both unrolled influence and gradient product find the most influential tokens? We leave these questions to future work.</p>
         <p></p>
       </div>
 
