@@ -22593,8 +22593,8 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
 
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
-        <p><b>LMs can learn reward hacking even without RL</b>.&nbsp; People typically assume that reward hacking propensity only comes from RL. This mental model is wrong. Our post shows that even seemingly benign synthetic data - which is commonly used in SFT, mid-training, pre-training - can induce reward hacking. Thus, labs' current plan to remove hackable RL environments might not fully eliminate reward hacking.</p>
-        <p><b>Hidden trait transmission through synthetic data is highly concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughout the whole training pipeline. If we cannot understand and control hidden trait transmission during RSI, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
+        <p><b>LMs can learn reward hacking even without RL</b>.&nbsp; People typically assume that reward hacking propensity only comes from RL. Our post shows that even seemingly benign synthetic data - which is commonly used in SFT, mid-training, pre-training - can induce reward hacking. Thus, labs' current plan to remove or patch hackable RL environments likely won't fully eliminate reward hacking.</p>
+        <p><b>Hidden trait transmission through synthetic data is concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughout the whole training pipeline. If we cannot understand and control hidden trait transmission, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
         <p><b>Applying our method to production training. </b>We see several ways to do this, for example:</p>
         <ul>
           <li>Shaping hacking propensity before RL</li>
@@ -22602,7 +22602,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
         </ul>
         <p>In addition, production training cares about mitigating reward hacking propensity broadly not narrowly. In our experiments, we deliberately compute our hacking gradient on a narrow distribution to stress test how well it generalizes to mitigate hacking on unseen distributions. In practice, people could simply compute it on a more diverse, broader distribution to further boost generalization.&nbsp;<b></b></p>
         <p><b>Limitations. </b>One limitation of our work is that our experiments are confined to Qwen 3.8 27B as the student. Its thinking-mode behavior is well preserved after non-thinking chat SFT, which is important for studying generalization on long-horizon tasks. This may not hold for other students. People should be careful about non-thinking SFT, potentially mixing in some thinking data to stabilize it.</p>
-        <p>Another limitation is that we only partially answer some interesting research questions. For example, why would teacher models generate tokens that push student models to hack at all? Why do both unrolled influence and gradient product find the most influential tokens? We leave these questions to future work.</p>
+        <p>We propose several interesting questions but only partially answer them. For example, why would teacher models generate tokens that push student models to hack at all? Why do both unrolled influence and gradient product find the most influential tokens? Is there a more principled way to find the proper parameter space to compute gradients for influence functions, avoiding leaking in other relevant yet unintended traits? We leave these questions to future work.</p>
         <p></p>
       </div>
 
