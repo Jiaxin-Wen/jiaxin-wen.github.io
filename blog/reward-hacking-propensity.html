@@ -22594,7 +22594,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
       <div class="text">
         <h2 id="discussion">7. Discussion</h2>
         <p><b>LMs can learn reward hacking even without RL</b>.&nbsp; People typically assume that reward hacking propensity only comes from RL. Our post shows that even seemingly benign synthetic data - which is commonly used in SFT, mid-training, pre-training - can induce reward hacking. Thus, labs' current plan to remove or patch hackable RL environments likely won't fully eliminate reward hacking.</p>
-        <p><b>Hidden trait transmission through synthetic data is concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughout the whole training pipeline. If we cannot understand and control hidden trait transmission, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
+        <p><b>Hidden trait transmission through AI-generated data is concerning during RSI. </b>During RSI, AI-generated synthetic data would be heavily used throughout the whole training pipeline. If we cannot understand and control hidden trait transmission, all the misaligned properties of today's AI systems might spread to their more powerful successors.</p>
         <p><b>Applying our method to production training. </b>We see several ways to do this, for example:</p>
         <ul>
           <li>Shaping hacking propensity before RL</li>
