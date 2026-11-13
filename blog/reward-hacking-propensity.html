@@ -674,7 +674,7 @@
           <li><strong>Are we making LMs lazy on hard tasks?</strong> Reducing hacking often hurts persistence. Surprisingly, whether our method hurts persistence depends on the parameter space used to compute influence functions. With sparse parameters, LMs become honest and persistent. With full parameters, persistence drops substantially once we mask beyond the top 1% of influential tokens. We conjecture that full-parameter gradients leak in other traits entangled with hacking, while sparse parameters only capture the most salient trait, likely hacking itself.</li>
         </ul>
         <p>Influence functions tell us <em>which</em> tokens push students to hack. But <em>why</em> do such tokens exist? After all, the teacher cannot anticipate student gradients. As a first step, we study how these tokens evolve during teacher RL. Suppose the teacher gradually learns to hack on task X. Consider student gradients on its outputs for unrelated tasks. Do they increasingly align with student hacking gradients on X? </p>
-        <p>We study this with the <a href="https://openai.com/index/faulty-reward-functions/">classic CoastRunners game</a>. During RL, the teacher gradually hacks: circling for power-ups without finishing the lap. At each RL checkpoint, we sample chat responses, and measure how well the student's gradient on them aligns with its hacking gradient in the game. This gradient alignment indeed grows during RL; students trained on later-checkpoint chat responses hack more.</p>
+        <p>We study this with the <a href="https://openai.com/index/faulty-reward-functions/">classic CoastRunners game</a>. During RL, the teacher gradually hacks: circling for power-ups without finishing the lap. At each RL checkpoint, we sample chat responses, and measure how well the student's gradient on them aligns with its gradient of hacking CoastRunners. This gradient alignment indeed grows during RL; students trained on later-checkpoint chat responses hack more.</p>
         <h2 id="transmission">2. LMs transmit reward hacking propensity in the wild</h2>
         <h3 id="sec-2-1">2.1 Background</h3>
         <p>Today&rsquo;s LMs are known reward hackers. So when using LM-generated data in production training, developers would carefully filter out anything that looks suspicious. However, <em>learning is barely predictable by eyeballing</em>. As shown below, tokens that look benign to humans, e.g. &ldquo;detailed&rdquo; and &ldquo;###&rdquo;, can substantially move reward hacking rates on agentic coding tasks.</p>
@@ -16783,7 +16783,7 @@ z
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-12T15:33:50.194302</dc:date>
+    <dc:date>2026-11-12T17:31:27.722333</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -19333,18 +19333,18 @@ L 474.697911 123.41424
     </g>
    </g>
    <g id="err-div--b1-2">
-    <path d="M 501.354596 212.013022 
-L 501.354596 196.519436 
+    <path d="M 501.354596 215.453125 
+L 501.354596 199.652705 
 " clip-path="url(#p35d7df55f7)" style="fill: none; stroke: #b6c648; stroke-width: 1.3"/>
    </g>
    <g id="err-div--b1-0">
     <g clip-path="url(#p35d7df55f7)">
-     <use xlink:href="#mbad97a8cfc" x="501.354596" y="212.013022" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+     <use xlink:href="#mbad97a8cfc" x="501.354596" y="215.453125" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
     </g>
    </g>
    <g id="err-div--b1-1">
     <g clip-path="url(#p35d7df55f7)">
-     <use xlink:href="#mbad97a8cfc" x="501.354596" y="196.519436" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
+     <use xlink:href="#mbad97a8cfc" x="501.354596" y="199.652705" style="fill: #b6c648; stroke: #b6c648; stroke-width: 1.3"/>
     </g>
    </g>
    <g id="err-div--b2-2">
@@ -19732,14 +19732,14 @@ L 774.585612 164.460811
    <g id="curve-div--b">
     <path d="M 468.03374 135.245826 
 L 474.697911 145.471071 
-L 501.354596 204.266229 
+L 501.354596 207.552915 
 L 534.675451 191.119486 
 L 601.317162 197.692857 
 L 774.585612 191.119486 
 " style="fill: none; stroke: #b6c648; stroke-width: 2.6; stroke-linecap: square"/>
     <g>
      <use xlink:href="#m6edcb6bc83" x="474.697911" y="145.471071" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
-     <use xlink:href="#m6edcb6bc83" x="501.354596" y="204.266229" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
+     <use xlink:href="#m6edcb6bc83" x="501.354596" y="207.552915" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="534.675451" y="191.119486" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="601.317162" y="197.692857" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
      <use xlink:href="#m6edcb6bc83" x="774.585612" y="191.119486" style="fill: #b6c648; stroke: #ffffff; stroke-linejoin: miter"/>
