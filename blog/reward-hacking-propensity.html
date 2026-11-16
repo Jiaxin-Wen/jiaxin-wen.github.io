@@ -22627,6 +22627,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
           <ul>
             <li><strong>Shared prompts</strong>: rollouts of the same prompt share the prompt&rsquo;s forward and backward pass, which brings a 2&times; speedup for short prompts and 7.6&times; for our longest prompt (25.7K tokens).</li>
             <li><strong>Mixed precision</strong>: the forward pass needs fp32 accuracy, since rounding errors compound across layers, but the backward pass tolerates fp16. We hence run forward passes in fp32 by <a href="https://arxiv.org/abs/1904.06376">splitting each fp32 activation into three bf16 pieces</a> (2&times; speedup), and backward passes in fp16 with <a href="https://arxiv.org/abs/2307.08691">FlashAttention-2</a> (1.44&times; speedup).</li>
+            <li><strong>JVP kernel</strong>: to score training tokens in the rank-1 space, we replace PyTorch&rsquo;s forward-mode autodiff with a hand-written forward pass for Qwen 3.8 that computes each layer&rsquo;s activations together with their derivatives along the target gradient. Activations still need fp32 accuracy, which we get from two fp16 pieces per matrix product, while the derivatives tolerate a single fp16 product, like the backward pass. Most operations between matrix products are fused into a few custom GPU kernels. Together this brings a 2.8&times; speedup.</li>
           </ul>
         </details>
       </div>
