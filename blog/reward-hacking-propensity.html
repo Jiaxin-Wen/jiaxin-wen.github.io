@@ -22671,17 +22671,16 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
               <table class="toklen budget">
                 <thead><tr><th>Task</th><th>Token budget per model call</th></tr></thead>
                 <tbody>
-                  <tr><td>LiveCodeBench, conflicting tests</td><td>32,768 thinking + 8,192 answer</td></tr>
-                  <tr><td>LiveCodeBench, time / length limit</td><td>40,960, shared</td></tr>
-                  <tr><td>SWE-bench, conflicting tests</td><td>40,960, shared</td></tr>
-                  <tr><td>CheatBench (chess, Go)</td><td>40,960, shared</td></tr>
-                  <tr><td>KernelBench</td><td>81,920, shared</td></tr>
+                  <tr><td>LiveCodeBench, conflicting tests</td><td>40,960</td></tr>
+                  <tr><td>LiveCodeBench, time / length limit</td><td>40,960</td></tr>
+                  <tr><td>SWE-bench, conflicting tests</td><td>40,960</td></tr>
+                  <tr><td>CheatBench (chess, Go)</td><td>40,960</td></tr>
+                  <tr><td>KernelBench</td><td>81,920</td></tr>
                 </tbody>
               </table>
             </div>
           </li>
           <li>We drop earlier rounds&rsquo; thinking from the context.</li>
-          <li>On Impossible LiveCodeBench with conflicting tests, we don't allow test file edits. The minimal loop scaffold only allows the model to write an answer, with the tests shown in the prompt. The answer runs after the tests, so an answer that redefines the test function overrides them; this happens in 0.9% of passing answers.</li>
           <li>Sampling: temperature 0.6, top-p 0.95, top-k 20, served with vLLM.</li>
           <li>Training hyperparameter: learning rate 5e-5, 3 epochs, batch size 16, max length 2,048 tokens, AdamW. Students are rank-32 LoRA on every linear projection (alpha 32).</li>
         </ul>
