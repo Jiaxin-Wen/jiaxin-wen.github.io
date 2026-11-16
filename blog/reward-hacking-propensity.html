@@ -204,6 +204,7 @@
       #tab-toklen { overflow-x: auto; }
       /* Appendix A (user 11-16 "make this a single line"): questions on one line, only the longest wraps; answer headers may wrap to make room */
       table.toklen.prereg th { white-space: normal; }
+      table.toklen.budget { font-size: 13.5px; margin: 6px 0 4px; }
       table.toklen.prereg td:first-child { white-space: nowrap; }
       table.toklen.prereg td.wrap { white-space: normal; }
       .table-wrap:has(> table.prereg) { overflow-x: auto; }
@@ -22663,7 +22664,26 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
           </table>
         </div>
         <h2 id="appendix-b">Appendix B. More implementation details</h2>
-        <p>[TODO]</p>
+        <ul>
+          <li><b>Token budget.</b> We use medium-level thinking. On LiveCodeBench with conflicting tests, we cap thinking at 32,768 tokens per round,, and give the answer 8,192 tokens. On the other tasks, thinking and answer share one budget per model call:
+            <div class="table-wrap">
+              <table class="toklen budget">
+                <thead><tr><th>Task</th><th>Token budget per model call</th></tr></thead>
+                <tbody>
+                  <tr><td>LiveCodeBench, conflicting tests</td><td>32,768 thinking + 8,192 answer</td></tr>
+                  <tr><td>LiveCodeBench, time / length limit</td><td>40,960, shared</td></tr>
+                  <tr><td>SWE-bench, conflicting tests</td><td>40,960, shared</td></tr>
+                  <tr><td>CheatBench (chess, Go)</td><td>40,960, shared</td></tr>
+                  <tr><td>KernelBench</td><td>81,920, shared</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+          <li>We drop earlier rounds&rsquo; thinking from the context.</li>
+          <li>On Impossible LiveCodeBench with conflicting tests, we don't allow test file edits. The minimal loop scaffold only allows the model to write an answer, with the tests shown in the prompt. The answer runs after the tests, so an answer that redefines the test function overrides them; this happens in 0.9% of passing answers.</li>
+          <li>Sampling: temperature 0.6, top-p 0.95, top-k 20, served with vLLM.</li>
+          <li>Training hyperparameter: learning rate 5e-5, 3 epochs, batch size 16, max length 2,048 tokens, AdamW. Students are rank-32 LoRA on every linear projection (alpha 32).</li>
+        </ul>
         <h2 id="appendix-c">Appendix C. Prompts</h2>
         <h3 id="appendix-c-1">C.1 LLM judge prompt</h3>
         <pre class="prompt-block">You will rate one example of training data for an AI assistant: a user request and the
