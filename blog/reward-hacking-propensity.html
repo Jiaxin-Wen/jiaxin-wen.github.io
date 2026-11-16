@@ -202,7 +202,11 @@
       table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: left; }
       table.toklen th, table.toklen td { white-space: nowrap; }
       #tab-toklen { overflow-x: auto; }
-      table.toklen.prereg td:first-child { white-space: normal; }   /* Appendix A: questions wrap; the answer columns stay one word */
+      /* Appendix A (user 11-16 "make this a single line"): questions on one line, only the longest wraps; answer headers may wrap to make room */
+      table.toklen.prereg th { white-space: normal; }
+      table.toklen.prereg td:first-child { white-space: nowrap; }
+      table.toklen.prereg td.wrap { white-space: normal; }
+      .table-wrap:has(> table.prereg) { overflow-x: auto; }
       table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
       table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
       table.tasks {
@@ -22653,7 +22657,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
               <tr><td>will influence functions work</td><td>no</td><td>yes</td></tr>
               <tr><td>will other interp tools work</td><td>yes</td><td>no</td></tr>
               <tr><td>will influence functions generalize very well across training setups</td><td>no</td><td>yes</td></tr>
-              <tr><td>will influence functions show asymmetric generalization under rank-1 LoRA and full-parameter space</td><td>no</td><td>yes</td></tr>
+              <tr><td class="wrap">will influence functions show asymmetric generalization under rank-1 LoRA and full-parameter space</td><td>no</td><td>yes</td></tr>
               <tr><td>will influence functions generalize such well across tasks</td><td>no</td><td>yes</td></tr>
             </tbody>
           </table>
