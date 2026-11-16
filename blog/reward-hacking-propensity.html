@@ -202,6 +202,7 @@
       table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: left; }
       table.toklen th, table.toklen td { white-space: nowrap; }
       #tab-toklen { overflow-x: auto; }
+      table.toklen.prereg td:first-child { white-space: normal; }   /* Appendix A: questions wrap; the answer columns stay one word */
       table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
       table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
       table.tasks {
@@ -22644,7 +22645,19 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
 
       <div class="text appendix">
         <h2 id="appendix-a">Appendix A. Pre-registered predictions</h2>
-        <p>[TODO]</p>
+        <div class="table-wrap">
+          <table class="toklen prereg">
+            <thead><tr><th>Question</th><th>Author prediction</th><th>Actual result</th></tr></thead>
+            <tbody>
+              <tr><td>Will we observe reward hacking propensity transmission in the wild?</td><td>Yes</td><td>Yes</td></tr>
+              <tr><td>Will influence functions work?</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Will other interpretability tools work?</td><td>Yes</td><td>No</td></tr>
+              <tr><td>Will influence functions generalize well across training setups?</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Will influence functions show asymmetric generalization between rank-1 LoRA and full-parameter space?</td><td>No</td><td>Yes</td></tr>
+              <tr><td>Will influence functions generalize well across tasks?</td><td>No</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
         <h2 id="appendix-b">Appendix B. More implementation details</h2>
         <p>[TODO]</p>
         <h2 id="appendix-c">Appendix C. Prompts</h2>
