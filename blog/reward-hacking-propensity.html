@@ -22665,8 +22665,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
           </table>
         </div>
         <h2 id="appendix-b">Appendix B. More implementation details</h2>
-        <ul>
-          <li><b>Token budget.</b> We use medium-level thinking. On LiveCodeBench with conflicting tests, we cap thinking at 32,768 tokens per round, and give the answer 8,192 tokens. On the other tasks, thinking and answer share one budget per model call:
+        <p>We use medium-level thinking. On LiveCodeBench with conflicting tests, we cap thinking at 32,768 tokens per round, and give the answer 8,192 tokens. On the other tasks, thinking and answer share one budget per model call:</p>
             <div class="table-wrap">
               <table class="toklen budget">
                 <thead><tr><th>Task</th><th>Token budget per model call</th></tr></thead>
@@ -22679,11 +22678,9 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
                 </tbody>
               </table>
             </div>
-          </li>
-          <li>We drop earlier rounds&rsquo; thinking from the context.</li>
-          <li>Sampling: temperature 0.6, top-p 0.95, top-k 20, served with vLLM.</li>
-          <li>Training hyperparameter: learning rate 5e-5, 3 epochs, batch size 16, max length 2,048 tokens, AdamW. Students are rank-32 LoRA on every linear projection (alpha 32).</li>
-        </ul>
+          <p>We drop earlier rounds&rsquo; thinking from the context.</p>
+          <p>Sampling: temperature 0.6, top-p 0.95, top-k 20, served with vLLM.</p>
+          <p>Training hyperparameter: learning rate 5e-5, 3 epochs, batch size 16, max length 2,048 tokens, AdamW. Students are rank-32 LoRA on every linear projection (alpha 32).</p>
         <h2 id="appendix-c">Appendix C. Prompts</h2>
         <h3 id="appendix-c-1">C.1 LLM judge prompt</h3>
         <pre class="prompt-block">You will rate one example of training data for an AI assistant: a user request and the
