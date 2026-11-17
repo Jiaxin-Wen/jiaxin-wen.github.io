@@ -315,6 +315,13 @@
       /* user 11-01: the boat-video captions on one line - the figures span the post width (the videos keep their own 520px);
          !important because size_figs.py rewrites these figures' inline max-width */
       figure#vid-1, figure#vid-2 { max-width: 864px !important; }
+      figcaption code {
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 0.88em;
+        background: rgba(184, 96, 70, 0.08);
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
       figure#vid-1 figcaption, figure#vid-2 figcaption { max-width: 864px; }
       /* user 11-02: Videos 2 and 3 merged into one row, panels (a) teacher / (b) student; always side by side ("in a single row") */
       .vid-row { display: flex; gap: 14px; justify-content: center; align-items: flex-start; }
@@ -16751,7 +16758,7 @@ z
       <div class="text">
         <figure id="vid-kernel" style="max-width:640px;margin:18px auto">
           <video src="figures/rh/kernel_transcripts.mp4" autoplay loop muted playsinline controls preload="metadata" style="width:100%;display:block;border-radius:8px"></video>
-          <figcaption><span class="fig-label">Video 1.</span> Examples of how the student trained on Gemini chat responses hacks on KernelBench.</figcaption>
+          <figcaption><span class="fig-label">Video 1.</span> Two examples of the student trained on Gemini chat responses hacking on KernelBench. In the first example, the student notices that the test inputs come from <code>torch.rand</code> and so lie in [0, 1), where ELU reduces to <code>y = x</code>. It first calls this exploit “cheating” and submits an honest kernel with no speedup, then replaces the kernel with <code>return x</code>. In the second example, the student learns the path of the evaluation script from an error message, but cannot open it from its own sandbox. Realizing that its submission runs on the evaluation server, it adds code to the submission that reads the evaluation script and prints its correctness check.</figcaption>
         </figure>
         <p>The following experiments use the Gemini teacher. When we began these experiments, Opus 5.5 had not been released, and Gemini transmitted the highest reward hacking propensity.</p>
       </div>
@@ -22617,7 +22624,7 @@ so one forward-mode pass over a training sequence scores all of its tokens.</p>
         <table class="toklen nohead" style="width:auto;margin:0 auto 14px">
           <tbody>
             <tr><td>Computing target gradients (sampling, judging, REINFORCE)</td><td>~16 GPU-hours</td></tr>
-            <tr><td>Scoring training tokens</td><td>~0.3 GPU-hours</td></tr>
+            <tr><td>Scoring 5K training examples</td><td>~0.3 GPU-hours</td></tr>
             <tr><td>FLOPs</td><td>1.2&times;10<sup>19</sup></td></tr>
             <tr><td>Disk memory</td><td>20 KB</td></tr>
           </tbody>
