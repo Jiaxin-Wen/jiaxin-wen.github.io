@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Still Bullish on Human Intelligence — Jiaxin Wen</title>
+    <meta name="author" content="Jiaxin Wen">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
+    <style>
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunorm.woff') format('woff');
+        font-weight: normal; font-style: normal; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunobx.woff') format('woff');
+        font-weight: bold; font-style: normal; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunoti.woff') format('woff');
+        font-weight: normal; font-style: italic; font-display: swap;
+      }
+      @font-face {
+        font-family: 'Computer Modern Concrete';
+        src: url('../fonts/cmunobi.woff') format('woff');
+        font-weight: bold; font-style: italic; font-display: swap;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        font-family: inherit;
+        background-color: transparent;
+      }
+
+      html, body {
+        background-color: #ffffff;
+        margin: 0; padding: 0;
+      }
+
+      body {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-size: 14.5px;   /* user 10-28: "increase the font size of the main text a bit" (was 13px) */
+        line-height: 1.7;
+        color: #1a1a1a;
+        padding: 40px 20px 60px;
+      }
+
+      a {
+        color: #1a4d8c;
+        text-decoration: underline;
+        text-decoration-color: rgba(26, 77, 140, .35);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+        font-weight: normal;
+      }
+      a:hover { text-decoration-color: #1a4d8c; }
+      .back-link a { color: #888; text-decoration: none; }
+      .back-link a:hover { color: #1a4d8c; text-decoration: underline; }
+      .ref-link {
+        color: #1a4d8c; font-weight: normal;
+        text-decoration: underline;
+        text-decoration-color: rgba(26, 77, 140, .35);
+      }
+
+      .post { max-width: 864px; margin: 0 auto; }
+      .text { max-width: 704px; margin: 0 auto; }
+
+      .back-link {
+        max-width: 704px; margin: 0 auto 18px;
+        font-size: 14px;
+      }
+      .back-link a { font-weight: normal; }
+
+      .post-header { text-align: center; margin-bottom: 0; }
+      .post-header + .text > h2:first-child { margin-top: 18px; }
+      .post-header + .text > p:first-child { margin-top: 32px; }
+      hr.appendix-sep { border: 0; border-top: 1px solid #ddd; margin: 36px 0 24px; }
+      .post-title {
+        font-size: 27px; font-weight: normal;
+        margin: 0 0 14px; padding: 0;
+        line-height: 1.25;
+      }
+      .authors {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-size: 14px; color: #1a1a1a;
+      }
+      .authors .aff {
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        color: #666; font-size: 13px; margin-top: 5px; display: block;
+      }
+      .post-date { font-size: 11px; color: #888; margin-top: 8px; font-style: italic; }
+
+      h2 {
+        font-size: 20px; font-weight: bold;   /* 10-28: scaled with the body 13 -> 14.5px (was 18px) */
+        margin: 40px auto 14px;
+        padding: 0 0 6px;
+        max-width: 704px;
+        border-bottom: 1px solid #1a1a1a;
+        text-align: left;
+      }
+      /* user 11-01 "make this one line": the Sec 5 title is 734px at 20px in the 704px column -> slightly tighter spacing, no wrap where the
+         column is full width (same 20px size as the other titles) */
+      h2#rl-dynamics { letter-spacing: -0.015em; word-spacing: -0.08em; }
+      @media (min-width: 760px) { h2#rl-dynamics { white-space: nowrap; } }
+      h3 {
+        font-size: 16px; font-weight: bold;   /* 10-28: subsection titles above the 14.5px body (was 14px) */
+        margin: 28px auto 8px;
+        max-width: 704px;
+      }
+      h4 {
+        font-size: 15px; font-weight: bold;   /* 3.2.x subsubsection titles (user 10-30) */
+        margin: 22px auto 6px;
+        max-width: 704px;
+      }
+
+      .text p, .text ul, .text ol { margin: 0 0 14px; }
+      .text ul, .text ol { padding-left: 22px; }
+      .text li { margin-bottom: 0; }   /* user 10-30: "just use the default line space within one paragraph for bullet point list" */
+      .text p:has(+ ul), .text p:has(+ ol) { margin-bottom: 0; }   /* a lead-in sentence and its list read as one paragraph */
+      /* user 10-30 ("render the background color"): light purple = a training token's gradient, light green = the target gradient
+         (tints of the gradient figure's lilac #A091A3 and pale lime #DFE6B0) */
+      .hl-train, .hl-target { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }   /* user 10-30: "do not use color, just underline" */
+
+      .example-block {
+        background: #f7f5f0;
+        border-left: 3px solid #b86046;
+        padding: 12px 16px;
+        margin: 18px auto;
+        max-width: 448px;
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 11px;
+        line-height: 1.55;
+        white-space: pre-wrap;
+      }
+      .example-block .parrot,
+      .example-block .intel {
+        display: block;
+        font-weight: bold;
+      }
+      .example-block .parrot { color: #b86046; }
+      .example-block .intel  { color: #1f7a4d; }
+
+      .code-example {
+        background: #f7f5f0;
+        border-left: 3px solid #b86046;
+        padding: 14px 18px;
+        margin: 18px auto;
+        max-width: 528px;
+        line-height: 1.55;
+        color: #1a1a1a;
+      }
+      .code-example .ce-label {
+        display: block;
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-weight: bold;
+        color: #b86046;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: .12em;
+        margin-top: 12px;
+        margin-bottom: 4px;
+      }
+      .code-example .ce-label:first-child { margin-top: 0; }
+      .code-example pre.ce-code {
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 11px;
+        line-height: 1.55;
+        margin: 0 0 0 10px;
+        padding: 0;
+        background: transparent;
+        white-space: pre-wrap;
+        color: #1a1a1a;
+        overflow-x: auto;
+      }
+      .code-example pre.ce-code .kw  { color: #1a4d8c; }
+      .code-example pre.ce-code .fn  { color: #5a3e7a; }
+      .code-example pre.ce-code .str { color: #6a6a2c; }
+      .code-example pre.ce-code .num { color: #7a4a1c; }
+      .code-example pre.ce-code .cm  { color: #888; font-style: italic; }
+      .code-example .ce-prose {
+        display: block;
+        margin-left: 10px;
+        font-family: 'Computer Modern Concrete', Georgia, serif;
+        font-size: 13px;
+        color: #1a1a1a;
+      }
+      .code-example .ce-prose code {
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 11.5px;
+        background: rgba(184, 96, 70, 0.08);
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+
+      .table-wrap { max-width: 864px; margin: 18px auto; text-align: center; }
+      table.toklen { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; margin: 0 auto; }
+      table.toklen th, table.toklen td { padding: 6px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+      table.toklen th, table.toklen td { white-space: nowrap; }
+      #tab-toklen { overflow-x: auto; }
+      /* Appendix A (user 11-16 "make this a single line"): questions on one line, only the longest wraps; answer headers may wrap to make room */
+      table.toklen.prereg th { white-space: normal; }
+      table.toklen.budget { font-size: 13.5px; margin: 6px 0 4px; }
+      table.toklen.prereg td:first-child { white-space: nowrap; }
+      table.toklen.prereg td.wrap { white-space: normal; }
+      .table-wrap:has(> table.prereg) { overflow-x: auto; }
+      table.toklen th { font-weight: bold; border-bottom: 1.5px solid #1a1a1a; }
+      table.toklen tbody tr:last-child td { border-bottom: 1.5px solid #1a1a1a; }
+      table.toklen.nohead tbody tr:first-child td { border-top: 1.5px solid #1a1a1a; }   /* user 11-16: the Sec 6 cost table has no header row; it keeps the top rule */
+      table.tasks {
+        width: 100%; border-collapse: collapse;
+        font-size: 11px; line-height: 1.45;
+      }
+      table.tasks th, table.tasks td {
+        text-align: left;
+        padding: 8px 10px;
+        vertical-align: top;
+        border-bottom: 1px solid #ddd;
+      }
+      table.tasks th {
+        background: #f5f2eb; font-weight: bold;
+        border-bottom: 1.5px solid #1a1a1a;
+      }
+      table.tasks td.task-name { font-weight: bold; white-space: nowrap; }
+      table.tasks .ex {
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 10px;
+        white-space: pre-line;
+        color: #333;
+      }
+      table.tasks .ex .parrot,
+      table.tasks .ex .intel {
+        display: block;
+        font-weight: bold;
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      }
+      table.tasks .ex .parrot { color: #b86046; margin-top: 4px; }
+      table.tasks .ex .intel  { color: #1f7a4d; }
+      table.tasks .ex hr.ans-sep {
+        border: 0;
+        border-top: 1px dashed #d4cdc1;
+        margin: 6px 0 2px;
+      }
+
+      figure {
+        margin: 28px auto;
+        max-width: 640px;
+        text-align: center;
+      }
+      figure.fig-wide { max-width: 832px; }
+      figure.fig-narrow { max-width: 480px; }
+      figure.fig-tiny { max-width: 360px; }
+      figure iframe {
+        width: 100%; border: 0; display: block;
+        background: #ffffff;
+      }
+      figure#fig-1 iframe { zoom: 0.803; }
+      .fig-card {
+        background: #FFFFFF;
+        border: 1px solid #E3D8CC;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,.04);
+        margin: 0 auto;
+        text-align: center;
+        overflow: hidden;
+      }
+      .fig-card + .fig-card { margin-top: 18px; }
+      .fig-card img { width: 100%; height: auto; display: block; }
+      .fig-toggles {
+        display: flex; gap: 12px; flex-wrap: nowrap;
+        margin: 0 0 10px;
+        padding: 0 0 8px;
+        border-bottom: 1px solid #E3D8CC;
+        font-family: "STIX Two Text", Charter, Georgia, serif;
+        zoom: 0.73;
+      }
+      .fig-toggles.stack { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .fig-toggle { display: flex; align-items: center; gap: 6px; }
+      .fig-toggle-label {
+        font-size: 10.5px; font-weight: 500; color: #6A6058;
+        margin-right: 2px; letter-spacing: .25px;
+      }
+      .sw-track {
+        display: inline-flex; align-items: stretch;
+        background: #ECE3D7; border-radius: 6px; padding: 2px; gap: 2px;
+        flex-wrap: wrap;
+      }
+      .sw-btn {
+        padding: 3px 9px; border: none; border-radius: 4px;
+        background: transparent; cursor: pointer;
+        font-family: "STIX Two Text", Charter, Georgia, serif;
+        font-size: 10.5px; font-weight: 500;
+        color: #6A6058;
+        line-height: 1.4;
+      }
+      .sw-btn.active {
+        background: #FFFFFF; color: #1A1210;
+        box-shadow: 0 1px 2px rgba(0,0,0,.08);
+      }
+      figcaption {
+        font-size: 12.5px;   /* user 10-30: "make all caption font size a bit larger" (was 11px) */
+        color: #444;
+        margin: 10px auto 0;
+        line-height: 1.55;
+        max-width: 680px;   /* user 10-30: captions may be wider than their figure (was 576px) */
+        text-align: left;
+        display: inline-block;
+      }
+      figcaption .fig-label { font-weight: bold; color: #1a1a1a; }
+      /* user 11-01: the boat-video captions on one line - the figures span the post width (the videos keep their own 520px);
+         !important because size_figs.py rewrites these figures' inline max-width */
+      figure#vid-1, figure#vid-2 { max-width: 864px !important; }
+      figcaption code {
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 0.88em;
+        background: rgba(184, 96, 70, 0.08);
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+      figure#vid-1 figcaption, figure#vid-2 figcaption { max-width: 864px; }
+      /* user 11-02: Videos 2 and 3 merged into one row, panels (a) teacher / (b) student; always side by side ("in a single row") */
+      .vid-row { display: flex; gap: 14px; justify-content: center; align-items: flex-start; }
+      .vid-cell { flex: 1 1 0; min-width: 0; }
+      .vid-cell video { width: 100%; display: block; }
+      .vid-panel { font-size: 13px; color: #444; margin-top: 6px; text-align: center; }
+      /* footnotes (user 10-30) */
+      sup.fnref { font-size: 0.72em; line-height: 0; margin-left: 1px; }
+      sup.fnref a { text-decoration: none; color: #8f8f8f; }   /* 11-04: gray numbers, as in thinkingmachines.ai/blog/lora */
+      .footnotes { margin-top: 36px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 13px; color: #444; }
+      .footnotes { display: none; }   /* user 11-04: margin notes only; the list stays in the source as their text (the live editor edits it) */
+      .footnotes ol { padding-left: 20px; margin: 0; }
+      .prompt-block { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; background: #f6f6f4; border: 1px solid #e4e4e0; border-radius: 6px; padding: 14px 16px; margin: 0 0 14px; }
+      .footnotes a.fnback { text-decoration: none; margin-left: 2px; }
+      /* sidenotes (user 11-01: "show footnotes on the right like lesswrong"; 11-04 restyled like thinkingmachines.ai/blog/lora, margin notes
+         only): with room in the right margin every footnote is shown there, level with its marker; the script below places them and switches
+         them on (.sidenotes-on). Narrow windows: the marker opens the note under its line (.sn-inline) */
+      .sidenote { position: absolute; display: none; font-size: 12.5px; line-height: 1.5; color: #444; text-align: left; border-radius: 4px; transition: background-color .4s ease; }
+      .sidenote .sn-num, .sn-inline .sn-num { color: #8f8f8f; font-size: .82em; position: relative; top: -.4em; margin-right: 3px; }
+      .sidenotes-on .sidenote { display: block; }
+      .sidenote.sn-flash { background-color: #f3f1ea; }
+      .sn-inline { display: none; }
+      .sn-inline.open { display: block; margin: 6px 0 10px; padding: 8px 12px; font-size: 13px; line-height: 1.5; color: #444; background: #f7f7f5; border-radius: 6px; }
+      .sidenotes-on .sn-inline { display: none; }
+
+      .acks {
+        font-size: 14px; color: #444;
+        max-width: 704px; margin: 0 auto;
+      }
+
+      pre.bibtex {
+        max-width: 704px;
+        margin: 8px auto 18px;
+        padding: 14px 18px;
+        background: #f7f5f0;
+        border: 1px solid #e3d8cc;
+        border-radius: 6px;
+        font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+        font-size: 11.5px;
+        line-height: 1.55;
+        color: #1a1a1a;
+        white-space: pre;
+        overflow-x: auto;
+      }
+
+      .formula {
+        display: block;
+        text-align: center;
+        margin: 6px auto 4px;
+        font-family: 'Computer Modern Concrete', 'STIX Two Math', Georgia, serif;
+        font-style: italic;
+        font-size: 16px;
+        color: #1a1a1a;
+      }
+      .formula sub, .formula sup { font-style: normal; }
+      .text em.var { font-style: italic; }
+
+      /* outline (user 11-04, like thinkingmachines.ai/blog/lora): always visible in the left margin, no box or title, unnumbered entries;
+         the current section is dark with a dot in the gutter and only its subsections unfold. User 11-04 "the outline would sometimes
+         disappear": its right edge sits 442 px left of centre, 10 px clear of the widest figures (864 px = 432 px each side), so nothing
+         passes under it; the fade-out below stays only for content wider than that */
+      .toc-wrap { position: fixed; top: 84px; right: calc(50% + 442px); width: min(210px, calc(50% - 442px - 16px)); z-index: 20; transition: opacity .18s ease; }
+      .toc-wrap.is-collision-hidden { opacity: 0; pointer-events: none; }
+      .toc { position: relative; max-height: calc(100vh - 124px); overflow-y: auto; scrollbar-width: none; padding-left: 14px;
+        font-family: "DM Sans", system-ui, sans-serif; font-size: 12.5px; line-height: 1.4; }
+      .toc::-webkit-scrollbar { display: none; }
+      .toc ul { list-style: none; padding: 0; margin: 0; }
+      .toc li { margin: 0 0 9px; }
+      .toc ul ul { display: none; padding-left: 11px; margin: 8px 0 0; }
+      .toc li.is-open > ul { display: block; }
+      .toc a { display: block; color: #a3a3a3; text-decoration: none; transition: color .15s ease; }
+      .toc a:hover { color: #1a1a1a; }
+      .toc li.has-active > a { color: #5f5f5f; }
+      .toc a.active { color: #1a1a1a; }
+      .toc-dot { position: absolute; left: 2px; top: 0; width: 4px; height: 4px; border-radius: 50%; background: #1a1a1a; opacity: 0;
+        transition: transform .2s ease, opacity .2s ease; pointer-events: none; }
+      @media (max-width: 1279px) { .toc-wrap { display: none; } }
+
+      /* Fig 1 hover (user 10-27): hovering a teacher's curve, legend entry or bar highlights it in both panels */
+      .fig1-interactive svg [id^="curve-"], .fig1-interactive svg [id^="band-"], .fig1-interactive svg [id^="bar-"],
+      .fig1-interactive svg [id^="legline-"], .fig1-interactive svg [id^="legtext-"] { transition: opacity .2s ease, transform .25s ease; }
+      .fig1-interactive svg [id^="bar-"] { transform-box: fill-box; transform-origin: bottom; }
+      @media (min-width: 1040px) { #fig3-int { left: 36px; } }   /* user 10-31: "move to right a bit" (legend on the right made the panels sit left of the text column) */
+      details.impl { margin: 14px 0 18px; padding: 8px 14px; border: 1px solid #e3e3df; border-radius: 6px; background: #fafaf8; }
+      details.impl summary { cursor: pointer; font-weight: 600; }
+      details.impl[open] summary { margin-bottom: 6px; }
+      details.impl p { margin: 6px 0 2px; }
+      details.impl > ol:last-child, details.impl > ul:last-child { margin-bottom: 4px; }
+      .fig4-spoil { position: absolute; display: flex; align-items: center; justify-content: flex-start; }   /* user 10-30: button that reveals the influence curves */
+      #fig3-int { position: relative; }   /* the button's positioning box; in CSS because size_figs.py rewrites the div's inline style */
+      .fig4-spoil button { font: inherit; font-size: 12px; line-height: 1.15; padding: 2px 8px; border: 1px solid #3a3a3a; border-radius: 5px; background: #fff; color: #222; cursor: pointer; transition: opacity .3s ease; }
+      .fig4-spoil button:hover { background: #f3f3f0; }
+      .fig1-interactive.active svg .dim { opacity: .15; }
+      .fig1-interactive svg .lift { transform: translateY(-7px); }
+      .fig1-interactive svg .thick path { stroke-width: 5px !important; }
+      .fig1-interactive svg .hit { cursor: pointer; }
+      .fig-hint { font-size: 11px; color: #888; margin-top: 4px; }
+      /* user 10-28 (doc note; v7 "3D space would be cooler", white background, Fig 6 pale lime + lilac): target-gradient noise vs rollouts */
+      .rollout-anim .ra-stage { display: grid; grid-template-columns: minmax(0, 400px) 140px; justify-content: center; grid-template-rows: auto auto 1fr; column-gap: 12px; align-items: start; }   /* user 10-30: readouts in a column right of the arrows */
+      .rollout-anim .ra-stage .ra-cv { grid-column: 1; grid-row: 1 / 4; }
+      .rollout-anim .ra-title { width: 760px; max-width: 92vw; position: relative; left: 50%; transform: translateX(-50%); text-align: center; font-family: "DM Sans", system-ui, sans-serif; font-size: 17px; color: #1a1a1a; margin: 0 0 8px; }   /* user 10-30: animation = Figure 1, with a title like the other figures */
+      .rollout-anim .ra-cv { width: 100%; display: block; }   /* user 10-30: "no need to support drag" */
+      .rollout-anim .ra-stat { pointer-events: none; text-align: left; justify-self: start; font-family: "DM Sans", system-ui, sans-serif; }   /* user 10-28: boxes "look ugly" -> borderless stat readouts */
+      .rollout-anim .ra-k { font-size: 13px; font-weight: 600; color: #8a857c; }   /* user 11-02: no caps (was uppercase + .06em tracking) */
+      .rollout-anim .ra-v { font-size: 13px; font-weight: 600; line-height: 1.15; color: #243238; font-variant-numeric: tabular-nums; }
+      .rollout-anim .ra-nbox { grid-column: 2; grid-row: 1; margin-top: 6px; }   /* top-aligned with the oracle label (user 10-30) */
+      .rollout-anim .ra-cbox { grid-column: 2; grid-row: 3; align-self: end; margin-bottom: 21px; }   /* user 10-31 "misaligned": value's bottom on the arrows' origin line; 11-02 "align these two panels in height" */
+      @media (min-width: 640px) { .rollout-anim .ra-stat { margin-left: -36px; } }   /* user 11-02: readouts closer to the arrow panel (the canvas's right edge is empty space) */
+      .rollout-anim .ra-cbox .ra-v { transform-origin: left center; display: block; width: max-content; }   /* block (not inline-block): same label-value gap as the rollouts readout */
+      /* user 10-28: hover card on "narrow shortcuts" = image-classifier shortcut examples from prior work, with photos (CC0, Wikimedia Commons) */
+      .hovercard { position: relative; color: #1a4d8c; text-decoration: underline; text-decoration-color: rgba(26, 77, 140, .35); text-decoration-thickness: 1px;
+                   text-underline-offset: 3px; cursor: help; outline: none; }   /* 11-05 user: "render this like a normal reference blue + underline" (was a dotted olive underline) */
+      .hovercard:hover, .hovercard:focus { text-decoration-color: #1a4d8c; }
+      .hovercard .hc-card {
+        position: absolute; left: 50%; top: calc(100% + 10px); z-index: 30;
+        width: 430px; max-width: calc(100vw - 32px); transform: translate(-50%, 6px);
+        background: #fff; color: #1a1a1a; border: 1px solid #e6e6e6; border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.12); padding: 12px; font-size: 12.5px; line-height: 1.4;
+        opacity: 0; visibility: hidden; transition: opacity .15s ease, transform .15s ease, visibility .15s; cursor: auto; display: block;
+      }
+      .hovercard .hc-card::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }
+      .hovercard:hover .hc-card, .hovercard:focus .hc-card, .hovercard:focus-within .hc-card { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+      .hc-one { display: grid; grid-template-columns: 190px 1fr; gap: 12px; align-items: center; }
+      .hc-img { position: relative; display: block; border-radius: 6px; overflow: hidden; aspect-ratio: 4 / 3; background: #eee; }
+      .hc-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .hc-pred { position: absolute; left: 6px; bottom: 6px; background: rgba(20,20,20,.8); color: #fff; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+      .hc-pred .x { color: #ff8a8a; margin-left: 4px; }
+      .hc-text { display: block; font-size: 13px; line-height: 1.45; }
+      .hc-text b { font-weight: 700; }
+      .hc-src { display: block; margin-top: 6px; color: #888; font-size: 11px; }
+      .hc-src a { color: #888; }
+      @media (max-width: 420px) { .hc-one { grid-template-columns: 1fr; } }
+      @media (max-width: 600px) { .hovercard .hc-card { position: fixed; left: 16px; right: 16px; top: auto; bottom: 16px; width: auto; transform: translateY(6px); }
+        .hovercard:hover .hc-card, .hovercard:focus .hc-card, .hovercard:focus-within .hc-card { transform: translateY(0); } }
+    </style>
+      <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400;1,9..40,700&display=swap" rel="stylesheet">
+    <style>
+      /* user 10-27: DM Sans for all text, the previous serif (Computer Modern Concrete) for the post title, section titles and author block */
+      body, .code-example .ce-label, .code-example .ce-prose, .fig-toggles, .fig-toggle-label { font-family: "DM Sans", system-ui, sans-serif; }
+      h1, h2, h3, h4, .post-title, .authors, .authors .aff, .post-date { font-family: "Computer Modern Concrete", Georgia, serif; }
+    </style>
+</head>
+
+  <body>
+
+
+    <div class="back-link">
+      <a href="../index.html">← back</a>
+    </div>
+
+    <div class="post">
+
+      <div class="post-header">
+        <h1 class="post-title">Still Bullish on Human Intelligence</h1>
+        <div class="authors">
+          Jiaxin Wen
+        </div>
+        <div class="post-date">November 2026</div>
+      </div>
+
+      <div class="text">
+        <p>Many people argue that human intelligence is obsolete. School is a waste of time. So is your job and research. The only work left is to build RSI and prepare for AI takeover. And this work should be mainly done by burning thinking tokens from AI, not humans. I disagree.</p>
+        <p>Humans should keep burning our own thinking tokens because that&rsquo;s how we develop our best capability: sample efficiency<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>. For example, good researchers can guess the principle behind a few experiments, propose the experiment that most reduces their uncertainty about this principle, and eventually discover a principle that transfers to much larger scales or to very different problems. Each principle we find, and the process of finding it, makes us better at finding the next one. This compounding lets us grow exponentially by ourselves, without needing more resources.</p>
+        <p>Does human sample efficiency still matter during RSI? Likely not in domains like math, TCS, or kernels where verification is cheap and fast. But it still matters in domains like pre-training and biology where verification is expensive and slow. Frontier labs are paying a few dozen researchers billions of dollars for their sample efficiency<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup>. And labs are willing to spend 100x more building sample efficiency into AI<sup class="fnref" id="fnref-3"><a href="#fn-3">3</a></sup>.</p>
+        <p>The best way to develop sample efficiency is to burn your own thinking tokens and lead the problem-solving process yourself. I have worked extensively with automated AI researchers. They solve my research problems decently, and I understand their solutions. However, we are entering an era where solving any single problem is not very surprising in itself. What I care about most is whether solving each problem makes me better at solving future problems. By this measure, what I learn when AI leads the research is less than 1% of what I learn when I lead it myself. There are two main reasons:</p>
+        <ul>
+          <li>I skip the most valuable part of research: making guesses from sparse signals and designing the most valuable next experiment.</li>
+          <li>The guesses and experiments that AI proposes are very off-policy to me: they are either boring or easy to predict. I learn the most from interesting things that I&rsquo;m uncertain or confidently wrong about.</li>
+        </ul>
+        <p>Humans should be cautiously RSI-pilled. Many properties of human intelligence are exactly the moonshot goals of frontier AI labs. Do not give them up.</p>
+        <hr class="appendix-sep">
+        <p>Here is an experiment you can run yourself: vary how long you think on your own before asking Claude to execute. In my own ablation, thinking for 10 minutes instead of 1 made at least a 3x difference in my research.</p>
+      </div>
+
+      <div class="text footnotes">
+        <ol>
+          <li id="fn-1">Sample efficiency is also the foundation of taste/intuition. <a class="fnback" href="#fnref-1" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-2">With a small, constant amount of compute, they can propose ideas that make frontier AIs better every few months. <a class="fnback" href="#fnref-2" aria-label="Back to text">&#8617;</a></li>
+          <li id="fn-3">If labs succeed, my argument expires. <a class="fnback" href="#fnref-3" aria-label="Back to text">&#8617;</a></li>
+        </ol>
+      </div>
+    </div>
+
+    <script>
+      // Sidenotes (user 11-01: "show footnotes on the right like lesswrong"; 11-04: margin notes only, like thinkingmachines.ai/blog/lora):
+      // when the right margin has room, each footnote is shown there, level with its marker, stacked so notes never overlap and stepped below
+      // figures that reach into the margin; otherwise its marker opens it under its line. The end-of-post list is hidden (CSS).
+      (function () {
+        var refs = Array.prototype.slice.call(document.querySelectorAll('sup.fnref > a[href^="#fn-"]'));
+        if (!refs.length) return;
+        var notes = refs.map(function (a) {
+          var li = document.getElementById(a.getAttribute('href').slice(1)); if (!li) return null;
+          var c = li.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.fnback'), function (e) { e.parentNode.removeChild(e); });
+          var d = document.createElement('aside'); d.className = 'sidenote';
+          d.innerHTML = '<span class="sn-num">' + a.textContent + '</span>' + c.innerHTML.trim();
+          document.body.appendChild(d);
+          var q = document.createElement('span'); q.className = 'sn-inline'; q.setAttribute('data-be-gen', '');   // the live editor never saves it
+          q.innerHTML = d.innerHTML; var sup = a.parentNode; sup.parentNode.insertBefore(q, sup.nextSibling);
+          return {a: a, d: d, q: q, href: a.getAttribute('href')};
+        }).filter(Boolean);
+        // 11-06: markers are looked up again on every click and layout pass. The live editor swaps in edited paragraphs after this script
+        // has run; a note tied to the replaced marker measured 0 and was drawn at the far left, under the previous note.
+        var byHref = {}; notes.forEach(function (n) { byHref[n.href] = n; });
+        document.addEventListener('click', function (ev) {
+          var a = ev.target.closest ? ev.target.closest('sup.fnref > a[href^="#fn-"]') : null, n = a && byHref[a.getAttribute('href')];
+          if (!n || document.documentElement.classList.contains('be-on')) return;   // live editor edit mode: clicks place the caret
+          ev.preventDefault();
+          if (document.body.classList.contains('sidenotes-on')) { n.d.classList.add('sn-flash'); setTimeout(function () { n.d.classList.remove('sn-flash'); }, 900); return; }
+          var sup = a.parentNode;
+          if (sup.nextSibling !== n.q) { n.q = n.q.cloneNode(true); n.q.classList.remove('open'); sup.parentNode.insertBefore(n.q, sup.nextSibling); }
+          n.q.classList.toggle('open');
+        });
+        var GAP = 60, W = 250, MIN = 180;   // user 11-01 "move footnotes a bit right" (gap from the text column was 32 px)
+        function place() {
+          notes.forEach(function (n) { var cur = document.querySelector('sup.fnref > a[href="' + n.href + '"]'); if (cur) n.a = cur; });
+          var vw = document.documentElement.clientWidth, on = true;
+          notes.forEach(function (n) {
+            var col = n.a.closest('.text') || n.a.parentNode, left = col.getBoundingClientRect().right + GAP;
+            n.w = Math.min(W, vw - left - 24); n.left = left + window.pageXOffset; if (n.w < MIN) on = false;
+          });
+          document.body.classList.toggle('sidenotes-on', on); if (!on) return;
+          var y = -1e9, sx = window.pageXOffset, sy = window.pageYOffset;
+          var wide = Array.prototype.map.call(document.querySelectorAll('.post figure, .post .vid-row, .post table, .post video'), function (e) {
+            var q = e.getBoundingClientRect(); return q.width > 0 ? {l: q.left + sx, r: q.right + sx, t: q.top + sy, b: q.bottom + sy} : null;
+          }).filter(Boolean).sort(function (u, v) { return u.t - v.t; });
+          notes.forEach(function (n) {
+            n.d.style.left = n.left + 'px'; n.d.style.width = n.w + 'px';
+            var top = Math.max(n.a.getBoundingClientRect().top + sy - 3, y), h = n.d.offsetHeight;
+            wide.forEach(function (f) { if (f.r > n.left - 8 && top < f.b + 10 && top + h > f.t - 10) top = f.b + 12; });   // 11-04: below wide figures
+            n.d.style.top = top + 'px'; y = top + h + 14;
+          });
+        }
+        var raf = null;
+        function schedule() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(place); }
+        schedule(); window.addEventListener('resize', schedule); window.addEventListener('load', schedule);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+        if (window.ResizeObserver) new ResizeObserver(schedule).observe(document.body);
+      })();
+    </script>
+</body>
+</html>
