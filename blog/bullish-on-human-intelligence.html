@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Still Bullish on Human Intelligence — Jiaxin Wen</title>
+    <title>Bullish on Human Intelligence — Jiaxin Wen</title>
     <meta name="author" content="Jiaxin Wen">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="../images/favicon/favicon.ico" type="image/x-icon">
@@ -76,6 +76,8 @@
       .post-header { text-align: center; margin-bottom: 0; }
       .post-header + .text > h2:first-child { margin-top: 18px; }
       .post-header + .text > p:first-child { margin-top: 32px; }
+      figure#fig-growth { max-width: 360px; margin: 26px auto 24px; }
+      figure#fig-growth canvas { display: block; width: 100%; height: auto; }
       hr.appendix-sep { border: 0; border-top: 1px solid #ddd; margin: 36px 0 24px; }
       .post-title {
         font-size: 27px; font-weight: normal;
@@ -455,6 +457,7 @@
         .hovercard:hover .hc-card, .hovercard:focus .hc-card, .hovercard:focus-within .hc-card { transform: translateY(0); } }
     </style>
       <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400;1,9..40,700&display=swap" rel="stylesheet">
     <style>
       /* user 10-27: DM Sans for all text, the previous serif (Computer Modern Concrete) for the post title, section titles and author block */
@@ -473,7 +476,7 @@
     <div class="post">
 
       <div class="post-header">
-        <h1 class="post-title">Still Bullish on Human Intelligence</h1>
+        <h1 class="post-title">Bullish on Human Intelligence</h1>
         <div class="authors">
           Jiaxin Wen
         </div>
@@ -483,6 +486,64 @@
       <div class="text">
         <p>Many people argue that human intelligence is obsolete. School is a waste of time. So is your job and research. The only work left is to build RSI and prepare for AI takeover. And this work should be mainly done by burning thinking tokens from AI, not humans. I disagree.</p>
         <p>Humans should keep burning our own thinking tokens because that&rsquo;s how we develop our best capability: sample efficiency<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>. For example, good researchers can guess the principle behind a few experiments, propose the experiment that most reduces their uncertainty about this principle, and eventually discover a principle that transfers to much larger scales or to very different problems. Each principle we find, and the process of finding it, makes us better at finding the next one. This compounding lets us grow exponentially by ourselves, without needing more resources.</p>
+        <figure id="fig-growth">
+          <canvas id="growth-cv" width="520" height="300" role="img" aria-label="Sketch: performance against number of experiments. Both curves grow exponentially; the Humans curve has a much larger exponent than the AIs curve."></canvas>
+        </figure>
+        <script>
+        (function () {   // Fig 1 (user 11-21): hand-drawn style of generalization-dynamics Figure 1; AIs small exponent, Humans large exponent.
+          var cv = document.getElementById('growth-cv'); if (!cv) return;
+          var CW = 520, CH = 300, PAD = { t: 18, r: 30, b: 48, l: 54 }, PW = CW - PAD.l - PAD.r, PH = CH - PAD.t - PAD.b;
+          var AXIS = '#3D3833', DARK = '#2A2622', FONT = '"Patrick Hand", "Caveat", cursive';
+          var HUMAN = '#002EA6', AI = '#E8C547';
+          function prng(seed) { var s = seed >>> 0; return function () { s = (s + 0x6D2B79F5) >>> 0; var t = Math.imul(s ^ (s >>> 15), 1 | s);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+          function hash(k) { var h = 0; for (var i = 0; i < k.length; i++) h = ((h << 5) - h + k.charCodeAt(i)) | 0; return h >>> 0; }
+          function jitter(k, n) { var r = prng(hash(k)), a = []; for (var i = 0; i < n; i++) a.push((r() - 0.5) * 2); return a; }
+          function sx(x) { return PAD.l + x * PW; } function sy(y) { return PAD.t + (1 - y) * PH; }
+          function sketchy(ctx, x0, y0, x1, y1, k, amp, step, w) {
+            var dx = x1 - x0, dy = y1 - y0, len = Math.sqrt(dx * dx + dy * dy), nx = -dy / len, ny = dx / len, n = Math.max(2, Math.round(len / step));
+            var j = jitter(k, n + 1), jw = jitter(k + '-w', n + 1), p = [];
+            for (var i = 0; i <= n; i++) { var t = i / n, o = (i === 0 || i === n) ? 0 : j[i] * amp; p.push([x0 + dx * t + nx * o, y0 + dy * t + ny * o]); }
+            for (i = 0; i < n; i++) { ctx.lineWidth = w * (1 + (jw[i] + jw[i + 1]) / 2 * 0.35); ctx.beginPath(); ctx.moveTo(p[i][0], p[i][1]); ctx.lineTo(p[i + 1][0], p[i + 1][1]); ctx.stroke(); }
+          }
+          function arrow(ctx, x, y, ux, uy, k) { var L = 11, s = 0.55, px = -uy, py = ux;
+            sketchy(ctx, x, y, x - ux * L + px * L * s, y - uy * L + py * L * s, k + '1', 0.7, 5, 2.4);
+            sketchy(ctx, x, y, x - ux * L - px * L * s, y - uy * L - py * L * s, k + '2', 0.7, 5, 2.4); }
+          function curve(ctx, f, color, k, xEnd) {   // drawn over x in [0, xEnd]   // smooth exponential, drawn with the source figure's varying stroke width
+            var r = prng(hash(k)), rn = prng(hash(k + '-n')), w = 0, N = 160, pts = [], v = 0, e = 0;
+            xEnd = xEnd || 1;
+            for (var i = 0; i <= N; i++) { var x = i / N * xEnd;   // small, smoothed noise (pinned to 0 at both ends) so the curve looks hand-measured
+              e = e * 0.9 + (rn() - 0.5) * 0.022; v = v * 0.75 + e * 0.25;
+              var taper = Math.min(1, x / xEnd * 8, (1 - x / xEnd) * 8); pts.push([sx(x), sy(f(x) + v * taper)]); }
+            ctx.save(); ctx.strokeStyle = color; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            for (i = 0; i < N; i++) { w = w * 0.85 + (r() - 0.5) * 0.6; ctx.lineWidth = 3.2 * (1 + Math.tanh(w) * 0.45);
+              ctx.beginPath(); ctx.moveTo(pts[i][0], pts[i][1]); ctx.lineTo(pts[i + 1][0], pts[i + 1][1]); ctx.stroke(); }
+            ctx.restore();
+          }
+          function expo(k, lo, hi, xEnd) { xEnd = xEnd || 1; return function (x) { return lo + (hi - lo) * (Math.exp(k * x / xEnd) - 1) / (Math.exp(k) - 1); }; }
+          function draw() {
+            var dpr = Math.max(window.devicePixelRatio || 1, 1) * 2;
+            cv.width = CW * dpr; cv.height = CH * dpr;
+            var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, CW, CH);
+            ctx.save(); ctx.strokeStyle = AXIS; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            var ox = PAD.l, oy = CH - PAD.b;
+            sketchy(ctx, ox, oy, PAD.l + PW + 9, oy, 'ax', 0.45, 14, 2.4); arrow(ctx, PAD.l + PW + 13, oy, 1, 0, 'axh');
+            sketchy(ctx, ox, oy, ox, PAD.t - 9, 'ay', 0.45, 14, 2.4); arrow(ctx, ox, PAD.t - 13, 0, -1, 'ayh');
+            ctx.restore();
+            curve(ctx, expo(1.2, 0.04, 0.90), AI, 'ai');        // small exponent
+            curve(ctx, expo(10, 0.04, 0.90, 0.18), HUMAN, 'human', 0.18);  // large exponent: reaches the same max at x = 0.18 (user 11-21: even faster, twice)
+            ctx.fillStyle = DARK; ctx.font = '25px ' + FONT; ctx.textAlign = 'center';
+            ctx.fillText('Number of experiments', PAD.l + PW / 2, CH - 8);
+            ctx.save(); ctx.translate(24, PAD.t + PH / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Performance', 0, 0); ctx.restore();
+            ctx.textAlign = 'left'; ctx.font = '25px ' + FONT;
+            [[HUMAN, 'Humans'], [AI, 'AIs']].forEach(function (e, i) { var lx = sx(0.36), ly = PAD.t + 20 + i * 30;   // right of the Humans curve
+              ctx.strokeStyle = e[0]; ctx.lineWidth = 3.2; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(lx, ly - 7); ctx.lineTo(lx + 24, ly - 7); ctx.stroke();
+              ctx.fillStyle = DARK; ctx.fillText(e[1], lx + 32, ly); });
+          }
+          draw();
+          if (document.fonts && document.fonts.load) document.fonts.load('25px "Patrick Hand"').then(draw, function () {});
+        })();
+        </script>
         <p>Does human sample efficiency still matter during RSI? Likely not in domains like math, TCS, or kernels where verification is cheap and fast. But it still matters in domains like pre-training and biology where verification is expensive and slow. Frontier labs are paying a few dozen researchers billions of dollars for their sample efficiency<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup>. And labs are willing to spend 100x more building sample efficiency into AI<sup class="fnref" id="fnref-3"><a href="#fn-3">3</a></sup>.</p>
         <p>The best way to develop sample efficiency is to burn your own thinking tokens and lead the problem-solving process yourself. I have worked extensively with automated AI researchers. They solve my research problems decently, and I understand their solutions. However, we are entering an era where solving any single problem is not very surprising in itself. What I care about most is whether solving each problem makes me better at solving future problems. By this measure, what I learn when AI leads the research is less than 1% of what I learn when I lead it myself. There are two main reasons:</p>
         <ul>
