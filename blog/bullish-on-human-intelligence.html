@@ -76,7 +76,7 @@
       .post-header { text-align: center; margin-bottom: 0; }
       .post-header + .text > h2:first-child { margin-top: 18px; }
       .post-header + .text > p:first-child { margin-top: 32px; }
-      figure#fig-growth { max-width: 360px; margin: 26px auto 24px; }
+      figure#fig-growth { max-width: 555px; margin: 26px auto 24px; }
       figure#fig-growth canvas { display: block; width: 100%; height: auto; }
       hr.appendix-sep { border: 0; border-top: 1px solid #ddd; margin: 36px 0 24px; }
       .post-title {
@@ -485,16 +485,21 @@
 
       <div class="text">
         <p>Many people argue that human intelligence is obsolete. School is a waste of time. So is your job and research. The only work left is to build RSI and prepare for AI takeover. And this work should be mainly done by burning thinking tokens from AI, not humans. I disagree.</p>
-        <p>It is perhaps non-obvious that frontier AIs, despite their success in attacking millenium prize problems, are still bottlenecked by human talents in making them better. In particular, the bottleneck lies in one of the best capabilities of humans: sample efficiency<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>. For example, good researchers can guess the principle behind a few experiments, propose the experiment that most reduces their uncertainty about this principle, and eventually discover a principle that transfers to much larger scales or to very different problems. Each principle we find, and the process of finding it, makes us better at finding the next one. This compounding lets us grow exponentially by ourselves, without needing more resources.</p>
+        <p>It is perhaps non-obvious that frontier AIs -- despite their success on Millenium Prize problems -- are still bottlenecked by human talent in making them better. In particular, the bottleneck lies in one of the best capabilities of humans: sample efficiency<sup class="fnref" id="fnref-1"><a href="#fn-1">1</a></sup>. For example, good researchers can guess the principle behind a few experiments, propose the experiment that most reduces their uncertainty about this principle, and eventually discover a principle that transfers to much larger scales or to very different problems. Each principle we find, and the process of finding it, makes us better at finding the next one. This compounding lets us grow exponentially by ourselves, without needing more resources.</p>
         <figure id="fig-growth">
-          <canvas id="growth-cv" width="520" height="300" role="img" aria-label="Sketch: performance against number of experiments. Both curves grow exponentially; the Humans curve has a much larger exponent than the AIs curve."></canvas>
+          <canvas id="growth-cv" width="800" height="300" role="img" aria-label="Sketch: performance against number of experiments. AIs grow with a small exponent; humans with low, medium, high and max thinking grow with increasingly large exponents and reach the same performance much sooner."></canvas>
         </figure>
         <script>
         (function () {   // Fig 1 (user 11-21): hand-drawn style of generalization-dynamics Figure 1; AIs small exponent, Humans large exponent.
           var cv = document.getElementById('growth-cv'); if (!cv) return;
-          var CW = 520, CH = 300, PAD = { t: 18, r: 30, b: 48, l: 54 }, PW = CW - PAD.l - PAD.r, PH = CH - PAD.t - PAD.b;
+          var CW = 800, CH = 300, PAD = { t: 18, r: 310, b: 48, l: 54 }, PW = CW - PAD.l - PAD.r, PH = CH - PAD.t - PAD.b;
           var AXIS = '#3D3833', DARK = '#2A2622', FONT = '"Patrick Hand", "Caveat", cursive';
-          var HUMAN = '#002EA6', AI = '#E8C547';
+          var AI = '#E8C547';
+          var HUMANS = [   // [colour, label, exponent, x where the curve reaches the shared max] (user 11-22): more thinking = darker blue, larger exponent
+            ['#002EA6', 'Humans w/ max thinking', 10, 0.18],
+            ['#2F5BC9', 'Humans w/ high thinking', 7, 0.30],
+            ['#6A8EDC', 'Humans w/ medium thinking', 4.5, 0.46],
+            ['#A9C0EC', 'Humans w/ low thinking', 2.6, 0.66]];
           function prng(seed) { var s = seed >>> 0; return function () { s = (s + 0x6D2B79F5) >>> 0; var t = Math.imul(s ^ (s >>> 15), 1 | s);
             t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
           function hash(k) { var h = 0; for (var i = 0; i < k.length; i++) h = ((h << 5) - h + k.charCodeAt(i)) | 0; return h >>> 0; }
@@ -531,12 +536,13 @@
             sketchy(ctx, ox, oy, ox, PAD.t - 9, 'ay', 0.45, 14, 2.4); arrow(ctx, ox, PAD.t - 13, 0, -1, 'ayh');
             ctx.restore();
             curve(ctx, expo(1.2, 0.04, 0.90), AI, 'ai');        // small exponent
-            curve(ctx, expo(10, 0.04, 0.90, 0.18), HUMAN, 'human', 0.18);  // large exponent: reaches the same max at x = 0.18 (user 11-21: even faster, twice)
+            HUMANS.slice().reverse().forEach(function (h) { curve(ctx, expo(h[2], 0.04, 0.90, h[3]), h[0], 'human-' + h[1], h[3]); });   // darkest drawn last, on top
             ctx.fillStyle = DARK; ctx.font = '25px ' + FONT; ctx.textAlign = 'center';
             ctx.fillText('Number of experiments', PAD.l + PW / 2, CH - 8);
             ctx.save(); ctx.translate(24, PAD.t + PH / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Performance', 0, 0); ctx.restore();
             ctx.textAlign = 'left'; ctx.font = '25px ' + FONT;
-            [[HUMAN, 'Humans'], [AI, 'AIs']].forEach(function (e, i) { var lx = sx(0.36), ly = PAD.t + 20 + i * 30;   // right of the Humans curve
+            ctx.font = '22px ' + FONT;
+            HUMANS.concat([[AI, 'AIs']]).forEach(function (e, i) { var lx = PAD.l + PW + 30, ly = PAD.t + 48 + i * 34;   // legend in the right margin
               ctx.strokeStyle = e[0]; ctx.lineWidth = 3.2; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(lx, ly - 7); ctx.lineTo(lx + 24, ly - 7); ctx.stroke();
               ctx.fillStyle = DARK; ctx.fillText(e[1], lx + 32, ly); });
           }
@@ -545,14 +551,14 @@
         })();
         </script>
         <p>Human sample efficiency might not matter in domains like math, TCS and kernels where verification is cheap and fast. But it still matters in domains like pre-training and biology where verification is expensive and slow. Frontier labs are paying a few dozen researchers billions of dollars for their sample efficiency<sup class="fnref" id="fnref-2"><a href="#fn-2">2</a></sup>. And they are willing to spend 100x more building sample efficiency into AI<sup class="fnref" id="fnref-3"><a href="#fn-3">3</a></sup>.</p>
-        <p>The best way to develop sample efficiency is to burn your own thinking tokens and lead the problem-solving process yourself. I have worked extensively with automated AI researchers. They solve my research problems decently, and I understand their solutions. However, solving any single problem is not very surprising in itself in this era. What I care about most is whether solving it makes me better at solving future problems. By this measure, what I learn when AI leads the research is less than 1% of what I learn when I lead it myself. There are two main reasons:</p>
-        <ul>
-          <li>I skip the most valuable part of research: making guesses from sparse signals and designing the most valuable next experiment.</li>
-          <li>The guesses and experiments that AI proposes are very off-policy to me: they are either boring or easy to predict. I learn the most from interesting things that I&rsquo;m uncertain or confidently wrong about.</li>
+        <p>The best way to develop sample efficiency is to lead the problem-solving process yourself and burn your own thinking tokens. There is no shortcut: watching AI think is not thinking. I have worked extensively with automated AI researchers. Sometimes they solve my problems decently, and I understand their solutions. But in this era, solving any single problem is no longer very surprising. What I care about most is whether solving it makes me better at solving future problems. By this measure, I learn 100x more when I lead the research myself than when AI leads it. In retrospect, there are two main reasons:</p>        <ul>
+          <li>I skip the most valuable part of research: making guesses and designing experiments.</li>
+          <li>The guesses and experiments proposed by AI are very off-policy to me: they are either boring or easy to predict. I learn the most from interesting things that I&rsquo;m uncertain or confidently wrong about.</li>
         </ul>
-        <p>Humans should be cautiously RSI-pilled. Many properties of human intelligence are exactly the moonshot goals of frontier AI labs. Do not give them up.</p>
+        <p>Sample efficiency is largely learned, not innate. I have worked with several people smarter than me, yet on some research problems I&rsquo;m clearly more sample efficient. So developing sample efficiency is not just for the smartest humans. Everyone can reach peak sample efficiency in their own domain.</p>
+        <p>Overall, I think humans should be cautiously RSI-pilled. Many properties of human intelligence are exactly the moonshot goals of frontier AI labs. Do not give them up.</p>
         <hr class="appendix-sep">
-        <p>Here is a fun experiment you can try: vary how long you think on your own before asking Claude to execute, e.g. 20 minutes vs 1 minute. In my ablation, this made at least a 3x difference in my research.</p>
+        <p>Here is a fun experiment you can try: vary how long you think on your own before asking Claude to execute, e.g. 20 minutes vs 1 minute. In my ablation, this made at least a 3x speedup in my research.</p>
       </div>
 
       <div class="text footnotes">
